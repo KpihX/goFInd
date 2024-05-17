@@ -1,0 +1,49 @@
+entity AppUser {
+  telephone String required
+}
+entity Objet {
+  nom String required
+  description String
+  statut ObjetStatut required
+  dateDeclaration LocalDate
+}
+entity Trajet {
+  depart String required
+  arrivee String required
+  dateHeureDepart ZonedDateTime required
+  placesDisponibles Integer required
+}
+entity Maison {
+  adresse String required
+  description String
+  disponibilite Boolean required
+}
+entity Location {
+  dateDebut LocalDate required
+  dateFin LocalDate required
+  prix Double required
+}
+enum ObjetStatut {
+  DISPONIBLE, VOLE, PERDU
+}
+relationship OneToOne {
+  User{appUser} to AppUser
+}
+relationship ManyToOne {
+  Objet{proprietaire(appUser)} to AppUser
+  Trajet{conducteur(appUser)} to AppUser
+  Location{locataire(appUser)} to AppUser
+  Maison{proprietaire(appUser)} to AppUser
+}
+relationship OneToMany {
+  AppUser{objets} to Objet{appUser(login)}
+  AppUser{trajets} to Trajet{appUser(login)}
+  AppUser{maisons} to Maison{proprietaire(login)}
+  Maison{locations(appUser)} to Location{maison(adresse)}
+}
+// DTOs, paginateurs et services
+service all with serviceClass
+paginate Objet, Trajet, Maison, Location with pagination
+dto * with mapstruct
+// Options de recherche
+search Objet, Trajet, Maison, Location with elasticsearch
