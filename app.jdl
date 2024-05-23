@@ -1,49 +1,76 @@
-entity AppUser {
+
+entity Utilisateur {
   telephone String required
 }
+enum EtatObjet {
+  VOLE, RETROUVE
+}
+enum TypeObjet {
+  TELEPHONE
+  LAPTOP
+}
 entity Objet {
-  nom String required
+  libelle String required
   description String
-  statut ObjetStatut required
-  dateDeclaration LocalDate
+  type TypeObjet required
+  image String
+  identifiant String required
+  etat EtatObjet required
+// dateDeclaration LocalDate
 }
 entity Trajet {
   depart String required
   arrivee String required
   dateHeureDepart ZonedDateTime required
-  placesDisponibles Integer required
+  places Integer required
+  prix Float required
 }
 entity Maison {
   adresse String required
   description String
-  disponibilite Boolean required
+  image String
+}
+enum EtatPiece {
+  LOUE
+  NONLOUE
+}
+entity Piece {
+  libelle String required
+  image String
+  etat EtatPiece
 }
 entity Location {
-  dateDebut LocalDate required
-  dateFin LocalDate required
-  prix Double required
-}
-enum ObjetStatut {
-  DISPONIBLE, VOLE, PERDU
+  prix Float required
 }
 relationship OneToOne {
-  User{appUser} to AppUser
+  Utilisateur{login(login)} to User with builtInEntity required
 }
-relationship ManyToOne {
-  Objet{proprietaire(appUser)} to AppUser
-  Trajet{conducteur(appUser)} to AppUser
-  Location{locataire(appUser)} to AppUser
-  Maison{proprietaire(appUser)} to AppUser
-}
+/**
+ * One to many relationship.
+ */
 relationship OneToMany {
-  AppUser{objets} to Objet{appUser(login)}
-  AppUser{trajets} to Trajet{appUser(login)}
-  AppUser{maisons} to Maison{proprietaire(login)}
-  Maison{locations(appUser)} to Location{maison(adresse)}
+  Utilisateur{objects} to Objet{proprietaire} required
+  Utilisateur{trajets} to Trajet{proprietaire} required
+  Utilisateur{maisons} to Maison{proprietaire} required
+  Maison{pieces} to Piece{maison} required
+}
+
+/**
+ * Many to one relationship.
+ */
+relationship ManyToOne {
+  Location{maison} to Maison required
+}
+/**
+ * Many to many relationship.
+ */
+relationship ManyToMany {
+  Utilisateur{trajets} to Trajet{engages}
+  Location{pieces} to Piece
 }
 // DTOs, paginateurs et services
 service all with serviceClass
-paginate Objet, Trajet, Maison, Location with pagination
+paginate Objet, Trajet, Piece, Maison, Location with pagination
 dto * with mapstruct
 // Options de recherche
-search Objet, Trajet, Maison, Location with elasticsearch
+search Objet, Trajet, Piece, Maison, Location with elasticsearch
