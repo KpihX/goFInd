@@ -31,3 +31,47 @@ export const Home = () => (
     </NavLink>
   </NavItem>
 );
+
+export const Objects = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/objects" className="d-flex align-items-center">
+      {/* <FontAwesomeIcon icon="home" /> */}
+      <span>
+        <Translate contentKey="global.menu.objects">Objects</Translate>
+      </span>
+    </NavLink>
+  </NavItem>
+);
+
+export const Itinaries = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/itinaries" className="d-flex align-items-center">
+      {/* <FontAwesomeIcon icon="home" /> */}
+      <span>
+        <Translate contentKey="global.menu.itinaries">Itinaries</Translate>
+      </span>
+    </NavLink>
+  </NavItem>
+);
+
+export const Houses = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/houses" className="d-flex align-items-center">
+      {/* <FontAwesomeIcon icon="home" /> */}
+      <span>
+        <Translate contentKey="global.menu.houses">Houses</Translate>
+      </span>
+    </NavLink>
+  </NavItem>
+);
+
+export const Locations = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/locations" className="d-flex align-items-center">
+      {/* <FontAwesomeIcon icon="home" /> */}
+      <span>
+        <Translate contentKey="global.menu.locations">Locations</Translate>
+      </span>
+    </NavLink>
+  </NavItem>
+);

@@ -9,6 +9,10 @@ import PasswordResetInit from 'app/modules/account/password-reset/init/password-
 import PasswordResetFinish from 'app/modules/account/password-reset/finish/password-reset-finish';
 import Logout from 'app/modules/login/logout';
 import Home from 'app/modules/home/home';
+import Objects from './modules/objects/objets';
+import Itinaries from './modules/itinaries/itinaries';
+import Houses from './modules/houses/houses';
+import Locations from './modules/locations/locations';
 import EntitiesRoutes from 'app/entities/routes';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
@@ -31,6 +35,10 @@ const AppRoutes = () => {
     <div className="view-routes">
       <ErrorBoundaryRoutes>
         <Route index element={<Home />} />
+        <Route path="objects" element={<Objects />} />
+        <Route path="itinaries" element={<Itinaries />} />
+        <Route path="houses" element={<Houses />} />
+        <Route path="locations" element={<Locations />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route path="account">
