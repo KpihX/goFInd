@@ -1,6 +1,6 @@
 {
   "home": {
-    "title": "Bienvenue, Java Hipster !",
+    "title": "Bienvenue, chez GoFind !",
     "subtitle": "Ceci est votre page d'accueil",
     "logged": {
       "message": "Vous êtes connecté en tant que \"{{username}}\"."
@@ -13,7 +13,7 @@
       "chat": "JHipster public chat room",
       "follow": "Suivez @jhipster sur Twitter"
     },
-    "like": "Si vous aimez JHipster, donnez nous une étoile sur",
+    "like": "Si vous aimez ce projet, donnez nous une étoile en plus sur ",
     "github": "GitHub "
   }
 }

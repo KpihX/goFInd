@@ -11,6 +11,8 @@ import ErrorBoundary from 'app/shared/error/error-boundary';
 import AppComponent from 'app/app';
 import { loadIcons } from 'app/config/icon-loader';
 
+import 'tailwindcss/tailwind.css';
+
 const store = getStore();
 registerLocale(store);
 

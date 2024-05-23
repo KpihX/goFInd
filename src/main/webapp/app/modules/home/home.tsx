@@ -32,7 +32,7 @@ export const Home = () => {
           </div>
         ) : (
           <div>
-            <Alert color="warning">
+            {/* <Alert color="warning">
               <Translate contentKey="global.messages.info.authenticated.prefix">If you want to </Translate>
 
               <Link to="/login" className="alert-link">
@@ -43,7 +43,7 @@ export const Home = () => {
                 <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
                 <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
               </Translate>
-            </Alert>
+            </Alert> */}
 
             <Alert color="warning">
               <Translate contentKey="global.messages.info.register.noaccount">You do not have an account yet?</Translate>&nbsp;
@@ -53,11 +53,11 @@ export const Home = () => {
             </Alert>
           </div>
         )}
-        <p>
+        {/* <p>
           <Translate contentKey="home.question">If you have any question on JHipster:</Translate>
-        </p>
+        </p> */}
 
-        <ul>
+        {/* <ul>
           <li>
             <a href="https://www.jhipster.tech/" target="_blank" rel="noopener noreferrer">
               <Translate contentKey="home.link.homepage">JHipster homepage</Translate>
@@ -83,11 +83,11 @@ export const Home = () => {
               <Translate contentKey="home.link.follow">follow @jhipster on Twitter</Translate>
             </a>
           </li>
-        </ul>
+        </ul> */}
 
         <p>
           <Translate contentKey="home.like">If you like JHipster, do not forget to give us a star on</Translate>{' '}
-          <a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/KpihX/goFInd.git" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
           !
