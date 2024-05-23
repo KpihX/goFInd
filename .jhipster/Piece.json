@@ -1,0 +1,42 @@
+{
+  "annotations": {
+    "changelogDate": "20240523202203"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "libelle",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "image",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "etat",
+      "fieldType": "EtatPiece",
+      "fieldValues": "LOUE,NONLOUE"
+    }
+  ],
+  "name": "Piece",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "maison",
+      "otherEntityRelationshipName": "pieces",
+      "relationshipName": "maison",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "location",
+      "otherEntityRelationshipName": "pieces",
+      "relationshipName": "location",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

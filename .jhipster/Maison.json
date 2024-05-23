@@ -1,0 +1,48 @@
+{
+  "annotations": {
+    "changelogDate": "20240523202202"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "adresse",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "image",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Maison",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "piece",
+      "otherEntityRelationshipName": "maison",
+      "relationshipName": "pieces",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "utilisateur",
+      "otherEntityRelationshipName": "maisons",
+      "relationshipName": "proprietaire",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "location",
+      "otherEntityRelationshipName": "maison",
+      "relationshipName": "locations",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Utilisateur.
+    -->
+    <changeSet id="20240523202159-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="login_id"
+                                 baseTableName="utilisateur"
+                                 constraintName="fk_utilisateur__login_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id"
+                                 baseTableName="rel_utilisateur__trajets"
+                                 constraintName="fk_rel_utilisateur__trajets__utilisateur_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="utilisateur"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="trajets_id"
+                                 baseTableName="rel_utilisateur__trajets"
+                                 constraintName="fk_rel_utilisateur__trajets__trajets_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="trajet"
+                                 />
+    </changeSet>
+</databaseChangeLog>

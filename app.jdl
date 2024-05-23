@@ -43,34 +43,29 @@ entity Location {
   prix Float required
 }
 relationship OneToOne {
-  Utilisateur{login(login)} to User with builtInEntity required
+  Utilisateur{login(login)} to User with builtInEntity
 }
 /**
  * One to many relationship.
  */
 relationship OneToMany {
-  Utilisateur{objects} to Objet{proprietaire} required
-  Utilisateur{trajets} to Trajet{proprietaire} required
-  Utilisateur{maisons} to Maison{proprietaire} required
-  Maison{pieces} to Piece{maison} required
+  Utilisateur{objects} to Objet{proprietaire}
+  Utilisateur{trajetsProp} to Trajet{proprietaire}
+  Utilisateur{maisons} to Maison{proprietaire}
+  Maison{pieces} to Piece{maison}
+  Location{pieces} to Piece{location}
 }
-
 /**
  * Many to one relationship.
  */
 relationship ManyToOne {
-  Location{maison} to Maison required
+  Location{maison} to Maison{locations}
 }
 /**
  * Many to many relationship.
  */
 relationship ManyToMany {
   Utilisateur{trajets} to Trajet{engages}
-  Location{pieces} to Piece
 }
-// DTOs, paginateurs et services
-service all with serviceClass
-paginate Objet, Trajet, Piece, Maison, Location with pagination
-dto * with mapstruct
-// Options de recherche
-search Objet, Trajet, Piece, Maison, Location with elasticsearch
+paginate Objet, Trajet, Maison, Piece, Location with infinite-scroll
+service all with serviceImpl

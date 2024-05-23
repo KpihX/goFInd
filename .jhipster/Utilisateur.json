@@ -1,0 +1,54 @@
+{
+  "annotations": {
+    "changelogDate": "20240523202159"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "telephone",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Utilisateur",
+  "relationships": [
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "relationshipName": "login",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "objet",
+      "otherEntityRelationshipName": "proprietaire",
+      "relationshipName": "objects",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "trajet",
+      "otherEntityRelationshipName": "proprietaire",
+      "relationshipName": "trajetsProp",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "maison",
+      "otherEntityRelationshipName": "proprietaire",
+      "relationshipName": "maisons",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "trajet",
+      "otherEntityRelationshipName": "engages",
+      "relationshipName": "trajets",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

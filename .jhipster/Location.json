@@ -1,0 +1,33 @@
+{
+  "annotations": {
+    "changelogDate": "20240523202204"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "prix",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Location",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "piece",
+      "otherEntityRelationshipName": "location",
+      "relationshipName": "pieces",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "maison",
+      "otherEntityRelationshipName": "locations",
+      "relationshipName": "maison",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

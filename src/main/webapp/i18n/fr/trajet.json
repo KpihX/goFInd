@@ -1,0 +1,30 @@
+{
+  "goFindApp": {
+    "trajet": {
+      "home": {
+        "title": "Trajets",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Trajet",
+        "createOrEditLabel": "Créer ou éditer un Trajet",
+        "notFound": "Aucun Trajet trouvé"
+      },
+      "created": "Un nouveau Trajet a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Trajet avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Trajet avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Trajet {{ id }} ?"
+      },
+      "detail": {
+        "title": "Trajet"
+      },
+      "id": "ID",
+      "depart": "Depart",
+      "arrivee": "Arrivee",
+      "dateHeureDepart": "Date Heure Depart",
+      "places": "Places",
+      "prix": "Prix",
+      "proprietaire": "Proprietaire",
+      "engages": "Engages"
+    }
+  }
+}

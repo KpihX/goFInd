@@ -1,0 +1,28 @@
+{
+  "goFindApp": {
+    "piece": {
+      "home": {
+        "title": "Pieces",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Piece",
+        "createOrEditLabel": "Créer ou éditer un Piece",
+        "notFound": "Aucun Piece trouvé"
+      },
+      "created": "Un nouveau Piece a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Piece avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Piece avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Piece {{ id }} ?"
+      },
+      "detail": {
+        "title": "Piece"
+      },
+      "id": "ID",
+      "libelle": "Libelle",
+      "image": "Image",
+      "etat": "Etat",
+      "maison": "Maison",
+      "location": "Location"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "annotations": {
+    "changelogDate": "20240523202200"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "libelle",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "TypeObjet",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "TELEPHONE,LAPTOP"
+    },
+    {
+      "fieldName": "image",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "identifiant",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "etat",
+      "fieldType": "EtatObjet",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "VOLE,RETROUVE"
+    }
+  ],
+  "name": "Objet",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "utilisateur",
+      "otherEntityRelationshipName": "objects",
+      "relationshipName": "proprietaire",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

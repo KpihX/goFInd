@@ -1,0 +1,29 @@
+{
+  "goFindApp": {
+    "maison": {
+      "home": {
+        "title": "Maisons",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Maison",
+        "createOrEditLabel": "Créer ou éditer un Maison",
+        "notFound": "Aucun Maison trouvé"
+      },
+      "created": "Un nouveau Maison a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Maison avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Maison avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Maison {{ id }} ?"
+      },
+      "detail": {
+        "title": "Maison"
+      },
+      "id": "ID",
+      "adresse": "Adresse",
+      "description": "Description",
+      "image": "Image",
+      "pieces": "Pieces",
+      "proprietaire": "Proprietaire",
+      "locations": "Locations"
+    }
+  }
+}
