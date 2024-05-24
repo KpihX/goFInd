@@ -48,7 +48,7 @@ export function Object({ id, libelle, description, identifiant, image, proprieta
   };
 
   return (
-    <Card>
+    <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         // avatar={
         //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
