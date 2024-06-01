@@ -53,10 +53,10 @@ const Header = (props: IHeaderProps) => {
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ms-auto" navbar>
             <Home />
-            <Objects />
-            <Itinaries />
-            <Houses />
-            <Locations />
+            {props.isAuthenticated && <Objects />}
+            {props.isAuthenticated && <Itinaries />}
+            {props.isAuthenticated && <Houses />}
+            {props.isAuthenticated && <Locations />}
             {props.isAuthenticated && <EntitiesMenu />}
             {props.isAuthenticated && props.isAdmin && <AdminMenu showOpenAPI={props.isOpenAPIEnabled} />}
             <LocaleMenu currentLocale={props.currentLocale} onClick={handleLocaleChange} />

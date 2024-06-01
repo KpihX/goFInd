@@ -6,6 +6,8 @@ import com.gofind.gofind.repository.rowmapper.UtilisateurRowMapper;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
@@ -16,6 +18,7 @@ import org.springframework.data.relational.core.sql.Comparison;
 import org.springframework.data.relational.core.sql.Condition;
 import org.springframework.data.relational.core.sql.Conditions;
 import org.springframework.data.relational.core.sql.Expression;
+import org.springframework.data.relational.core.sql.SQL;
 import org.springframework.data.relational.core.sql.Select;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectFromAndJoinCondition;
 import org.springframework.data.relational.core.sql.Table;
@@ -41,6 +44,8 @@ class ObjetRepositoryInternalImpl extends SimpleR2dbcRepository<Objet, Long> imp
     private static final Table entityTable = Table.aliased("objet", EntityManager.ENTITY_ALIAS);
     private static final Table proprietaireTable = Table.aliased("utilisateur", "proprietaire");
 
+    private final Logger log = LoggerFactory.getLogger(ObjetRepositoryInternalImpl.class);
+
     public ObjetRepositoryInternalImpl(
         R2dbcEntityTemplate template,
         EntityManager entityManager,
@@ -62,8 +67,12 @@ class ObjetRepositoryInternalImpl extends SimpleR2dbcRepository<Objet, Long> imp
     }
 
     @Override
-    public Flux<Objet> findAllBy(Pageable pageable) {
-        return createQuery(pageable, null).all();
+    public Flux<Objet> findAllBy(Pageable pageable, String search, String searchType) {
+        Expression searchExpression = SQL.literalOf("%" + search + "%");
+        log.debug("*** Search: " + search);
+        log.debug("*** SearchType: " + searchType);
+        Condition whereClause = Conditions.like(entityTable.column(searchType), searchExpression);
+        return createQuery(pageable, whereClause).all();
     }
 
     RowsFetchSpec<Objet> createQuery(Pageable pageable, Condition whereClause) {
@@ -81,8 +90,8 @@ class ObjetRepositoryInternalImpl extends SimpleR2dbcRepository<Objet, Long> imp
     }
 
     @Override
-    public Flux<Objet> findAll() {
-        return findAllBy(null);
+    public Flux<Objet> findAll(String search, String searchType) {
+        return findAllBy(null, search, searchType);
     }
 
     @Override

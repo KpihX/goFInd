@@ -17,7 +17,7 @@ export const Home = () => {
       </Col>
       <Col md="9">
         <h1 className="display-4">
-          <Translate contentKey="home.title">Welcome, Java Hipster!</Translate>
+          <Translate contentKey="home.title">Welcome, on goFind!</Translate>
         </h1>
         <p className="lead">
           <Translate contentKey="home.subtitle">This is your homepage</Translate>
@@ -44,6 +44,33 @@ export const Home = () => {
                 <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
               </Translate>
             </Alert> */}
+
+            <p className="lead">
+              <p>Concrètement, goFind permet:</p>
+              <ol>
+                <li>
+                  <p>La gestion des objets de vente (téléphone, laptop, ..), ceci dans la mésure où vous donne la possibilité de: </p>
+                  <ul>
+                    <li>signaler un objet volé (téléphone, laptop, ..) ;</li>
+                    <li>vérifier si un objet de revente est issu d'un vol ou pas.</li>
+                  </ul>
+                </li>
+                <li>
+                  <p>La gestion des itinéraires, ceci dans la mésure où vous donne la possibilité de: </p>
+                  <ul>
+                    <li>proposer un itinéraire et avoir des clients ;</li>
+                    <li>de souscrire à un itinéraire de voyage.</li>
+                  </ul>
+                </li>
+                <li>
+                  <p>La gestion des locations, ceci dans la mésure où vous donne la possibilité de: </p>
+                  <ul>
+                    <li>mettre une ou plusieurs pièces d'une de vos maisons en location ;</li>
+                    <li>louer une ou plusieurs pièces d'une maison en location</li>
+                  </ul>
+                </li>
+              </ol>
+            </p>
 
             <Alert color="warning">
               <Translate contentKey="global.messages.info.register.noaccount">You do not have an account yet?</Translate>&nbsp;

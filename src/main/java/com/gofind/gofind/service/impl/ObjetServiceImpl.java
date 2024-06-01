@@ -71,9 +71,11 @@ public class ObjetServiceImpl implements ObjetService {
 
     @Override
     @Transactional(readOnly = true)
-    public Flux<Objet> findAll(Pageable pageable) {
-        log.debug("Request to get all Objets");
-        return objetRepository.findAllBy(pageable);
+    public Flux<Objet> findAll(Pageable pageable, String search, String searchType) {
+        log.debug("*** Request to get all Objets");
+        // log.debug("*** Search: " + search);
+        // log.debug("*** SearchType: " + searchType);
+        return objetRepository.findAllBy(pageable, search, searchType);
     }
 
     public Mono<Long> countAll() {

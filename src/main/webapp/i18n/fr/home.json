@@ -1,7 +1,7 @@
 {
   "home": {
     "title": "Bienvenue, chez GoFind !",
-    "subtitle": "Ceci est votre page d'accueil",
+    "subtitle": "La solution idéale pour assurer la régularité des objets de vente, pour gérer vos itinéraires et vos locations!",
     "logged": {
       "message": "Vous êtes connecté en tant que \"{{username}}\"."
     },

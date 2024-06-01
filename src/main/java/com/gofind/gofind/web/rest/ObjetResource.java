@@ -172,12 +172,16 @@ public class ObjetResource {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<Objet>>> getAllObjets(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = true) String search,
+        @RequestParam(required = true) String searchType,
         ServerHttpRequest request
     ) {
-        log.debug("REST request to get a page of Objets");
+        log.debug("*** REST request to get a page of Objets");
+        // log.debug("*** Search: " + search);
+        // log.debug("*** SearchType: " + searchType);
         return objetService
             .countAll()
-            .zipWith(objetService.findAll(pageable).collectList())
+            .zipWith(objetService.findAll(pageable, search, searchType).collectList())
             .map(
                 countWithEntities ->
                     ResponseEntity.ok()

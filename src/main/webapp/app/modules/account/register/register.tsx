@@ -8,9 +8,13 @@ import PasswordStrengthBar from 'app/shared/layout/password/password-strength-ba
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { handleRegister, reset } from './register.reducer';
 
+import { createEntity } from 'app/entities/utilisateur/utilisateur.reducer';
+
 export const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
+
+  const utilisateurEntity = useAppSelector(state => state.utilisateur.entity);
 
   useEffect(
     () => () => {
@@ -21,8 +25,21 @@ export const RegisterPage = () => {
 
   const currentLocale = useAppSelector(state => state.locale.currentLocale);
 
-  const handleValidSubmit = ({ username, email, firstPassword }) => {
+  const handleValidSubmit = ({ username, telephone, email, firstPassword }) => {
     dispatch(handleRegister({ login: username, email, password: firstPassword, langKey: currentLocale }));
+    saveEntity({ telephone });
+  };
+
+  const saveEntity = values => {
+    const account = useAppSelector(state => state.authentication.account);
+    const entity = {
+      ...utilisateurEntity,
+      ...values,
+      login: account.login,
+      trajets: null,
+    };
+
+    dispatch(createEntity(entity));
   };
 
   const updatePassword = event => setPassword(event.target.value);
@@ -61,6 +78,17 @@ export const RegisterPage = () => {
                 maxLength: { value: 50, message: translate('register.messages.validate.login.maxlength') },
               }}
               data-cy="username"
+            />
+            <ValidatedField
+              name="telephone"
+              label={translate('global.form.telephone.label')}
+              placeholder={translate('global.form.telephone.placeholder')}
+              type="text"
+              validate={{
+                required: { value: true, message: translate('global.messages.validate.telephone.required') },
+                validate: v => true || translate('global.messages.validate.telephone.invalid'),
+              }}
+              data-cy="telephone"
             />
             <ValidatedField
               name="email"
