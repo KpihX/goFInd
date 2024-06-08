@@ -2,6 +2,7 @@
   "goFindApp": {
     "TypeObjet": {
       "null": "",
+      "TOUS": "TOUS",
       "TELEPHONE": "TELEPHONE",
       "LAPTOP": "LAPTOP"
     }
