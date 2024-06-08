@@ -114,7 +114,9 @@
       "open": "Ouvrir",
       "save": "Sauvegarder",
       "view": "Voir",
-      "show": "Show {{otherEntity}}"
+      "show": "Show {{otherEntity}}",
+      "report": "Signaler",
+      "unreport": "Se retracter"
     },
     "detail": {
       "field": "Champs",

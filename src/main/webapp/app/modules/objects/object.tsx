@@ -24,6 +24,8 @@ import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.cons
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -40,12 +42,30 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export function Object({ id, libelle, description, identifiant, image, proprietaire }) {
+export function Object({ id, libelle, description, identifiant, image, etat, proprietaire }) {
   const [expanded, setExpanded] = React.useState(false);
+  const account = useAppSelector(state => state.authentication.account);
+  const [found, setFound] = React.useState(etat === 'RETROUVE');
+
+  const handleClick = () => {
+    console.info('You clicked the Chip.');
+  };
+
+  React.useEffect(() => {
+    setFound(etat === 'RETROUVE');
+  }, []);
+
+  const handleDelete = () => {
+    setFound(false);
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  React.useEffect(() => {
+    // console.log("* id: ", id, ", proprio", proprietaire);
+  }, []);
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -70,26 +90,59 @@ export function Object({ id, libelle, description, identifiant, image, proprieta
           {description}
         </Typography>
       </CardContent>
-      <div className="btn-group flex-btn-group-container">
-        <Button tag={Link} to={`/objet/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
-          <FontAwesomeIcon icon="eye" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.view">View</Translate>
-          </span>
-        </Button>
-        <Button tag={Link} to={`/objet/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-          <FontAwesomeIcon icon="pencil-alt" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.edit">Edit</Translate>
-          </span>
-        </Button>
-        <Button onClick={() => (window.location.href = `/objet/${id}/delete`)} color="danger" size="sm" data-cy="entityDeleteButton">
-          <FontAwesomeIcon icon="trash" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.delete">Delete</Translate>
-          </span>
-        </Button>
-      </div>
+      {account.id === proprietaire.loginId ? (
+        <>
+          {found && (
+            <Stack direction="row" spacing={1}>
+              <Chip
+                label="Votre objet a été retrouvé! Veuillez consulter vos mails pour plus d'infos!"
+                variant="outlined"
+                color="success"
+                onClick={handleClick}
+                onDelete={handleDelete}
+              />
+            </Stack>
+          )}
+          <div className="flex flex-row pl-3 justify-center">
+            {/* <Button tag={Link} to={`/objet/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                <FontAwesomeIcon icon="eye" />{' '}
+                <span className="d-none d-md-inline">
+                  <Translate contentKey="entity.action.view">View</Translate>
+                </span>
+              </Button> */}
+            <Button tag={Link} to={`/objet/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+              <FontAwesomeIcon icon="pencil-alt" />{' '}
+              <span className="d-none d-md-inline">
+                <Translate contentKey="entity.action.edit">Edit</Translate>
+              </span>
+            </Button>
+            <Button onClick={() => (window.location.href = `/objet/${id}/delete`)} color="danger" size="sm" data-cy="entityDeleteButton">
+              <FontAwesomeIcon icon="trash" />{' '}
+              <span className="d-none d-md-inline">
+                <Translate contentKey="entity.action.delete">Delete</Translate>
+              </span>
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="btn-group flex-btn-group-container">
+          {etat === 'VOLE' ? (
+            <Button color="warning" size="sm" data-cy="entityReportButton">
+              <FontAwesomeIcon icon="ban" />{' '}
+              <span className="d-none d-md-inline">
+                <Translate contentKey="entity.action.report">Report as Stolen</Translate>
+              </span>
+            </Button>
+          ) : (
+            <Button color="green" size="sm" data-cy="entityUnReportButton">
+              <FontAwesomeIcon icon="times-circle" />{' '}
+              <span className="d-none d-md-inline">
+                <Translate contentKey="entity.action.unreport"> Unreport </Translate>
+              </span>
+            </Button>
+          )}
+        </div>
+      )}
       {/* <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />

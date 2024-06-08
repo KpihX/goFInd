@@ -32,7 +32,7 @@ export const ObjetUpdate = () => {
   const etatObjetValues = Object.keys(EtatObjet);
 
   const handleClose = () => {
-    navigate('/objet');
+    navigate('/objets');
   };
 
   useEffect(() => {
@@ -161,7 +161,7 @@ export const ObjetUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objet" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objets" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

@@ -29,7 +29,6 @@ export const Objects = () => {
   const typeObjetValues = Object.keys(GenTypeObjet);
   const [currentTypeObjet, setCurrentTypeObjet] = useState(Object.keys(GenTypeObjet)[0]);
   const [typeSearch, setTypeSearch] = React.useState('libelle'); // ou 'identifiant
-  const account = useAppSelector(state => state.authentication.account);
 
   const handleChange = (event: SelectChangeEvent) => {
     setTypeSearch(event.target.value);
@@ -220,18 +219,20 @@ export const Objects = () => {
       >
         {objetList && objetList.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
-            {objetList.map((objet, i) =>
-              objet.type === currentTypeObjet || currentTypeObjet === Object.keys(GenTypeObjet)[0] ? (
-                <Objet
-                  key={`entity-${i}`}
-                  id={objet.id}
-                  libelle={objet.libelle}
-                  identifiant={objet.identifiant}
-                  image={objet.image}
-                  proprietaire={objet.proprietaire}
-                  description={objet.description}
-                />
-              ) : null,
+            {objetList.map(
+              (objet, i) =>
+                objet.type === currentTypeObjet || currentTypeObjet === Object.keys(GenTypeObjet)[0] ? (
+                  <Objet
+                    key={`entity-${i}`}
+                    id={objet.id}
+                    libelle={objet.libelle}
+                    identifiant={objet.identifiant}
+                    image={objet.image}
+                    etat={objet.etat}
+                    proprietaire={objet.proprietaire}
+                    description={objet.description}
+                  />
+                ) : null,
               // <div key={`entity-${i}`} data-cy="entityTable">
               //   <div>
               //     <Button tag={Link} to={`/objet/${objet.id}`} color="link" size="sm">
