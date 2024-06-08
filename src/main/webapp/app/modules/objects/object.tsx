@@ -134,7 +134,7 @@ export function Object({ id, libelle, description, identifiant, image, etat, pro
               </span>
             </Button>
           ) : (
-            <Button color="green" size="sm" data-cy="entityUnReportButton">
+            <Button color="success" size="sm" data-cy="entityUnReportButton">
               <FontAwesomeIcon icon="times-circle" />{' '}
               <span className="d-none d-md-inline">
                 <Translate contentKey="entity.action.unreport"> Unreport </Translate>
