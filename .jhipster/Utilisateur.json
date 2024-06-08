@@ -28,6 +28,13 @@
       "relationshipType": "one-to-many"
     },
     {
+      "otherEntityName": "objet",
+      "otherEntityRelationshipName": "signalant",
+      "relationshipName": "objectsSignales",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
       "otherEntityName": "trajet",
       "otherEntityRelationshipName": "proprietaire",
       "relationshipName": "trajetsProp",

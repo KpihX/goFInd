@@ -11,6 +11,7 @@ export interface IObjet {
   identifiant?: string;
   etat?: keyof typeof EtatObjet;
   proprietaire?: IUtilisateur | null;
+  signalant?: IUtilisateur | null;
 }
 
 export const defaultValue: Readonly<IObjet> = {};

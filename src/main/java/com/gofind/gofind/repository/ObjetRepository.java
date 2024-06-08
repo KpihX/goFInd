@@ -14,13 +14,19 @@ import reactor.core.publisher.Mono;
 @SuppressWarnings("unused")
 @Repository
 public interface ObjetRepository extends ReactiveCrudRepository<Objet, Long>, ObjetRepositoryInternal {
-    Flux<Objet> findAllBy(Pageable pageable, String search, String searchType);
+    Flux<Objet> findAllBy(Pageable pageable);
 
     @Query("SELECT * FROM objet entity WHERE entity.proprietaire_id = :id")
     Flux<Objet> findByProprietaire(Long id);
 
     @Query("SELECT * FROM objet entity WHERE entity.proprietaire_id IS NULL")
     Flux<Objet> findAllWhereProprietaireIsNull();
+
+    @Query("SELECT * FROM objet entity WHERE entity.signalant_id = :id")
+    Flux<Objet> findBySignalant(Long id);
+
+    @Query("SELECT * FROM objet entity WHERE entity.signalant_id IS NULL")
+    Flux<Objet> findAllWhereSignalantIsNull();
 
     @Override
     <S extends Objet> Mono<S> save(S entity);

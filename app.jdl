@@ -50,6 +50,7 @@ relationship OneToOne {
  */
 relationship OneToMany {
   Utilisateur{objects} to Objet{proprietaire}
+  Utilisateur{objectsSignales} to Objet{signalant}
   Utilisateur{trajetsProp} to Trajet{proprietaire}
   Utilisateur{maisons} to Maison{proprietaire}
   Maison{pieces} to Piece{maison}

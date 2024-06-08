@@ -43,6 +43,7 @@ class ObjetRepositoryInternalImpl extends SimpleR2dbcRepository<Objet, Long> imp
 
     private static final Table entityTable = Table.aliased("objet", EntityManager.ENTITY_ALIAS);
     private static final Table proprietaireTable = Table.aliased("utilisateur", "proprietaire");
+    private static final Table signalantTable = Table.aliased("utilisateur", "signalant");
 
     private final Logger log = LoggerFactory.getLogger(ObjetRepositoryInternalImpl.class);
 
@@ -78,12 +79,16 @@ class ObjetRepositoryInternalImpl extends SimpleR2dbcRepository<Objet, Long> imp
     RowsFetchSpec<Objet> createQuery(Pageable pageable, Condition whereClause) {
         List<Expression> columns = ObjetSqlHelper.getColumns(entityTable, EntityManager.ENTITY_ALIAS);
         columns.addAll(UtilisateurSqlHelper.getColumns(proprietaireTable, "proprietaire"));
+        columns.addAll(UtilisateurSqlHelper.getColumns(signalantTable, "signalant"));
         SelectFromAndJoinCondition selectFrom = Select.builder()
             .select(columns)
             .from(entityTable)
             .leftOuterJoin(proprietaireTable)
             .on(Column.create("proprietaire_id", entityTable))
-            .equals(Column.create("id", proprietaireTable));
+            .equals(Column.create("id", proprietaireTable))
+            .leftOuterJoin(signalantTable)
+            .on(Column.create("signalant_id", entityTable))
+            .equals(Column.create("id", signalantTable));
         // we do not support Criteria here for now as of https://github.com/jhipster/generator-jhipster/issues/18269
         String select = entityManager.createSelect(selectFrom, Objet.class, pageable, whereClause);
         return db.sql(select).map(this::process);
@@ -103,6 +108,7 @@ class ObjetRepositoryInternalImpl extends SimpleR2dbcRepository<Objet, Long> imp
     private Objet process(Row row, RowMetadata metadata) {
         Objet entity = objetMapper.apply(row, "e");
         entity.setProprietaire(utilisateurMapper.apply(row, "proprietaire"));
+        entity.setSignalant(utilisateurMapper.apply(row, "signalant"));
         return entity;
     }
 

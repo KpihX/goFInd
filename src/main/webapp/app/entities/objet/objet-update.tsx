@@ -32,7 +32,7 @@ export const ObjetUpdate = () => {
   const etatObjetValues = Object.keys(EtatObjet);
 
   const handleClose = () => {
-    navigate('/objets');
+    navigate('/objet');
   };
 
   useEffect(() => {
@@ -59,6 +59,7 @@ export const ObjetUpdate = () => {
       ...objetEntity,
       ...values,
       proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
+      signalant: utilisateurs.find(it => it.id.toString() === values.signalant?.toString()),
     };
 
     if (isNew) {
@@ -76,6 +77,7 @@ export const ObjetUpdate = () => {
           etat: 'VOLE',
           ...objetEntity,
           proprietaire: objetEntity?.proprietaire?.id,
+          signalant: objetEntity?.signalant?.id,
         };
 
   return (
@@ -161,7 +163,23 @@ export const ObjetUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objets" replace color="info">
+              <ValidatedField
+                id="objet-signalant"
+                name="signalant"
+                data-cy="signalant"
+                label={translate('goFindApp.objet.signalant')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {utilisateurs
+                  ? utilisateurs.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objet" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

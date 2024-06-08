@@ -155,6 +155,9 @@ export const Objet = () => {
                   <th>
                     <Translate contentKey="goFindApp.objet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th>
+                    <Translate contentKey="goFindApp.objet.signalant">Signalant</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -177,6 +180,7 @@ export const Objet = () => {
                       <Translate contentKey={`goFindApp.EtatObjet.${objet.etat}`} />
                     </td>
                     <td>{objet.proprietaire ? <Link to={`/utilisateur/${objet.proprietaire.id}`}>{objet.proprietaire.id}</Link> : ''}</td>
+                    <td>{objet.signalant ? <Link to={`/utilisateur/${objet.signalant.id}`}>{objet.signalant.id}</Link> : ''}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/objet/${objet.id}`} color="info" size="sm" data-cy="entityDetailsButton">

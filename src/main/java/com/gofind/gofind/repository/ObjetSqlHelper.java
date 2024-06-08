@@ -19,6 +19,7 @@ public class ObjetSqlHelper {
         columns.add(Column.aliased("etat", table, columnPrefix + "_etat"));
 
         columns.add(Column.aliased("proprietaire_id", table, columnPrefix + "_proprietaire_id"));
+        columns.add(Column.aliased("signalant_id", table, columnPrefix + "_signalant_id"));
         return columns;
     }
 }

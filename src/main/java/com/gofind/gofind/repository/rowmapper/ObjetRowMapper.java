@@ -34,6 +34,7 @@ public class ObjetRowMapper implements BiFunction<Row, String, Objet> {
         entity.setIdentifiant(converter.fromRow(row, prefix + "_identifiant", String.class));
         entity.setEtat(converter.fromRow(row, prefix + "_etat", EtatObjet.class));
         entity.setProprietaireId(converter.fromRow(row, prefix + "_proprietaire_id", Long.class));
+        entity.setSignalantId(converter.fromRow(row, prefix + "_signalant_id", Long.class));
         return entity;
     }
 }

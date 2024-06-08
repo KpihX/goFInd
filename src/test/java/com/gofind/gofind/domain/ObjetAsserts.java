@@ -64,6 +64,7 @@ public class ObjetAsserts {
     public static void assertObjetUpdatableRelationshipsEquals(Objet expected, Objet actual) {
         assertThat(expected)
             .as("Verify Objet relationships")
-            .satisfies(e -> assertThat(e.getProprietaire()).as("check proprietaire").isEqualTo(actual.getProprietaire()));
+            .satisfies(e -> assertThat(e.getProprietaire()).as("check proprietaire").isEqualTo(actual.getProprietaire()))
+            .satisfies(e -> assertThat(e.getSignalant()).as("check signalant").isEqualTo(actual.getSignalant()));
     }
 }

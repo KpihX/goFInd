@@ -44,6 +44,13 @@
       "relationshipName": "proprietaire",
       "relationshipSide": "right",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "utilisateur",
+      "otherEntityRelationshipName": "objectsSignales",
+      "relationshipName": "signalant",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",

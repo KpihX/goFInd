@@ -31,8 +31,12 @@ public class Utilisateur implements Serializable {
     private User login;
 
     @Transient
-    @JsonIgnoreProperties(value = { "proprietaire" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "proprietaire", "signalant" }, allowSetters = true)
     private Set<Objet> objects = new HashSet<>();
+
+    @Transient
+    @JsonIgnoreProperties(value = { "proprietaire", "signalant" }, allowSetters = true)
+    private Set<Objet> objectsSignales = new HashSet<>();
 
     @Transient
     @JsonIgnoreProperties(value = { "proprietaire", "engages" }, allowSetters = true)
@@ -119,6 +123,37 @@ public class Utilisateur implements Serializable {
     public Utilisateur removeObjects(Objet objet) {
         this.objects.remove(objet);
         objet.setProprietaire(null);
+        return this;
+    }
+
+    public Set<Objet> getObjectsSignales() {
+        return this.objectsSignales;
+    }
+
+    public void setObjectsSignales(Set<Objet> objets) {
+        if (this.objectsSignales != null) {
+            this.objectsSignales.forEach(i -> i.setSignalant(null));
+        }
+        if (objets != null) {
+            objets.forEach(i -> i.setSignalant(this));
+        }
+        this.objectsSignales = objets;
+    }
+
+    public Utilisateur objectsSignales(Set<Objet> objets) {
+        this.setObjectsSignales(objets);
+        return this;
+    }
+
+    public Utilisateur addObjectsSignales(Objet objet) {
+        this.objectsSignales.add(objet);
+        objet.setSignalant(this);
+        return this;
+    }
+
+    public Utilisateur removeObjectsSignales(Objet objet) {
+        this.objectsSignales.remove(objet);
+        objet.setSignalant(null);
         return this;
     }
 

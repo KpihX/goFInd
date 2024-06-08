@@ -1,0 +1,3 @@
+relationship OneToMany {
+    Utilisateur{objectsSignales} to Objet{signalant}
+}

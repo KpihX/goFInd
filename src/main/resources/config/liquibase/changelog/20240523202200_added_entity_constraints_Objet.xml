@@ -16,5 +16,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="utilisateur"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="signalant_id"
+                                 baseTableName="objet"
+                                 constraintName="fk_objet__signalant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="utilisateur"
+                                 />
     </changeSet>
 </databaseChangeLog>

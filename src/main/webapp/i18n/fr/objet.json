@@ -24,7 +24,8 @@
       "image": "Image",
       "identifiant": "Identifiant",
       "etat": "Etat",
-      "proprietaire": "Proprietaire"
+      "proprietaire": "Proprietaire",
+      "signalant": "Signalant"
     }
   }
 }
