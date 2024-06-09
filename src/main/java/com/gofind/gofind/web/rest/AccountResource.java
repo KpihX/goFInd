@@ -73,10 +73,10 @@ public class AccountResource {
         return userService
             .registerUser(managedUserVM, managedUserVM.getPassword())
             .doOnSuccess(user -> {
-                // mailService.sendActivationEmail(user);
                 Utilisateur newUtil = new Utilisateur();
                 newUtil.setLogin(user);
                 newUtil.setTelephone(telephone);
+                mailService.sendActivationEmail(user);
                 utilisateurService.save(newUtil).doOnSuccess(util -> log.debug("Utilisateur created: {}", util)).subscribe(); // S'abonner pour exécuter l'opération de sauvegarde
             })
             .then();

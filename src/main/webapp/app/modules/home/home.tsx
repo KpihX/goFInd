@@ -23,13 +23,56 @@ export const Home = () => {
           <Translate contentKey="home.subtitle">This is your homepage</Translate>
         </p>
         {account?.login ? (
-          <div>
-            <Alert color="success">
-              <Translate contentKey="home.logged.message" interpolate={{ username: account.login }}>
-                You are logged in as user {account.login}.
-              </Translate>
-            </Alert>
-          </div>
+          <>
+            <div>
+              <Alert color="success">
+                <Translate contentKey="home.logged.message" interpolate={{ username: account.login }}>
+                  You are logged in as user {account.login}.
+                </Translate>
+              </Alert>
+            </div>
+            <div>
+              {/* <Alert color="warning">
+            <Translate contentKey="global.messages.info.authenticated.prefix">If you want to </Translate>
+
+            <Link to="/login" className="alert-link">
+              <Translate contentKey="global.messages.info.authenticated.link"> sign in</Translate>
+            </Link>
+            <Translate contentKey="global.messages.info.authenticated.suffix">
+              , you can try the default accounts:
+              <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
+              <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
+            </Translate>
+          </Alert> */}
+
+              <p className="lead">
+                <p>Concrètement, goFind permet:</p>
+                <ol>
+                  <li>
+                    <p>La gestion des objets de vente (téléphone, laptop, ..), ceci dans la mésure où vous donne la possibilité de: </p>
+                    <ul>
+                      <li>signaler un objet volé (téléphone, laptop, ..) ;</li>
+                      <li>vérifier si un objet de revente est issu d'un vol ou pas.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <p>La gestion des itinéraires, ceci dans la mésure où vous donne la possibilité de: </p>
+                    <ul>
+                      <li>proposer un itinéraire et avoir des clients ;</li>
+                      <li>de souscrire à un itinéraire de voyage.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <p>La gestion des locations, ceci dans la mésure où vous donne la possibilité de: </p>
+                    <ul>
+                      <li>mettre une ou plusieurs pièces d'une de vos maisons en location ;</li>
+                      <li>louer une ou plusieurs pièces d'une maison en location</li>
+                    </ul>
+                  </li>
+                </ol>
+              </p>
+            </div>
+          </>
         ) : (
           <div>
             {/* <Alert color="warning">
