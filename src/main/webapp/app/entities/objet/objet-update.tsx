@@ -31,6 +31,8 @@ export const ObjetUpdate = () => {
   const typeObjetValues = Object.keys(TypeObjet);
   const etatObjetValues = Object.keys(EtatObjet);
 
+  const account = useAppSelector(state => state.authentication.account);
+
   const handleClose = () => {
     navigate('/objects');
   };
@@ -57,17 +59,19 @@ export const ObjetUpdate = () => {
 
     // console.log("* values:", values)
 
-    const signalant = utilisateurs.find(it => it.id.toString() === values.signalant?.toString());
+    // const signalant = utilisateurs.find(it => it.id.toString() === values.signalant?.toString());
+
+    const proprietaire = utilisateurs.find(it => it?.loginId?.toString() === account?.id?.toString());
 
     const entity = {
+      etat: 'VOLE',
+      proprietaire,
+      proprietaireId: proprietaire.id,
       ...objetEntity,
       ...values,
-      proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
-      signalant,
-      signalantId: signalant?.id,
     };
 
-    // console.log("* entity:", entity)
+    console.log('* entity:', entity);
 
     if (isNew) {
       dispatch(createEntity(entity));
@@ -79,13 +83,15 @@ export const ObjetUpdate = () => {
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? {
+          type: 'TELEPHONE',
+        }
       : {
           type: 'TELEPHONE',
           etat: 'VOLE',
           ...objetEntity,
-          proprietaire: objetEntity?.proprietaire?.id,
-          signalant: objetEntity?.signalant?.id,
+          // proprietaire: objetEntity?.proprietaire?.id,
+          // signalant: objetEntity?.signalant?.id,
         };
 
   return (
@@ -148,17 +154,20 @@ export const ObjetUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField label={translate('goFindApp.objet.etat')} id="objet-etat" name="etat" data-cy="etat" type="select">
-                {etatObjetValues.map(etatObjet => (
-                  <option value={etatObjet} key={etatObjet}>
-                    {translate('goFindApp.EtatObjet.' + etatObjet)}
-                  </option>
-                ))}
-              </ValidatedField>
-              <ValidatedField
+              {!isNew && (
+                <ValidatedField label={translate('goFindApp.objet.etat')} id="objet-etat" name="etat" data-cy="etat" type="select">
+                  {etatObjetValues.map(etatObjet => (
+                    <option value={etatObjet} key={etatObjet}>
+                      {translate('goFindApp.EtatObjet.' + etatObjet)}
+                    </option>
+                  ))}
+                </ValidatedField>
+              )}
+              {/* <ValidatedField
                 id="objet-proprietaire"
                 name="proprietaire"
                 data-cy="proprietaire"
+                readOnly
                 label={translate('goFindApp.objet.proprietaire')}
                 type="select"
               >
@@ -181,12 +190,12 @@ export const ObjetUpdate = () => {
                 <option value="" key="0" />
                 {utilisateurs
                   ? utilisateurs.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
+                      <option value={otherEntity.id} disabled key={otherEntity.id}>
                         {otherEntity.id}
                       </option>
                     ))
                   : null}
-              </ValidatedField>
+              </ValidatedField> */}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objects" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

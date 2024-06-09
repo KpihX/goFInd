@@ -28,6 +28,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { updateEntity } from 'app/entities/objet/objet.reducer';
 import { toast } from 'react-toastify';
+import { getEntities } from 'app/entities/utilisateur/utilisateur.reducer';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -51,16 +52,18 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
   const foundInit = etat === 'RETROUVE';
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
   const objetEntity = useAppSelector(state => state.objet.entity);
-  const updateUtilisateurs = useAppSelector(state => state.utilisateur.updateSuccess);
+  const [updateUtilisateurs, setUpdateUtilisateurs] = React.useState(false);
   const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    // console.info('You clicked the Chip.');
+    toast.success('Vous pouvez supprimer votre objet en toute sécurité après être entré en possession!');
   };
 
   React.useEffect(() => {
     setFound(etat === 'RETROUVE');
+    dispatch(getEntities({}));
+    setUpdateUtilisateurs(true);
   }, []);
 
   // eslint-disable-next-line complexity
@@ -93,7 +96,7 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
   };
 
   const handleDelete = () => {
-    setFound(false);
+    toast.success('Vous pouvez supprimer votre objet en toute sécurité après être entré en possession!');
   };
 
   const handleReport = () => {
@@ -128,9 +131,9 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
       });
     } else {
       const signalantNew = utilisateurs.find(it => it.loginId.toString() === account.id.toString());
-      // console.log("* utilisateurs:", utilisateurs);
-      // console.log("* account:", account);
-      // console.log("** found:", found);
+      console.log('* utilisateurs:', utilisateurs);
+      console.log('* account:', account);
+      console.log('** found:', found);
       saveEntity({
         etatNew: 'RETROUVE',
         signalantNew,
@@ -146,6 +149,8 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
     // console.log("* libelle", libelle);
     // console.log("- proprio", proprietaire.loginId);
     // console.log("- account", account.id);
+    // console.log("- found", found);
+    // console.log("- signalant", signalant);
   }, []);
 
   return (
@@ -168,9 +173,9 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
             title={libelle}
             subheader={`id:${identifiant}`}
           />
-          <CardMedia component="img" height="194" image={image} alt="libelle" />
+          <CardMedia component="img" height="400" image={image} alt="libelle" />
           <CardContent>
-            <p>{proprietaire ? <Link to={`/utilisateur/${proprietaire.id}`}>{proprietaire.id}</Link> : ''}</p>
+            {/* <p>{proprietaire ? <Link to={`/utilisateur/${proprietaire.id}`}>{proprietaire.login}</Link> : ''}</p> */}
             <Typography variant="body2" color="text.secondary">
               {description}
             </Typography>
