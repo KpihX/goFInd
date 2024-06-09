@@ -47,10 +47,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 export function Object({ id, libelle, description, identifiant, image, etat, type, proprietaire, signalant }) {
   const [expanded, setExpanded] = React.useState(false);
   const account = useAppSelector(state => state.authentication.account);
-  const [found, setFound] = React.useState(etat === 'RETROUVE');
+  const [found, setFound]: [boolean, any] = React.useState(etat === 'RETROUVE');
   const foundInit = etat === 'RETROUVE';
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
   const objetEntity = useAppSelector(state => state.objet.entity);
+  const updateUtilisateurs = useAppSelector(state => state.utilisateur.updateSuccess);
   const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
   const dispatch = useAppDispatch();
 
@@ -85,7 +86,10 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
 
     // console.log("* entity:", entity)
 
-    dispatch(updateEntity(entity));
+    // console.log("* found:", found);
+    const report = found ? 'report' : 'unreport';
+    // console.log("* report:", report);
+    dispatch(updateEntity({ entity, report }));
   };
 
   const handleDelete = () => {
@@ -93,11 +97,6 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
   };
 
   const handleReport = () => {
-    const signalantNew = utilisateurs.find(it => it.loginId.toString() === account.id.toString());
-    saveEntity({
-      etatNew: 'RETROUVE',
-      signalantNew,
-    });
     setFound(true);
   };
 
@@ -114,12 +113,30 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
   }, [updateSuccess, found]);
 
   const handleUnreport = () => {
-    saveEntity({
-      etatNew: 'VOLE',
-      signalantNew: null,
-    });
     setFound(false);
   };
+
+  React.useEffect(() => {
+    if (found === foundInit) {
+      return;
+    }
+    if (!found) {
+      // console.log("** found:", found);
+      saveEntity({
+        etatNew: 'VOLE',
+        signalantNew: null,
+      });
+    } else {
+      const signalantNew = utilisateurs.find(it => it.loginId.toString() === account.id.toString());
+      // console.log("* utilisateurs:", utilisateurs);
+      // console.log("* account:", account);
+      // console.log("** found:", found);
+      saveEntity({
+        etatNew: 'RETROUVE',
+        signalantNew,
+      });
+    }
+  }, [found, updateUtilisateurs]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);

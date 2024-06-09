@@ -132,6 +132,7 @@ server:
     session:
       cookie:
         http-only: true
+  timezone: Africa/Douala
 
 springdoc:
   show-actuator: true

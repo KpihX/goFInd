@@ -44,8 +44,8 @@ export const createEntity = createAsyncThunk(
 
 export const updateEntity = createAsyncThunk(
   'objet/update_entity',
-  async (entity: IObjet, thunkAPI) => {
-    return axios.put<IObjet>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  async ({ entity, report }: { entity: IObjet; report: string }) => {
+    return axios.put<IObjet>(`${apiUrl}/${entity.id}?report=${report}`, cleanEntity(entity));
   },
   { serializeError: serializeAxiosError },
 );

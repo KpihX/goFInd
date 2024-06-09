@@ -38,6 +38,8 @@ public interface UserRepository extends R2dbcRepository<User, Long>, UserReposit
 
     Mono<User> findOneByLogin(String login);
 
+    Mono<User> findOneById(Long id);
+
     Flux<User> findAllByIdNotNull(Pageable pageable);
 
     Flux<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
@@ -61,6 +63,8 @@ interface DeleteExtended<T> {
 interface UserRepositoryInternal extends DeleteExtended<User> {
     Mono<User> findOneWithAuthoritiesByLogin(String login);
 
+    Mono<User> findOneWithAuthoritiesById(Long id);
+
     Mono<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
     Flux<User> findAllWithAuthorities(Pageable pageable);
@@ -81,6 +85,11 @@ class UserRepositoryInternalImpl implements UserRepositoryInternal {
     @Override
     public Mono<User> findOneWithAuthoritiesByLogin(String login) {
         return findOneWithAuthoritiesBy("login", login);
+    }
+
+    @Override
+    public Mono<User> findOneWithAuthoritiesById(Long id) {
+        return findOneWithAuthoritiesBy("id", id);
     }
 
     @Override

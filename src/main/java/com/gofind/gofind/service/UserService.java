@@ -309,6 +309,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Mono<User> getUserWithAuthoritiesById(Long id) {
+        return userRepository.findOneWithAuthoritiesById(id);
+    }
+
+    @Transactional(readOnly = true)
     public Mono<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }

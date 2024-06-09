@@ -72,7 +72,7 @@ export const ObjetUpdate = () => {
     if (isNew) {
       dispatch(createEntity(entity));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity({ entity, report: 'ras' }));
       // console.log("* entity:", entity)
     }
   };

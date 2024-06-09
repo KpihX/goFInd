@@ -4,15 +4,15 @@
       "home": {
         "title": "Objets",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Objet",
-        "createOrEditLabel": "Créer ou éditer un Objet",
+        "createLabel": "Créer un nouveau objet",
+        "createOrEditLabel": "Créer ou éditer un objet",
         "notFound": "Aucun Objet trouvé"
       },
-      "created": "Un nouveau Objet a été créé avec l'identifiant {{ param }}",
+      "created": "Un nouveau objet a été créé avec l'identifiant {{ param }}",
       "updated": "L' objet avec l'identifiant {{ param }} a été mis à jour",
       "deleted": "L' objet avec l'identifiant {{ param }} a été supprimé",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Objet {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer l' objet {{ id }} ?"
       },
       "detail": {
         "title": "Objet"
