@@ -229,7 +229,9 @@ export const Objects = () => {
                     identifiant={objet.identifiant}
                     image={objet.image}
                     etat={objet.etat}
+                    type={objet.type}
                     proprietaire={objet.proprietaire}
+                    signalant={objet.signalant}
                     description={objet.description}
                   />
                 ) : null,

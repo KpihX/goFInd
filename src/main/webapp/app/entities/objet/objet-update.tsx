@@ -32,7 +32,7 @@ export const ObjetUpdate = () => {
   const etatObjetValues = Object.keys(EtatObjet);
 
   const handleClose = () => {
-    navigate('/objet');
+    navigate('/objects');
   };
 
   useEffect(() => {
@@ -55,17 +55,25 @@ export const ObjetUpdate = () => {
       values.id = Number(values.id);
     }
 
+    // console.log("* values:", values)
+
+    const signalant = utilisateurs.find(it => it.id.toString() === values.signalant?.toString());
+
     const entity = {
       ...objetEntity,
       ...values,
       proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
-      signalant: utilisateurs.find(it => it.id.toString() === values.signalant?.toString()),
+      signalant,
+      signalantId: signalant?.id,
     };
+
+    // console.log("* entity:", entity)
 
     if (isNew) {
       dispatch(createEntity(entity));
     } else {
       dispatch(updateEntity(entity));
+      // console.log("* entity:", entity)
     }
   };
 
@@ -179,7 +187,7 @@ export const ObjetUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objet" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objects" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

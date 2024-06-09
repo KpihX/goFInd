@@ -9,8 +9,8 @@
         "notFound": "Aucun Objet trouvé"
       },
       "created": "Un nouveau Objet a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Objet avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Objet avec l'identifiant {{ param }} a été supprimé",
+      "updated": "L' objet avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "L' objet avec l'identifiant {{ param }} a été supprimé",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer le Objet {{ id }} ?"
       },
