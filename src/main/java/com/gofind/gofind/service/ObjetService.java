@@ -39,7 +39,7 @@ public interface ObjetService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Flux<Objet> findAll(Pageable pageable);
+    Flux<Objet> findAll(Pageable pageable, String search, String seachType);
 
     /**
      * Returns the number of objets available.

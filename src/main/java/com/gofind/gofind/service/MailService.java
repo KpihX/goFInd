@@ -1,6 +1,8 @@
 package com.gofind.gofind.service;
 
+import com.gofind.gofind.domain.Objet;
 import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.Utilisateur;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
@@ -37,16 +39,20 @@ public class MailService {
 
     private final SpringTemplateEngine templateEngine;
 
+    private final UserService userService;
+
     public MailService(
         JHipsterProperties jHipsterProperties,
         JavaMailSender javaMailSender,
         MessageSource messageSource,
-        SpringTemplateEngine templateEngine
+        SpringTemplateEngine templateEngine,
+        UserService userService
     ) {
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
+        this.userService = userService;
     }
 
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -100,6 +106,77 @@ public class MailService {
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, locale);
         this.sendEmailSync(user.getEmail(), subject, content, false, true);
+    }
+
+    public void sendObjetReportEmail(Objet objet) {
+        Utilisateur proprietaireUtil = objet.getProprietaire();
+        // User proprietaireUser = proprietaireUtil.getLogin();
+        // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+        // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+        Long loginId = proprietaireUtil.getLoginId();
+
+        Utilisateur signalant = objet.getSignalant();
+
+        String subject = "Signalement d'un objet retrouvé";
+        String content =
+            "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+            "Nous vous écrivons pour vous signaler que votre objet volé d'informations:\n" +
+            "{ Libelle: " +
+            objet.getLibelle() +
+            "\n" +
+            ", Identifiant: " +
+            objet.getIdentifiant() +
+            "\n" +
+            "} aurait été retrouvé par un de nos utilisateurs dont les informations pour entrer en contact avec lui suivent: \n" +
+            "{ Nom: " +
+            signalant.getLogin().getLogin() +
+            "\n" +
+            ", Email: " +
+            signalant.getLogin().getEmail() +
+            "\n" +
+            ", Telephone: " +
+            signalant.getTelephone() +
+            "\n\n" +
+            "}. Cordialement,\n" +
+            "L'equipe goFind!";
+
+        userService
+            .getUserWithAuthoritiesById(loginId)
+            .subscribe(user -> {
+                log.debug("*** Sending a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+                this.sendEmail(user.getEmail(), subject, content, false, true);
+                log.debug("*** Sucessful sending of a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+            });
+    }
+
+    public void sendObjetUnReportEmail(Objet objet) {
+        Utilisateur proprietaireUtil = objet.getProprietaire();
+        // User proprietaireUser = proprietaireUtil.getLogin();
+        // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+        // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+        Long loginId = proprietaireUtil.getLoginId();
+
+        String subject = "Erreur de Signalement d'un objet retrouvé";
+        String content =
+            "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+            "Nous vous écrivons pour vous signaler que le message du précédent mail par rapport à votre objet volé d'informations:\n" +
+            "{ Libelle: " +
+            objet.getLibelle() +
+            "\n" +
+            ", Identifiant: " +
+            objet.getIdentifiant() +
+            "\n" +
+            "} s'est avéré erroné! Un utilisateur a fait une fausse manipulation! Toutes nos excuses pour ce désagrément!\n" +
+            "}. Cordialement,\n" +
+            "L'equipe goFind!";
+
+        userService
+            .getUserWithAuthoritiesById(loginId)
+            .subscribe(user -> {
+                log.debug("*** Sending a unreport mail to '{}' about its object {}", user.getEmail(), objet);
+                this.sendEmail(user.getEmail(), subject, content, false, true);
+                log.debug("*** Sucessful sending of a unreport mail to '{}' about its object {}", user.getEmail(), objet);
+            });
     }
 
     public void sendActivationEmail(User user) {

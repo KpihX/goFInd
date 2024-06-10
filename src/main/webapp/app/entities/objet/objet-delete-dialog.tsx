@@ -25,7 +25,7 @@ export const ObjetDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
 
   const handleClose = () => {
-    navigate('/objet');
+    navigate('/objects');
   };
 
   useEffect(() => {

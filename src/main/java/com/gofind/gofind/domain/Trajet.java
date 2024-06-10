@@ -45,11 +45,11 @@ public class Trajet implements Serializable {
     private Float prix;
 
     @Transient
-    @JsonIgnoreProperties(value = { "login", "objects", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "login", "objects", "objectsSignales", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
     private Utilisateur proprietaire;
 
     @Transient
-    @JsonIgnoreProperties(value = { "login", "objects", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "login", "objects", "objectsSignales", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
     private Set<Utilisateur> engages = new HashSet<>();
 
     @Column("proprietaire_id")

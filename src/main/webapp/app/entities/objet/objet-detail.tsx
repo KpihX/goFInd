@@ -71,6 +71,10 @@ export const ObjetDetail = () => {
             <Translate contentKey="goFindApp.objet.proprietaire">Proprietaire</Translate>
           </dt>
           <dd>{objetEntity.proprietaire ? objetEntity.proprietaire.id : ''}</dd>
+          <dt>
+            <Translate contentKey="goFindApp.objet.signalant">Signalant</Translate>
+          </dt>
+          <dd>{objetEntity.signalant ? objetEntity.signalant.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/objet" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

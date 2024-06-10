@@ -1,9 +1,11 @@
 package com.gofind.gofind.web.rest;
 
+import com.gofind.gofind.domain.Utilisateur;
 import com.gofind.gofind.repository.UserRepository;
 import com.gofind.gofind.security.SecurityUtils;
 import com.gofind.gofind.service.MailService;
 import com.gofind.gofind.service.UserService;
+import com.gofind.gofind.service.UtilisateurService;
 import com.gofind.gofind.service.dto.AdminUserDTO;
 import com.gofind.gofind.service.dto.PasswordChangeDTO;
 import com.gofind.gofind.web.rest.errors.*;
@@ -40,10 +42,18 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    private final UtilisateurService utilisateurService;
+
+    public AccountResource(
+        UserRepository userRepository,
+        UserService userService,
+        MailService mailService,
+        UtilisateurService utilisateurService
+    ) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.utilisateurService = utilisateurService;
     }
 
     /**
@@ -56,11 +66,20 @@ public class AccountResource {
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+    public Mono<Void> registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM, @RequestParam(required = true) String telephone) {
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        return userService.registerUser(managedUserVM, managedUserVM.getPassword()).doOnSuccess(mailService::sendActivationEmail).then();
+        return userService
+            .registerUser(managedUserVM, managedUserVM.getPassword())
+            .doOnSuccess(user -> {
+                Utilisateur newUtil = new Utilisateur();
+                newUtil.setLogin(user);
+                newUtil.setTelephone(telephone);
+                mailService.sendActivationEmail(user);
+                utilisateurService.save(newUtil).doOnSuccess(util -> log.debug("Utilisateur created: {}", util)).subscribe(); // S'abonner pour exécuter l'opération de sauvegarde
+            })
+            .then();
     }
 
     /**

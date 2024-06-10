@@ -34,4 +34,16 @@ class ObjetTest {
         objet.proprietaire(null);
         assertThat(objet.getProprietaire()).isNull();
     }
+
+    @Test
+    void signalantTest() throws Exception {
+        Objet objet = getObjetRandomSampleGenerator();
+        Utilisateur utilisateurBack = getUtilisateurRandomSampleGenerator();
+
+        objet.setSignalant(utilisateurBack);
+        assertThat(objet.getSignalant()).isEqualTo(utilisateurBack);
+
+        objet.signalant(null);
+        assertThat(objet.getSignalant()).isNull();
+    }
 }

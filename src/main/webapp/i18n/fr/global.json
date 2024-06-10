@@ -52,7 +52,9 @@
       "confirmpassword.label": "Confirmation du nouveau mot de passe",
       "confirmpassword.placeholder": "Confirmation du nouveau mot de passe",
       "email.label": "Email",
-      "email.placeholder": "Votre email"
+      "email.placeholder": "Votre email",
+      "telephone.label": "Téléphone",
+      "telephone.placeholder": "Votre numéro de Téléphone"
     },
     "messages": {
       "info": {
@@ -63,7 +65,7 @@
         },
         "register": {
           "noaccount": "Vous n'avez pas encore de compte ?",
-          "link": "Créer un compte"
+          "link": "Créer en un, et profiter à fond de notre plateforme !"
         }
       },
       "error": {
@@ -86,6 +88,10 @@
           "minlength": "Votre email doit comporter au moins 5 caractères.",
           "maxlength": "Votre email ne doit pas comporter plus de 50 caractères.",
           "invalid": "Votre email n'est pas valide."
+        },
+        "telephone": {
+          "required": "Votre numéro de téléphone est requis.",
+          "invalid": "Votre numéro de téléphone n'est pas valide."
         }
       }
     },
@@ -108,7 +114,9 @@
       "open": "Ouvrir",
       "save": "Sauvegarder",
       "view": "Voir",
-      "show": "Show {{otherEntity}}"
+      "show": "Show {{otherEntity}}",
+      "report": "Signaler",
+      "unreport": "Se retracter"
     },
     "detail": {
       "field": "Champs",
@@ -153,5 +161,5 @@
       "not.image": "Le fichier doit être une image et non du type \"{{ fileType }}\""
     }
   },
-  "footer": "Ceci est votre pied de page"
+  "footer": "L'équipe GoFind!"
 }

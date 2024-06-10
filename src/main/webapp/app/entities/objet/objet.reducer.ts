@@ -20,8 +20,8 @@ const apiUrl = 'api/objets';
 
 // Actions
 
-export const getEntities = createAsyncThunk('objet/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+export const getEntities = createAsyncThunk('objet/fetch_entity_list', async ({ page, size, sort, search, searchType }: IQueryParams) => {
+  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}search=${search ? search : ''}&searchType=${searchType ? searchType : 'libelle'}&cacheBuster=${new Date().getTime()}`;
   return axios.get<IObjet[]>(requestUrl);
 });
 
@@ -44,8 +44,8 @@ export const createEntity = createAsyncThunk(
 
 export const updateEntity = createAsyncThunk(
   'objet/update_entity',
-  async (entity: IObjet, thunkAPI) => {
-    return axios.put<IObjet>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  async ({ entity, report }: { entity: IObjet; report: string }) => {
+    return axios.put<IObjet>(`${apiUrl}/${entity.id}?report=${report}`, cleanEntity(entity));
   },
   { serializeError: serializeAxiosError },
 );

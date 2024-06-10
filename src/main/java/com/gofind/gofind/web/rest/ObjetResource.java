@@ -1,7 +1,10 @@
 package com.gofind.gofind.web.rest;
 
 import com.gofind.gofind.domain.Objet;
+// import com.gofind.gofind.domain.User;
+// import com.gofind.gofind.domain.Utilisateur;
 import com.gofind.gofind.repository.ObjetRepository;
+import com.gofind.gofind.service.MailService;
 import com.gofind.gofind.service.ObjetService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -45,7 +48,10 @@ public class ObjetResource {
 
     private final ObjetRepository objetRepository;
 
-    public ObjetResource(ObjetService objetService, ObjetRepository objetRepository) {
+    private final MailService mailService;
+
+    public ObjetResource(ObjetService objetService, ObjetRepository objetRepository, MailService mailService) {
+        this.mailService = mailService;
         this.objetService = objetService;
         this.objetRepository = objetRepository;
     }
@@ -89,6 +95,7 @@ public class ObjetResource {
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Objet>> updateObjet(
         @PathVariable(value = "id", required = false) final Long id,
+        @RequestParam(required = false) String report,
         @Valid @RequestBody Objet objet
     ) throws URISyntaxException {
         log.debug("REST request to update Objet : {}, {}", id, objet);
@@ -108,6 +115,15 @@ public class ObjetResource {
 
                 return objetService
                     .update(objet)
+                    .doOnSuccess(objetObtained -> {
+                        if (report.equals("report")) {
+                            log.debug("*** Sending objet report email: {}", objetObtained);
+                            mailService.sendObjetReportEmail(objetObtained);
+                        } else if (report.equals("unreport")) {
+                            log.debug("*** Sending objet unreport email: {}", objetObtained);
+                            mailService.sendObjetUnReportEmail(objetObtained);
+                        }
+                    })
                     .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                     .map(
                         result ->
@@ -172,12 +188,16 @@ public class ObjetResource {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<Objet>>> getAllObjets(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = true) String search,
+        @RequestParam(required = true) String searchType,
         ServerHttpRequest request
     ) {
-        log.debug("REST request to get a page of Objets");
+        log.debug("*** REST request to get a page of Objets");
+        // log.debug("*** Search: " + search);
+        // log.debug("*** SearchType: " + searchType);
         return objetService
             .countAll()
-            .zipWith(objetService.findAll(pageable).collectList())
+            .zipWith(objetService.findAll(pageable, search, searchType).collectList())
             .map(
                 countWithEntities ->
                     ResponseEntity.ok()

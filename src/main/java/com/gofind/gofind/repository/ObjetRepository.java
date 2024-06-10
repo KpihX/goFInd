@@ -22,11 +22,17 @@ public interface ObjetRepository extends ReactiveCrudRepository<Objet, Long>, Ob
     @Query("SELECT * FROM objet entity WHERE entity.proprietaire_id IS NULL")
     Flux<Objet> findAllWhereProprietaireIsNull();
 
+    @Query("SELECT * FROM objet entity WHERE entity.signalant_id = :id")
+    Flux<Objet> findBySignalant(Long id);
+
+    @Query("SELECT * FROM objet entity WHERE entity.signalant_id IS NULL")
+    Flux<Objet> findAllWhereSignalantIsNull();
+
     @Override
     <S extends Objet> Mono<S> save(S entity);
 
     @Override
-    Flux<Objet> findAll();
+    Flux<Objet> findAll(String search, String searchType);
 
     @Override
     Mono<Objet> findById(Long id);
@@ -38,9 +44,9 @@ public interface ObjetRepository extends ReactiveCrudRepository<Objet, Long>, Ob
 interface ObjetRepositoryInternal {
     <S extends Objet> Mono<S> save(S entity);
 
-    Flux<Objet> findAllBy(Pageable pageable);
+    Flux<Objet> findAllBy(Pageable pageable, String search, String searchType);
 
-    Flux<Objet> findAll();
+    Flux<Objet> findAll(String search, String searchType);
 
     Mono<Objet> findById(Long id);
     // this is not supported at the moment because of https://github.com/jhipster/generator-jhipster/issues/18269

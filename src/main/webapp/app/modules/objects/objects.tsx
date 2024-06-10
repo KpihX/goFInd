@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { translate } from 'react-jhipster';
-import { TypeObjet } from 'app/shared/model/enumerations/type-objet.model';
+import { GenTypeObjet } from 'app/shared/model/enumerations/type-objet.model';
 import { Button as Button2 } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputAdornment } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Object as Objet } from './object';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -20,8 +24,15 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities, reset } from 'app/entities/objet/objet.reducer';
 
 export const Objects = () => {
+  const [currentSearch, setCurrentSearch] = useState('');
   const [search, setSearch] = useState('');
-  const typeObjetValues = Object.keys(TypeObjet);
+  const typeObjetValues = Object.keys(GenTypeObjet);
+  const [currentTypeObjet, setCurrentTypeObjet] = useState(Object.keys(GenTypeObjet)[0]);
+  const [typeSearch, setTypeSearch] = React.useState('libelle'); // ou 'identifiant
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setTypeSearch(event.target.value);
+  };
 
   const dispatch = useAppDispatch();
 
@@ -43,6 +54,8 @@ export const Objects = () => {
         page: paginationState.activePage - 1,
         size: paginationState.itemsPerPage,
         sort: `${paginationState.sort},${paginationState.order}`,
+        search: currentSearch,
+        searchType: typeSearch,
       }),
     );
   };
@@ -68,7 +81,7 @@ export const Objects = () => {
 
   useEffect(() => {
     getAllEntities();
-  }, [paginationState.activePage]);
+  }, [paginationState.activePage, search, typeSearch]);
 
   const handleLoadMore = () => {
     if ((window as any).pageYOffset > 0) {
@@ -111,6 +124,12 @@ export const Objects = () => {
     }
   };
 
+  React.useEffect(() => {
+    if (currentSearch === '') {
+      setSearch('');
+    }
+  }, [currentSearch]);
+
   return (
     <div className="flex flex-col">
       <Stack
@@ -121,30 +140,62 @@ export const Objects = () => {
           paddingY: '1rem',
         }}
       >
-        {typeObjetValues.map(typeObjet => (
-          <Button2 key={typeObjet}>{translate('goFindApp.TypeObjet.' + typeObjet)}</Button2>
-        ))}
+        {typeObjetValues.map(typeObjet =>
+          currentTypeObjet === typeObjet ? (
+            <Button2
+              key={typeObjet}
+              variant="contained"
+              onClick={() => {
+                setCurrentTypeObjet(typeObjet);
+              }}
+            >
+              {translate('goFindApp.TypeObjet.' + typeObjet)}
+            </Button2>
+          ) : (
+            <Button2
+              key={typeObjet}
+              variant="outlined"
+              onClick={() => {
+                setCurrentTypeObjet(typeObjet);
+              }}
+            >
+              {translate('goFindApp.TypeObjet.' + typeObjet)}
+            </Button2>
+          ),
+        )}
       </Stack>
       <div className="flex flex-row">
         <TextField
           variant="outlined"
           sx={{ ml: 1 }}
-          placeholder="Rechercher"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
+          placeholder="Rechercher un objet ..."
+          value={currentSearch}
+          onChange={e => setCurrentSearch(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Button
-                  variant="contained"
-                  // onClick={() => console.log('search', search)}
-                >
+                <Button2 variant="contained" onClick={() => setSearch(currentSearch)}>
                   <FontAwesomeIcon icon="search" />
-                </Button>
+                </Button2>
               </InputAdornment>
             ),
           }}
         />
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-select-small-label">Type de recherche</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={typeSearch}
+            label="Type de recherche"
+            onChange={handleChange}
+          >
+            <MenuItem value="libelle">Libelle</MenuItem>
+            <MenuItem value="identifiant">Identifiant</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+      <div>
         <h2 id="objet-heading" data-cy="ObjetHeading">
           <div className="d-flex justify-content-end">
             <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
@@ -168,16 +219,22 @@ export const Objects = () => {
       >
         {objetList && objetList.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
-            {objetList.map((objet, i) => (
-              <Objet
-                key={`entity-${i}`}
-                id={objet.id}
-                libelle={objet.libelle}
-                identifiant={objet.identifiant}
-                image={objet.image}
-                proprietaire={objet.proprietaire}
-                description={objet.description}
-              />
+            {objetList.map(
+              (objet, i) =>
+                objet.type === currentTypeObjet || currentTypeObjet === Object.keys(GenTypeObjet)[0] ? (
+                  <Objet
+                    key={`entity-${i}`}
+                    id={objet.id}
+                    libelle={objet.libelle}
+                    identifiant={objet.identifiant}
+                    image={objet.image}
+                    etat={objet.etat}
+                    type={objet.type}
+                    proprietaire={objet.proprietaire}
+                    signalant={objet.signalant}
+                    description={objet.description}
+                  />
+                ) : null,
               // <div key={`entity-${i}`} data-cy="entityTable">
               //   <div>
               //     <Button tag={Link} to={`/objet/${objet.id}`} color="link" size="sm">
@@ -223,7 +280,7 @@ export const Objects = () => {
               //     </div>
               //   </div>
               // </div>
-            ))}
+            )}
           </div>
         ) : (
           !loading && (

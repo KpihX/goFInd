@@ -38,7 +38,7 @@ public class Maison implements Serializable {
     private Set<Piece> pieces = new HashSet<>();
 
     @Transient
-    @JsonIgnoreProperties(value = { "login", "objects", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "login", "objects", "objectsSignales", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
     private Utilisateur proprietaire;
 
     @Transient

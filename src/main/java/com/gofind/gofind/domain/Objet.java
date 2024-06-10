@@ -46,11 +46,18 @@ public class Objet implements Serializable {
     private EtatObjet etat;
 
     @Transient
-    @JsonIgnoreProperties(value = { "login", "objects", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "login", "objects", "objectsSignales", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
     private Utilisateur proprietaire;
+
+    @Transient
+    @JsonIgnoreProperties(value = { "login", "objects", "objectsSignales", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
+    private Utilisateur signalant;
 
     @Column("proprietaire_id")
     private Long proprietaireId;
+
+    @Column("signalant_id")
+    private Long signalantId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -159,12 +166,34 @@ public class Objet implements Serializable {
         return this;
     }
 
+    public Utilisateur getSignalant() {
+        return this.signalant;
+    }
+
+    public void setSignalant(Utilisateur utilisateur) {
+        this.signalant = utilisateur;
+        this.signalantId = utilisateur != null ? utilisateur.getId() : null;
+    }
+
+    public Objet signalant(Utilisateur utilisateur) {
+        this.setSignalant(utilisateur);
+        return this;
+    }
+
     public Long getProprietaireId() {
         return this.proprietaireId;
     }
 
     public void setProprietaireId(Long utilisateur) {
         this.proprietaireId = utilisateur;
+    }
+
+    public Long getSignalantId() {
+        return this.signalantId;
+    }
+
+    public void setSignalantId(Long utilisateur) {
+        this.signalantId = utilisateur;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

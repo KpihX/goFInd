@@ -126,6 +126,7 @@ public class UserService {
                     newUser.setLangKey(userDTO.getLangKey());
                     // new user is not active
                     newUser.setActivated(false);
+                    // newUser.setActivated(true);
                     // new user gets registration key
                     newUser.setActivationKey(RandomUtil.generateActivationKey());
                     return newUser;
@@ -305,6 +306,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public Mono<User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneWithAuthoritiesByLogin(login);
+    }
+
+    @Transactional(readOnly = true)
+    public Mono<User> getUserWithAuthoritiesById(Long id) {
+        return userRepository.findOneWithAuthoritiesById(id);
     }
 
     @Transactional(readOnly = true)

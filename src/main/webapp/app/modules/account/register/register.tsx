@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Translate, translate, ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
 import { Row, Col, Alert, Button } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -11,6 +11,7 @@ import { handleRegister, reset } from './register.reducer';
 export const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
+  const [tel, setTel] = useState('');
 
   useEffect(
     () => () => {
@@ -21,8 +22,9 @@ export const RegisterPage = () => {
 
   const currentLocale = useAppSelector(state => state.locale.currentLocale);
 
-  const handleValidSubmit = ({ username, email, firstPassword }) => {
-    dispatch(handleRegister({ login: username, email, password: firstPassword, langKey: currentLocale }));
+  const handleValidSubmit = ({ username, telephone, email, firstPassword }) => {
+    dispatch(handleRegister({ login: username, telephone, email, password: firstPassword, langKey: currentLocale }));
+    setTel(telephone);
   };
 
   const updatePassword = event => setPassword(event.target.value);
@@ -32,6 +34,7 @@ export const RegisterPage = () => {
   useEffect(() => {
     if (successMessage) {
       toast.success(translate(successMessage));
+      // toast.success('Votre compte a bien été créé!');
     }
   }, [successMessage]);
 
@@ -61,6 +64,17 @@ export const RegisterPage = () => {
                 maxLength: { value: 50, message: translate('register.messages.validate.login.maxlength') },
               }}
               data-cy="username"
+            />
+            <ValidatedField
+              name="telephone"
+              label={translate('global.form.telephone.label')}
+              placeholder={translate('global.form.telephone.placeholder')}
+              type="text"
+              validate={{
+                required: { value: true, message: translate('global.messages.validate.telephone.required') },
+                validate: v => true || translate('global.messages.validate.telephone.invalid'),
+              }}
+              data-cy="telephone"
             />
             <ValidatedField
               name="email"
@@ -107,7 +121,7 @@ export const RegisterPage = () => {
             </Button>
           </ValidatedForm>
           <p>&nbsp;</p>
-          <Alert color="warning">
+          {/* <Alert color="warning">
             <span>
               <Translate contentKey="global.messages.info.authenticated.prefix">If you want to</Translate>{' '}
             </span>
@@ -121,7 +135,7 @@ export const RegisterPage = () => {
                 <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
               </Translate>
             </span>
-          </Alert>
+          </Alert> */}
         </Col>
       </Row>
     </div>

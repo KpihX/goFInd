@@ -50,6 +50,28 @@ class UtilisateurTest {
     }
 
     @Test
+    void objectsSignalesTest() throws Exception {
+        Utilisateur utilisateur = getUtilisateurRandomSampleGenerator();
+        Objet objetBack = getObjetRandomSampleGenerator();
+
+        utilisateur.addObjectsSignales(objetBack);
+        assertThat(utilisateur.getObjectsSignales()).containsOnly(objetBack);
+        assertThat(objetBack.getSignalant()).isEqualTo(utilisateur);
+
+        utilisateur.removeObjectsSignales(objetBack);
+        assertThat(utilisateur.getObjectsSignales()).doesNotContain(objetBack);
+        assertThat(objetBack.getSignalant()).isNull();
+
+        utilisateur.objectsSignales(new HashSet<>(Set.of(objetBack)));
+        assertThat(utilisateur.getObjectsSignales()).containsOnly(objetBack);
+        assertThat(objetBack.getSignalant()).isEqualTo(utilisateur);
+
+        utilisateur.setObjectsSignales(new HashSet<>());
+        assertThat(utilisateur.getObjectsSignales()).doesNotContain(objetBack);
+        assertThat(objetBack.getSignalant()).isNull();
+    }
+
+    @Test
     void trajetsPropTest() throws Exception {
         Utilisateur utilisateur = getUtilisateurRandomSampleGenerator();
         Trajet trajetBack = getTrajetRandomSampleGenerator();
