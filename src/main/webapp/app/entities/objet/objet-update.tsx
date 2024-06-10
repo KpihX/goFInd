@@ -16,6 +16,7 @@ import { EtatObjet } from 'app/shared/model/enumerations/etat-objet.model';
 import { getEntity, updateEntity, createEntity, reset } from './objet.reducer';
 
 export const ObjetUpdate = () => {
+  const account = useAppSelector(state => state.authentication.account);
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -138,29 +139,24 @@ export const ObjetUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField label={translate('goFindApp.objet.etat')} id="objet-etat" name="etat" data-cy="etat" type="select">
-                {etatObjetValues.map(etatObjet => (
-                  <option value={etatObjet} key={etatObjet}>
-                    {translate('goFindApp.EtatObjet.' + etatObjet)}
-                  </option>
-                ))}
-              </ValidatedField>
+              <ValidatedField
+                label={translate('goFindApp.objet.etat')}
+                id="objet-etat"
+                name="etat"
+                data-cy="etat"
+                type="text"
+                readOnly
+                defaultValue="VOLE"
+              />
               <ValidatedField
                 id="objet-proprietaire"
                 name="proprietaire"
                 data-cy="proprietaire"
                 label={translate('goFindApp.objet.proprietaire')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {utilisateurs
-                  ? utilisateurs.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+                type="text"
+                readOnly
+                defaultValue={account.login}
+              ></ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objet" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

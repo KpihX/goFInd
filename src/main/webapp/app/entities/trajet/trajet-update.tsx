@@ -21,6 +21,8 @@ export const TrajetUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
+  const account = useAppSelector(state => state.authentication.account);
+
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
   const trajetEntity = useAppSelector(state => state.trajet.entity);
   const loading = useAppSelector(state => state.trajet.loading);
@@ -62,7 +64,6 @@ export const TrajetUpdate = () => {
       ...trajetEntity,
       ...values,
       proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
-      engages: mapIdList(values.engages),
     };
 
     if (isNew) {
@@ -167,34 +168,13 @@ export const TrajetUpdate = () => {
                 name="proprietaire"
                 data-cy="proprietaire"
                 label={translate('goFindApp.trajet.proprietaire')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {utilisateurs
-                  ? utilisateurs.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
-                label={translate('goFindApp.trajet.engages')}
-                id="trajet-engages"
-                data-cy="engages"
-                type="select"
-                multiple
-                name="engages"
-              >
-                <option value="" key="0" />
-                {utilisateurs
-                  ? utilisateurs.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+                type="text"
+                readOnly
+                defaultValue={account.login}
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              ></ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/trajet" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

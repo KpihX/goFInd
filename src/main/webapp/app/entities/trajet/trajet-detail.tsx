@@ -12,6 +12,8 @@ import { getEntity } from './trajet.reducer';
 export const TrajetDetail = () => {
   const dispatch = useAppDispatch();
 
+  const account = useAppSelector(state => state.authentication.account);
+
   const { id } = useParams<'id'>();
 
   useEffect(() => {
@@ -19,6 +21,7 @@ export const TrajetDetail = () => {
   }, []);
 
   const trajetEntity = useAppSelector(state => state.trajet.entity);
+
   return (
     <Row>
       <Col md="8">
@@ -67,7 +70,8 @@ export const TrajetDetail = () => {
           <dt>
             <Translate contentKey="goFindApp.trajet.proprietaire">Proprietaire</Translate>
           </dt>
-          <dd>{trajetEntity.proprietaire ? trajetEntity.proprietaire.id : ''}</dd>
+
+          <dd>{trajetEntity.proprietaire ? trajetEntity.proprietaireId : 'maeva'}</dd>
           <dt>
             <Translate contentKey="goFindApp.trajet.engages">Engages</Translate>
           </dt>

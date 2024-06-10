@@ -22,6 +22,8 @@ export const Trajet = () => {
   );
   const [sorting, setSorting] = useState(false);
 
+  const account = useAppSelector(state => state.authentication.account);
+
   const trajetList = useAppSelector(state => state.trajet.entities);
   const loading = useAppSelector(state => state.trajet.loading);
   const links = useAppSelector(state => state.trajet.links);
@@ -150,7 +152,7 @@ export const Trajet = () => {
                   <th className="hand" onClick={sort('prix')}>
                     <Translate contentKey="goFindApp.trajet.prix">Prix</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('prix')} />
                   </th>
-                  <th>
+                  <th className="hand" onClick={sort('proprietaire')}>
                     <Translate contentKey="goFindApp.trajet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th />
@@ -171,9 +173,7 @@ export const Trajet = () => {
                     </td>
                     <td>{trajet.places}</td>
                     <td>{trajet.prix}</td>
-                    <td>
-                      {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''}
-                    </td>
+                    <td>{trajet.proprietaire ? <Link to={'/utilisateur/'}>maee</Link> : 'maeva'}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/trajet/${trajet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
@@ -182,23 +182,27 @@ export const Trajet = () => {
                             <Translate contentKey="entity.action.view">View</Translate>
                           </span>
                         </Button>
-                        <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                          <FontAwesomeIcon icon="pencil-alt" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.edit">Edit</Translate>
-                          </span>
-                        </Button>
-                        <Button
-                          onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
-                          color="danger"
-                          size="sm"
-                          data-cy="entityDeleteButton"
-                        >
-                          <FontAwesomeIcon icon="trash" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.delete">Delete</Translate>
-                          </span>
-                        </Button>
+                        {trajet.proprietaire_id === account.id && (
+                          <>
+                            <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                              <FontAwesomeIcon icon="pencil-alt" />{' '}
+                              <span className="d-none d-md-inline">
+                                <Translate contentKey="entity.action.edit">Edit</Translate>
+                              </span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
+                              color="danger"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                            >
+                              <FontAwesomeIcon icon="trash" />{' '}
+                              <span className="d-none d-md-inline">
+                                <Translate contentKey="entity.action.delete">Delete</Translate>
+                              </span>
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
