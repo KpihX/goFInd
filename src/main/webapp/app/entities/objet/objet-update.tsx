@@ -16,6 +16,7 @@ import { EtatObjet } from 'app/shared/model/enumerations/etat-objet.model';
 import { getEntity, updateEntity, createEntity, reset } from './objet.reducer';
 
 export const ObjetUpdate = () => {
+  const account = useAppSelector(state => state.authentication.account);
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -30,8 +31,6 @@ export const ObjetUpdate = () => {
   const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
   const typeObjetValues = Object.keys(TypeObjet);
   const etatObjetValues = Object.keys(EtatObjet);
-
-  const account = useAppSelector(state => state.authentication.account);
 
   const handleClose = () => {
     navigate('/objects');

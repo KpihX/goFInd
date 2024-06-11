@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { Translate, TextFormat, getPaginationState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
+import { APP_DATE_FORMAT } from 'app/config/constants';
+import { ASC, DESC, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities, reset } from './trajet.reducer';
+import { getEntities, updateEntity, reset } from './trajet.reducer';
 
 export const Trajet = () => {
   const dispatch = useAppDispatch();
-
-  const pageLocation = useLocation();
+  const location = useLocation();
 
   const [paginationState, setPaginationState] = useState(
-    overridePaginationStateWithQueryParams(getPaginationState(pageLocation, ITEMS_PER_PAGE, 'id'), pageLocation.search),
+    overridePaginationStateWithQueryParams(getPaginationState(location, ITEMS_PER_PAGE, 'id'), location.search),
   );
   const [sorting, setSorting] = useState(false);
 
@@ -26,6 +25,8 @@ export const Trajet = () => {
   const loading = useAppSelector(state => state.trajet.loading);
   const links = useAppSelector(state => state.trajet.links);
   const updateSuccess = useAppSelector(state => state.trajet.updateSuccess);
+
+  const [engagedTrajets, setEngagedTrajets] = useState({});
 
   const getAllEntities = () => {
     dispatch(
@@ -39,10 +40,7 @@ export const Trajet = () => {
 
   const resetAll = () => {
     dispatch(reset());
-    setPaginationState({
-      ...paginationState,
-      activePage: 1,
-    });
+    setPaginationState({ ...paginationState, activePage: 1 });
     dispatch(getEntities({}));
   };
 
@@ -61,11 +59,8 @@ export const Trajet = () => {
   }, [paginationState.activePage]);
 
   const handleLoadMore = () => {
-    if ((window as any).pageYOffset > 0) {
-      setPaginationState({
-        ...paginationState,
-        activePage: paginationState.activePage + 1,
-      });
+    if (window.pageYOffset > 0) {
+      setPaginationState({ ...paginationState, activePage: paginationState.activePage + 1 });
     }
   };
 
@@ -78,12 +73,7 @@ export const Trajet = () => {
 
   const sort = p => () => {
     dispatch(reset());
-    setPaginationState({
-      ...paginationState,
-      activePage: 1,
-      order: paginationState.order === ASC ? DESC : ASC,
-      sort: p,
-    });
+    setPaginationState({ ...paginationState, activePage: 1, order: paginationState.order === ASC ? DESC : ASC, sort: p });
     setSorting(true);
   };
 
@@ -101,19 +91,28 @@ export const Trajet = () => {
     }
   };
 
+  const handleEngage = trajet => {
+    const updatedTrajet = { ...trajet, places: trajet.places - 1 };
+    dispatch(updateEntity(updatedTrajet));
+    setEngagedTrajets({ ...engagedTrajets, [trajet.id]: true });
+  };
+
+  const handleRetract = trajet => {
+    const updatedTrajet = { ...trajet, places: trajet.places + 1 };
+    dispatch(updateEntity(updatedTrajet));
+    setEngagedTrajets({ ...engagedTrajets, [trajet.id]: false });
+  };
+
   return (
     <div>
       <h2 id="trajet-heading" data-cy="TrajetHeading">
-        <Translate contentKey="goFindApp.trajet.home.title">Trajets</Translate>
+        Trajets
         <div className="d-flex justify-content-end">
-          <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
-            <Translate contentKey="goFindApp.trajet.home.refreshListLabel">Refresh List</Translate>
+          <Button className="mr-2" color="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh List
           </Button>
           <Link to="/trajet/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp;
-            <Translate contentKey="goFindApp.trajet.home.createLabel">Create new Trajet</Translate>
+            <FontAwesomeIcon icon="plus" /> &nbsp; Create new Trajet
           </Link>
         </div>
       </h2>
@@ -129,30 +128,24 @@ export const Trajet = () => {
               <thead>
                 <tr>
                   <th className="hand" onClick={sort('id')}>
-                    <Translate contentKey="goFindApp.trajet.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                    ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                   </th>
                   <th className="hand" onClick={sort('depart')}>
-                    <Translate contentKey="goFindApp.trajet.depart">Depart</Translate>{' '}
-                    <FontAwesomeIcon icon={getSortIconByFieldName('depart')} />
+                    Depart <FontAwesomeIcon icon={getSortIconByFieldName('depart')} />
                   </th>
                   <th className="hand" onClick={sort('arrivee')}>
-                    <Translate contentKey="goFindApp.trajet.arrivee">Arrivee</Translate>{' '}
-                    <FontAwesomeIcon icon={getSortIconByFieldName('arrivee')} />
+                    Arrivee <FontAwesomeIcon icon={getSortIconByFieldName('arrivee')} />
                   </th>
                   <th className="hand" onClick={sort('dateHeureDepart')}>
-                    <Translate contentKey="goFindApp.trajet.dateHeureDepart">Date Heure Depart</Translate>{' '}
-                    <FontAwesomeIcon icon={getSortIconByFieldName('dateHeureDepart')} />
+                    Date Heure Depart <FontAwesomeIcon icon={getSortIconByFieldName('dateHeureDepart')} />
                   </th>
                   <th className="hand" onClick={sort('places')}>
-                    <Translate contentKey="goFindApp.trajet.places">Places</Translate>{' '}
-                    <FontAwesomeIcon icon={getSortIconByFieldName('places')} />
+                    Places <FontAwesomeIcon icon={getSortIconByFieldName('places')} />
                   </th>
                   <th className="hand" onClick={sort('prix')}>
-                    <Translate contentKey="goFindApp.trajet.prix">Prix</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('prix')} />
+                    Prix <FontAwesomeIcon icon={getSortIconByFieldName('prix')} />
                   </th>
-                  <th>
-                    <Translate contentKey="goFindApp.trajet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
+                  <th>Proprietaire</th>
                   <th />
                 </tr>
               </thead>
@@ -174,19 +167,13 @@ export const Trajet = () => {
                     <td>
                       {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''}
                     </td>
-                    <td className="text-end">
+                    <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/trajet/${trajet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                          <FontAwesomeIcon icon="eye" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.view">View</Translate>
-                          </span>
+                          <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                         </Button>
                         <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                          <FontAwesomeIcon icon="pencil-alt" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.edit">Edit</Translate>
-                          </span>
+                          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
                         </Button>
                         <Button
                           onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
@@ -194,11 +181,17 @@ export const Trajet = () => {
                           size="sm"
                           data-cy="entityDeleteButton"
                         >
-                          <FontAwesomeIcon icon="trash" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.delete">Delete</Translate>
-                          </span>
+                          <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Delete</span>
                         </Button>
+                        {engagedTrajets[trajet.id] ? (
+                          <Button color="warning" size="sm" onClick={() => handleRetract(trajet)}>
+                            Se rétracter
+                          </Button>
+                        ) : (
+                          <Button color="success" size="sm" onClick={() => handleEngage(trajet)}>
+                            S'engager
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -206,11 +199,7 @@ export const Trajet = () => {
               </tbody>
             </Table>
           ) : (
-            !loading && (
-              <div className="alert alert-warning">
-                <Translate contentKey="goFindApp.trajet.home.notFound">No Trajets found</Translate>
-              </div>
-            )
+            !loading && <div className="alert alert-warning">No Trajets found</div>
           )}
         </InfiniteScroll>
       </div>
