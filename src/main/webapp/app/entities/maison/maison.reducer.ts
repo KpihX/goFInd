@@ -3,9 +3,9 @@ import { createAsyncThunk, isFulfilled, isPending } from '@reduxjs/toolkit';
 import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
-import { IObjet, defaultValue } from 'app/shared/model/objet.model';
+import { IMaison, defaultValue } from 'app/shared/model/maison.model';
 
-const initialState: EntityState<IObjet> = {
+const initialState: EntityState<IMaison> = {
   loading: false,
   errorMessage: null,
   entities: [],
@@ -16,61 +16,61 @@ const initialState: EntityState<IObjet> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'api/objets';
+const apiUrl = 'api/maisons';
 
 // Actions
 
-export const getEntities = createAsyncThunk('objet/fetch_entity_list', async ({ page, size, sort, search, searchType }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}search=${search ? search : ''}&searchType=${searchType ? searchType : 'libelle'}&cacheBuster=${new Date().getTime()}`;
-  return axios.get<IObjet[]>(requestUrl);
+export const getEntities = createAsyncThunk('maison/fetch_entity_list', async ({ page, size, sort, search, searchType }: IQueryParams) => {
+  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}search=${search ? search : ''}&searchType=${searchType ? searchType : 'localisation'}&cacheBuster=${new Date().getTime()}`;
+  return axios.get<IMaison[]>(requestUrl);
 });
 
 export const getEntity = createAsyncThunk(
-  'objet/fetch_entity',
+  'maison/fetch_entity',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return axios.get<IObjet>(requestUrl);
+    return axios.get<IMaison>(requestUrl);
   },
   { serializeError: serializeAxiosError },
 );
 
 export const createEntity = createAsyncThunk(
-  'objet/create_entity',
-  async (entity: IObjet, thunkAPI) => {
-    return axios.post<IObjet>(apiUrl, cleanEntity(entity));
+  'maison/create_entity',
+  async (entity: IMaison, thunkAPI) => {
+    return axios.post<IMaison>(apiUrl, cleanEntity(entity));
   },
   { serializeError: serializeAxiosError },
 );
 
 export const updateEntity = createAsyncThunk(
-  'objet/update_entity',
-  async ({ entity, report }: { entity: IObjet; report: string }) => {
-    return axios.put<IObjet>(`${apiUrl}/${entity.id}?report=${report}`, cleanEntity(entity));
+  'maison/update_entity',
+  async ({ entity, report }: { entity: IMaison; report: string }) => {
+    return axios.put<IMaison>(`${apiUrl}/${entity.id}?report=${report}`, cleanEntity(entity));
   },
   { serializeError: serializeAxiosError },
 );
 
 export const partialUpdateEntity = createAsyncThunk(
-  'objet/partial_update_entity',
-  async (entity: IObjet, thunkAPI) => {
-    return axios.patch<IObjet>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  'maison/partial_update_entity',
+  async (entity: IMaison, thunkAPI) => {
+    return axios.patch<IMaison>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
   },
   { serializeError: serializeAxiosError },
 );
 
 export const deleteEntity = createAsyncThunk(
-  'objet/delete_entity',
+  'maison/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return await axios.delete<IObjet>(requestUrl);
+    return await axios.delete<IMaison>(requestUrl);
   },
   { serializeError: serializeAxiosError },
 );
 
 // slice
 
-export const ObjetSlice = createEntitySlice({
-  name: 'objet',
+export const MaisonSlice = createEntitySlice({
+  name: 'maison',
   initialState,
   extraReducers(builder) {
     builder
@@ -114,7 +114,7 @@ export const ObjetSlice = createEntitySlice({
   },
 });
 
-export const { reset } = ObjetSlice.actions;
+export const { reset } = MaisonSlice.actions;
 
 // Reducer
-export default ObjetSlice.reducer;
+export default MaisonSlice.reducer;
