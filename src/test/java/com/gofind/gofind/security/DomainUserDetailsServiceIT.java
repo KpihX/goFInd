@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.gofind.gofind.IntegrationTest;
 import com.gofind.gofind.config.Constants;
-import com.gofind.gofind.domain.User;
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.domain.users.User;
+import com.gofind.gofind.repository.users.UserRepository;
 import java.util.Locale;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,8 +1,8 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Trajet;
-import com.gofind.gofind.repository.TrajetRepository;
-import com.gofind.gofind.service.TrajetService;
+import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.repository.itinaries.TrajetRepository;
+import com.gofind.gofind.service.itinaries.TrajetService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +28,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Trajet}.
+ * REST controller for managing {@link com.gofind.gofind.domain.itinaries.Trajet}.
  */
 @RestController
 @RequestMapping("/api/trajets")

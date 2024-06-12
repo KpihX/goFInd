@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gofind.gofind.IntegrationTest;
 import com.gofind.gofind.config.Constants;
-import com.gofind.gofind.domain.User;
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.domain.users.User;
+import com.gofind.gofind.repository.users.UserRepository;
+import com.gofind.gofind.service.users.UserService;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

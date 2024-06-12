@@ -1,8 +1,8 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Utilisateur;
-import com.gofind.gofind.repository.UtilisateurRepository;
-import com.gofind.gofind.service.UtilisateurService;
+import com.gofind.gofind.domain.users.Utilisateur;
+import com.gofind.gofind.repository.users.UtilisateurRepository;
+import com.gofind.gofind.service.users.UtilisateurService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +24,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Utilisateur}.
+ * REST controller for managing {@link com.gofind.gofind.domain.users.Utilisateur}.
  */
 @RestController
 @RequestMapping("/api/utilisateurs")

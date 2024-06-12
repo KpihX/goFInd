@@ -1,7 +1,7 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Authority;
-import com.gofind.gofind.repository.AuthorityRepository;
+import com.gofind.gofind.domain.users.Authority;
+import com.gofind.gofind.repository.users.AuthorityRepository;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -21,7 +21,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Authority}.
+ * REST controller for managing {@link com.gofind.gofind.domain.users.Authority}.
  */
 @RestController
 @RequestMapping("/api/authorities")

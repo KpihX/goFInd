@@ -70,7 +70,7 @@ export const ObjetUpdate = () => {
       ...values,
     };
 
-    console.log('* entity:', entity);
+    // console.log('* entity:', entity);
 
     if (isNew) {
       dispatch(createEntity(entity));

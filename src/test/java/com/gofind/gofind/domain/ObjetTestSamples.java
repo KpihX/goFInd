@@ -1,5 +1,6 @@
 package com.gofind.gofind.domain;
 
+import com.gofind.gofind.domain.objects.Objet;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;

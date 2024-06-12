@@ -1,8 +1,8 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Maison;
-import com.gofind.gofind.repository.MaisonRepository;
-import com.gofind.gofind.service.MaisonService;
+import com.gofind.gofind.domain.locations.Maison;
+import com.gofind.gofind.repository.locations.MaisonRepository;
+import com.gofind.gofind.service.locations.MaisonService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +28,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Maison}.
+ * REST controller for managing {@link com.gofind.gofind.domain.locations.Maison}.
  */
 @RestController
 @RequestMapping("/api/maisons")

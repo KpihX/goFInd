@@ -3,6 +3,7 @@ package com.gofind.gofind.domain;
 import static com.gofind.gofind.domain.AuthorityTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gofind.gofind.domain.users.Authority;
 import com.gofind.gofind.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 

@@ -1,12 +1,12 @@
 package com.gofind.gofind.web.rest;
 
 import com.gofind.gofind.config.Constants;
-import com.gofind.gofind.domain.User;
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.domain.users.User;
+import com.gofind.gofind.repository.users.UserRepository;
 import com.gofind.gofind.security.AuthoritiesConstants;
-import com.gofind.gofind.service.MailService;
-import com.gofind.gofind.service.UserService;
 import com.gofind.gofind.service.dto.AdminUserDTO;
+import com.gofind.gofind.service.mail.MailService;
+import com.gofind.gofind.service.users.UserService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import com.gofind.gofind.web.rest.errors.EmailAlreadyUsedException;
 import com.gofind.gofind.web.rest.errors.LoginAlreadyUsedException;
@@ -39,7 +39,7 @@ import tech.jhipster.web.util.PaginationUtil;
 /**
  * REST controller for managing users.
  * <p>
- * This class accesses the {@link com.gofind.gofind.domain.User} entity, and needs to fetch its collection of authorities.
+ * This class accesses the {@link com.gofind.gofind.domain.users.User} entity, and needs to fetch its collection of authorities.
  * <p>
  * For a normal use-case, it would be better to have an eager relationship between User and Authority,
  * and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join

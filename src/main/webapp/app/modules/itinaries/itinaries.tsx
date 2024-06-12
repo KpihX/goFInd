@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button as Button2, InputAdornment, TextField } from '@mui/material';
+import { Button as Button2, Chip, InputAdornment, Stack, TextField } from '@mui/material';
 
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -9,10 +9,15 @@ import { Translate, TextFormat, getPaginationState } from 'react-jhipster';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
-import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { mapIdList, overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, reset } from 'app/entities/trajet/trajet.reducer';
+import { convertDateTimeToServer } from 'app/shared/util/date-utils';
+import { getEntities as getUtils } from 'app/entities/utilisateur/utilisateur.reducer';
+import { getUsers } from '../administration/user-management/user-management.reducer';
+
+import { partialUpdateEntity } from 'app/entities/trajet/trajet.reducer';
 
 export const Itinaries = () => {
   const [search, setSearch] = useState('');
@@ -30,6 +35,12 @@ export const Itinaries = () => {
   const loading = useAppSelector(state => state.trajet.loading);
   const links = useAppSelector(state => state.trajet.links);
   const updateSuccess = useAppSelector(state => state.trajet.updateSuccess);
+
+  const account = useAppSelector(state => state.authentication.account);
+  const utilisateurs = useAppSelector(state => state.utilisateur.entities);
+  const [updateUtilisateurs, setUpdateUtilisateurs] = React.useState(false);
+  const users = useAppSelector(state => state.userManagement.users);
+  const [engagesSpec, setEngagesSpec] = React.useState([]);
 
   const getAllEntities = () => {
     dispatch(
@@ -52,6 +63,9 @@ export const Itinaries = () => {
 
   useEffect(() => {
     resetAll();
+    dispatch(getUtils({}));
+    dispatch(getUsers({}));
+    setUpdateUtilisateurs(true);
   }, []);
 
   useEffect(() => {
@@ -104,6 +118,34 @@ export const Itinaries = () => {
       return order === ASC ? faSortUp : faSortDown;
     }
   };
+
+  const handleSubscribe = trajet => {
+    const util = utilisateurs.find(it => it.loginId.toString() === account?.id?.toString());
+    setEngagesSpec([...trajet.engages, util]);
+  };
+
+  const handleUnsubscribe = trajet => {
+    setEngagesSpec(trajet.engages);
+  };
+
+  // eslint-disable-next-line complexity
+  const saveEntity = () => {
+    const entity = {
+      engages: mapIdList(engagesSpec),
+    };
+
+    dispatch(partialUpdateEntity(entity));
+  };
+
+  const idToLogin = id => {
+    return users.find(it => it.id === id).login;
+  };
+
+  React.useEffect(() => {
+    if (engagesSpec.length !== 0) {
+      saveEntity();
+    }
+  }, [engagesSpec, updateUtilisateurs]);
 
   return (
     <div>
@@ -175,7 +217,12 @@ export const Itinaries = () => {
                       <FontAwesomeIcon icon={getSortIconByFieldName('prix')} />
                     </th>
                     <th>
-                      <Translate contentKey="goFindApp.trajet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" />
+                      {/* <Translate contentKey="goFindApp.trajet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" /> */}
+                      Contact propriétaire <FontAwesomeIcon icon="sort" />
+                    </th>
+                    <th>
+                      {/* <Translate contentKey="goFindApp.trajet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" /> */}
+                      Engagés <FontAwesomeIcon icon="sort" />
                     </th>
                     <th />
                   </tr>
@@ -195,35 +242,76 @@ export const Itinaries = () => {
                       </td>
                       <td>{trajet.places}</td>
                       <td>{trajet.prix}</td>
+                      {trajet.proprietaire.loginId !== account.id && (
+                        <td>
+                          {trajet.proprietaire.telephone}
+                          {/* {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''} */}
+                        </td>
+                      )}
+                      {trajet.proprietaire.loginId === account.id && (
+                        <td>
+                          <Stack direction="row" spacing={1}>
+                            <Chip label="Vous êtes le proprio!" variant="outlined" color="success" />
+                          </Stack>
+                          {/* {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''} */}
+                        </td>
+                      )}
                       <td>
-                        {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''}
+                        <option value="" key="0" />
+                        {trajet.engages
+                          ? trajet.engages.map(otherEntity => (
+                              <option value={otherEntity.id} key={otherEntity.id}>
+                                {idToLogin(otherEntity.loginId)}
+                              </option>
+                            ))
+                          : null}
                       </td>
                       <td className="text-end">
-                        <div className="btn-group flex-btn-group-container">
-                          <Button tag={Link} to={`/trajet/${trajet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                            <FontAwesomeIcon icon="eye" />{' '}
-                            <span className="d-none d-md-inline">
-                              <Translate contentKey="entity.action.view">View</Translate>
-                            </span>
-                          </Button>
-                          <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                            <FontAwesomeIcon icon="pencil-alt" />{' '}
-                            <span className="d-none d-md-inline">
-                              <Translate contentKey="entity.action.edit">Edit</Translate>
-                            </span>
-                          </Button>
-                          <Button
-                            onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
-                            color="danger"
-                            size="sm"
-                            data-cy="entityDeleteButton"
-                          >
-                            <FontAwesomeIcon icon="trash" />{' '}
-                            <span className="d-none d-md-inline">
-                              <Translate contentKey="entity.action.delete">Delete</Translate>
-                            </span>
-                          </Button>
-                        </div>
+                        {trajet.proprietaire.loginId === account.id && (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button tag={Link} to={`/trajet/${trajet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                              <FontAwesomeIcon icon="eye" />{' '}
+                              <span className="d-none d-md-inline">
+                                <Translate contentKey="entity.action.view">View</Translate>
+                              </span>
+                            </Button>
+                            <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                              <FontAwesomeIcon icon="pencil-alt" />{' '}
+                              <span className="d-none d-md-inline">
+                                <Translate contentKey="entity.action.edit">Edit</Translate>
+                              </span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
+                              color="danger"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                            >
+                              <FontAwesomeIcon icon="trash" />{' '}
+                              <span className="d-none d-md-inline">
+                                <Translate contentKey="entity.action.delete">Delete</Translate>
+                              </span>
+                            </Button>
+                          </div>
+                        )}
+                        {trajet.proprietaire.loginId !== account.id && (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button color="primary" size="sm" data-cy="entitySubscribe" onClick={() => handleSubscribe(trajet)}>
+                              <FontAwesomeIcon icon="pencil-alt" />{' '}
+                              <span className="d-none d-md-inline">
+                                Souscrire
+                                {/* <Translate contentKey="entity.action.edit">Edit</Translate> */}
+                              </span>
+                            </Button>
+                            <Button onClick={() => handleUnsubscribe(trajet)} color="danger" size="sm" data-cy="entityUnsubscribe">
+                              <FontAwesomeIcon icon="times-circle" />{' '}
+                              <span className="d-none d-md-inline">
+                                Se retracter
+                                {/* <Translate contentKey="entity.action.delete">Delete</Translate> */}
+                              </span>
+                            </Button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

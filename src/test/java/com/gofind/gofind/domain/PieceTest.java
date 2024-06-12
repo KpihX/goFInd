@@ -5,6 +5,9 @@ import static com.gofind.gofind.domain.MaisonTestSamples.*;
 import static com.gofind.gofind.domain.PieceTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gofind.gofind.domain.locations.Location;
+import com.gofind.gofind.domain.locations.Maison;
+import com.gofind.gofind.domain.locations.Piece;
 import com.gofind.gofind.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 

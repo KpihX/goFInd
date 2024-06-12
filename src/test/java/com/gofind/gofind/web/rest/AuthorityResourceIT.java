@@ -7,9 +7,9 @@ import static org.hamcrest.Matchers.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.Authority;
-import com.gofind.gofind.repository.AuthorityRepository;
+import com.gofind.gofind.domain.users.Authority;
 import com.gofind.gofind.repository.EntityManager;
+import com.gofind.gofind.repository.users.AuthorityRepository;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;

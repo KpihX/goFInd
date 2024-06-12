@@ -1,7 +1,7 @@
 package com.gofind.gofind.service.mapper;
 
-import com.gofind.gofind.domain.Authority;
-import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.users.Authority;
+import com.gofind.gofind.domain.users.User;
 import com.gofind.gofind.service.dto.AdminUserDTO;
 import com.gofind.gofind.service.dto.UserDTO;
 import java.util.*;
