@@ -9,10 +9,10 @@ import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.Utilisateur;
+import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.repository.EntityManager;
-import com.gofind.gofind.repository.UtilisateurRepository;
-import com.gofind.gofind.service.UtilisateurService;
+import com.gofind.gofind.repository.users.UtilisateurRepository;
+import com.gofind.gofind.service.users.UtilisateurService;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;

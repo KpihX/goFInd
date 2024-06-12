@@ -3,7 +3,7 @@ package com.gofind.gofind.security.jwt;
 import static com.gofind.gofind.security.SecurityUtils.AUTHORITIES_KEY;
 import static com.gofind.gofind.security.SecurityUtils.JWT_ALGORITHM;
 
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.repository.users.UserRepository;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 import io.micrometer.core.instrument.MeterRegistry;

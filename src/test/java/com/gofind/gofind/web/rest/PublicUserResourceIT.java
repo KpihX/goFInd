@@ -3,9 +3,9 @@ package com.gofind.gofind.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.users.User;
 import com.gofind.gofind.repository.EntityManager;
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.repository.users.UserRepository;
 import com.gofind.gofind.security.AuthoritiesConstants;
 import com.gofind.gofind.service.dto.UserDTO;
 import org.junit.jupiter.api.BeforeEach;

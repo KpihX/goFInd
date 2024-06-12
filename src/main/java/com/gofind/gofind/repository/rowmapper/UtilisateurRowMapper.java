@@ -1,6 +1,6 @@
 package com.gofind.gofind.repository.rowmapper;
 
-import com.gofind.gofind.domain.Utilisateur;
+import com.gofind.gofind.domain.users.Utilisateur;
 import io.r2dbc.spi.Row;
 import java.util.function.BiFunction;
 import org.springframework.stereotype.Service;

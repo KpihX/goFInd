@@ -4,6 +4,8 @@ import static com.gofind.gofind.domain.ObjetTestSamples.*;
 import static com.gofind.gofind.domain.UtilisateurTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gofind.gofind.domain.objects.Objet;
+import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 

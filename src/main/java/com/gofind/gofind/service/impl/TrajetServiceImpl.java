@@ -1,8 +1,8 @@
 package com.gofind.gofind.service.impl;
 
-import com.gofind.gofind.domain.Trajet;
-import com.gofind.gofind.repository.TrajetRepository;
-import com.gofind.gofind.service.TrajetService;
+import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.repository.itinaries.TrajetRepository;
+import com.gofind.gofind.service.itinaries.TrajetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * Service Implementation for managing {@link com.gofind.gofind.domain.Trajet}.
+ * Service Implementation for managing {@link com.gofind.gofind.domain.itinaries.Trajet}.
  */
 @Service
 @Transactional

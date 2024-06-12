@@ -1,8 +1,8 @@
 package com.gofind.gofind.service.dto;
 
 import com.gofind.gofind.config.Constants;
-import com.gofind.gofind.domain.Authority;
-import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.users.Authority;
+import com.gofind.gofind.domain.users.User;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;

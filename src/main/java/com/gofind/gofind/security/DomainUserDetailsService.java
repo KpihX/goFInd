@@ -1,8 +1,8 @@
 package com.gofind.gofind.security;
 
-import com.gofind.gofind.domain.Authority;
-import com.gofind.gofind.domain.User;
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.domain.users.Authority;
+import com.gofind.gofind.domain.users.User;
+import com.gofind.gofind.repository.users.UserRepository;
 import java.util.*;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;

@@ -1,13 +1,13 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Utilisateur;
-import com.gofind.gofind.repository.UserRepository;
+import com.gofind.gofind.domain.users.Utilisateur;
+import com.gofind.gofind.repository.users.UserRepository;
 import com.gofind.gofind.security.SecurityUtils;
-import com.gofind.gofind.service.MailService;
-import com.gofind.gofind.service.UserService;
-import com.gofind.gofind.service.UtilisateurService;
 import com.gofind.gofind.service.dto.AdminUserDTO;
 import com.gofind.gofind.service.dto.PasswordChangeDTO;
+import com.gofind.gofind.service.mail.MailService;
+import com.gofind.gofind.service.users.UserService;
+import com.gofind.gofind.service.users.UtilisateurService;
 import com.gofind.gofind.web.rest.errors.*;
 import com.gofind.gofind.web.rest.vm.KeyAndPasswordVM;
 import com.gofind.gofind.web.rest.vm.ManagedUserVM;

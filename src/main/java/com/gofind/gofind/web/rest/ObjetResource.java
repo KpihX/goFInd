@@ -1,11 +1,9 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Objet;
-// import com.gofind.gofind.domain.User;
-// import com.gofind.gofind.domain.Utilisateur;
-import com.gofind.gofind.repository.ObjetRepository;
-import com.gofind.gofind.service.MailService;
-import com.gofind.gofind.service.ObjetService;
+import com.gofind.gofind.domain.objects.Objet;
+import com.gofind.gofind.repository.objects.ObjetRepository;
+import com.gofind.gofind.service.mail.MailService;
+import com.gofind.gofind.service.objects.ObjetService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +29,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Objet}.
+ * REST controller for managing {@link com.gofind.gofind.domain.objects.Objet}.
  */
 @RestController
 @RequestMapping("/api/objets")

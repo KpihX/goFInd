@@ -1,6 +1,6 @@
 package com.gofind.gofind.repository.rowmapper;
 
-import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.users.User;
 import io.r2dbc.spi.Row;
 import java.time.Instant;
 import java.util.function.BiFunction;

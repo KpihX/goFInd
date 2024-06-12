@@ -1,8 +1,8 @@
 package com.gofind.gofind.service.impl;
 
-import com.gofind.gofind.domain.Piece;
-import com.gofind.gofind.repository.PieceRepository;
-import com.gofind.gofind.service.PieceService;
+import com.gofind.gofind.domain.locations.Piece;
+import com.gofind.gofind.repository.locations.PieceRepository;
+import com.gofind.gofind.service.locations.PieceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * Service Implementation for managing {@link com.gofind.gofind.domain.Piece}.
+ * Service Implementation for managing {@link com.gofind.gofind.domain.locations.Piece}.
  */
 @Service
 @Transactional
