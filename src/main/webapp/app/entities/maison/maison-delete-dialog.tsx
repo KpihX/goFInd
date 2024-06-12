@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './maison.reducer';
 
-export const MaisonDeleteDialog = () => {
+export const ObjetDeleteDialog = () => {
   const dispatch = useAppDispatch();
 
   const pageLocation = useLocation();
@@ -21,11 +21,11 @@ export const MaisonDeleteDialog = () => {
     setLoadModal(true);
   }, []);
 
-  const maisonEntity = useAppSelector(state => state.maison.entity);
-  const updateSuccess = useAppSelector(state => state.maison.updateSuccess);
+  const objetEntity = useAppSelector(state => state.objet.entity);
+  const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
 
   const handleClose = () => {
-    navigate('/maison');
+    navigate('/objects');
   };
 
   useEffect(() => {
@@ -36,26 +36,22 @@ export const MaisonDeleteDialog = () => {
   }, [updateSuccess]);
 
   const confirmDelete = () => {
-    dispatch(deleteEntity(maisonEntity.id));
+    dispatch(deleteEntity(objetEntity.id));
   };
 
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose} data-cy="maisonDeleteDialogHeading">
-        <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
+      <ModalHeader toggle={handleClose} data-cy="objetDeleteDialogHeading">
+        Confirmer l'opération de suppression
       </ModalHeader>
-      <ModalBody id="goFindApp.maison.delete.question">
-        <Translate contentKey="goFindApp.maison.delete.question" interpolate={{ id: maisonEntity.id }}>
-          Are you sure you want to delete this Maison?
-        </Translate>
-      </ModalBody>
+      <ModalBody id="goFindApp.objet.delete.question">Etes-vous sûrs de vouloir supprimer cette maison?</ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={handleClose}>
           <FontAwesomeIcon icon="ban" />
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-maison" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-objet" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -65,4 +61,4 @@ export const MaisonDeleteDialog = () => {
   );
 };
 
-export default MaisonDeleteDialog;
+export default ObjetDeleteDialog;

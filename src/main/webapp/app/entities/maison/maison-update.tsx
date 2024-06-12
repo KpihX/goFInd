@@ -10,10 +10,13 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IUtilisateur } from 'app/shared/model/utilisateur.model';
 import { getEntities as getUtilisateurs } from 'app/entities/utilisateur/utilisateur.reducer';
-import { IMaison } from 'app/shared/model/maison.model';
+import { IObjet } from 'app/shared/model/objet.model';
+import { TypeObjet } from 'app/shared/model/enumerations/type-objet.model';
+import { EtatObjet } from 'app/shared/model/enumerations/etat-objet.model';
 import { getEntity, updateEntity, createEntity, reset } from './maison.reducer';
 
-export const MaisonUpdate = () => {
+export const ObjetUpdate = () => {
+  const account = useAppSelector(state => state.authentication.account);
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -22,13 +25,15 @@ export const MaisonUpdate = () => {
   const isNew = id === undefined;
 
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
-  const maisonEntity = useAppSelector(state => state.maison.entity);
-  const loading = useAppSelector(state => state.maison.loading);
-  const updating = useAppSelector(state => state.maison.updating);
-  const updateSuccess = useAppSelector(state => state.maison.updateSuccess);
+  const objetEntity = useAppSelector(state => state.objet.entity);
+  const loading = useAppSelector(state => state.objet.loading);
+  const updating = useAppSelector(state => state.objet.updating);
+  const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
+  const typeObjetValues = Object.keys(TypeObjet);
+  const etatObjetValues = Object.keys(EtatObjet);
 
   const handleClose = () => {
-    navigate('/maison');
+    navigate('/objects');
   };
 
   useEffect(() => {
@@ -51,33 +56,49 @@ export const MaisonUpdate = () => {
       values.id = Number(values.id);
     }
 
+    // console.log("* values:", values)
+
+    // const signalant = utilisateurs.find(it => it.id.toString() === values.signalant?.toString());
+
+    const proprietaire = utilisateurs.find(it => it?.loginId?.toString() === account?.id?.toString());
+
     const entity = {
-      ...maisonEntity,
+      etat: 'VOLE',
+      proprietaire,
+      proprietaireId: proprietaire.id,
+      ...objetEntity,
       ...values,
-      proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
     };
+
+    console.log('* entity:', entity);
 
     if (isNew) {
       dispatch(createEntity(entity));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity({ entity, report: 'ras' }));
+      // console.log("* entity:", entity)
     }
   };
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? {
+          type: 'TELEPHONE',
+        }
       : {
-          ...maisonEntity,
-          proprietaire: maisonEntity?.proprietaire?.id,
+          type: 'TELEPHONE',
+          etat: 'VOLE',
+          ...objetEntity,
+          // proprietaire: objetEntity?.proprietaire?.id,
+          // signalant: objetEntity?.signalant?.id,
         };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="goFindApp.maison.home.createOrEditLabel" data-cy="MaisonCreateUpdateHeading">
-            <Translate contentKey="goFindApp.maison.home.createOrEditLabel">Create or edit a Maison</Translate>
+          <h2 id="goFindApp.objet.home.createOrEditLabel" data-cy="ObjetCreateUpdateHeading">
+            Ajouter sa maison en location
           </h2>
         </Col>
       </Row>
@@ -92,34 +113,54 @@ export const MaisonUpdate = () => {
                   name="id"
                   required
                   readOnly
-                  id="maison-id"
+                  id="objet-id"
                   label={translate('global.field.id')}
                   validate={{ required: true }}
                 />
               ) : null}
               <ValidatedField
-                label={translate('goFindApp.maison.adresse')}
-                id="maison-adresse"
-                name="adresse"
-                data-cy="adresse"
+                label={translate('goFindApp.objet.libelle')}
+                id="objet-libelle"
+                name="libelle"
+                data-cy="libelle"
                 type="text"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
               <ValidatedField
-                label={translate('goFindApp.maison.description')}
-                id="maison-description"
+                label={translate('goFindApp.objet.description')}
+                id="objet-description"
                 name="description"
                 data-cy="description"
                 type="text"
               />
-              <ValidatedField label={translate('goFindApp.maison.image')} id="maison-image" name="image" data-cy="image" type="text" />
+              <ValidatedField label={translate('goFindApp.objet.image')} id="objet-image" name="image" data-cy="image" type="text" />
               <ValidatedField
-                id="maison-proprietaire"
+                label={translate('goFindApp.objet.identifiant')}
+                id="objet-identifiant"
+                name="identifiant"
+                data-cy="identifiant"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              {!isNew && (
+                <ValidatedField label={translate('goFindApp.objet.etat')} id="objet-etat" name="etat" data-cy="etat" type="select">
+                  {etatObjetValues.map(etatObjet => (
+                    <option value={etatObjet} key={etatObjet}>
+                      {translate('goFindApp.EtatObjet.' + etatObjet)}
+                    </option>
+                  ))}
+                </ValidatedField>
+              )}
+              {/* <ValidatedField
+                id="objet-proprietaire"
                 name="proprietaire"
                 data-cy="proprietaire"
-                label={translate('goFindApp.maison.proprietaire')}
+                readOnly
+                label={translate('goFindApp.objet.proprietaire')}
                 type="select"
               >
                 <option value="" key="0" />
@@ -131,7 +172,23 @@ export const MaisonUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/maison" replace color="info">
+              <ValidatedField
+                id="objet-signalant"
+                name="signalant"
+                data-cy="signalant"
+                label={translate('goFindApp.objet.signalant')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {utilisateurs
+                  ? utilisateurs.map(otherEntity => (
+                      <option value={otherEntity.id} disabled key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField> */}
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/objects" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -152,4 +209,4 @@ export const MaisonUpdate = () => {
   );
 };
 
-export default MaisonUpdate;
+export default ObjetUpdate;

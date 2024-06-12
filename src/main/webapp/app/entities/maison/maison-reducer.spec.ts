@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import { parseHeaderForLinks } from 'react-jhipster';
 
 import { EntityState } from 'app/shared/reducers/reducer.utils';
-import { IMaison, defaultValue } from 'app/shared/model/maison.model';
+import { IObjet, defaultValue } from 'app/shared/model/objet.model';
 import reducer, { createEntity, deleteEntity, getEntities, getEntity, updateEntity, partialUpdateEntity, reset } from './maison.reducer';
 
 describe('Entities reducer tests', () => {
@@ -17,7 +17,7 @@ describe('Entities reducer tests', () => {
     }
   }
 
-  const initialState: EntityState<IMaison> = {
+  const initialState: EntityState<IObjet> = {
     loading: false,
     errorMessage: null,
     entities: [],
@@ -189,7 +189,7 @@ describe('Entities reducer tests', () => {
       axios.delete = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
 
-    it('dispatches FETCH_MAISON_LIST actions', async () => {
+    it('dispatches FETCH_OBJET_LIST actions', async () => {
       const arg = {};
 
       const result = await getEntities(arg)(dispatch, getState, extra);
@@ -199,7 +199,7 @@ describe('Entities reducer tests', () => {
       expect(getEntities.fulfilled.match(result)).toBe(true);
     });
 
-    it('dispatches FETCH_MAISON actions', async () => {
+    it('dispatches FETCH_OBJET actions', async () => {
       const arg = 42666;
 
       const result = await getEntity(arg)(dispatch, getState, extra);
@@ -209,7 +209,7 @@ describe('Entities reducer tests', () => {
       expect(getEntity.fulfilled.match(result)).toBe(true);
     });
 
-    it('dispatches CREATE_MAISON actions', async () => {
+    it('dispatches CREATE_OBJET actions', async () => {
       const arg = { id: 456 };
 
       const result = await createEntity(arg)(dispatch, getState, extra);
@@ -219,7 +219,7 @@ describe('Entities reducer tests', () => {
       expect(createEntity.fulfilled.match(result)).toBe(true);
     });
 
-    it('dispatches UPDATE_MAISON actions', async () => {
+    it('dispatches UPDATE_OBJET actions', async () => {
       const arg = { id: 456 };
 
       const result = await updateEntity(arg)(dispatch, getState, extra);
@@ -229,7 +229,7 @@ describe('Entities reducer tests', () => {
       expect(updateEntity.fulfilled.match(result)).toBe(true);
     });
 
-    it('dispatches PARTIAL_UPDATE_MAISON actions', async () => {
+    it('dispatches PARTIAL_UPDATE_OBJET actions', async () => {
       const arg = { id: 123 };
 
       const result = await partialUpdateEntity(arg)(dispatch, getState, extra);
@@ -239,7 +239,7 @@ describe('Entities reducer tests', () => {
       expect(partialUpdateEntity.fulfilled.match(result)).toBe(true);
     });
 
-    it('dispatches DELETE_MAISON actions', async () => {
+    it('dispatches DELETE_OBJET actions', async () => {
       const arg = 42666;
 
       const result = await deleteEntity(arg)(dispatch, getState, extra);

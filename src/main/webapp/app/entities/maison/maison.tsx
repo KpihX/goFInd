@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, reset } from './maison.reducer';
 
-export const Maison = () => {
+export const Objet = () => {
   const dispatch = useAppDispatch();
 
   const pageLocation = useLocation();
@@ -21,10 +21,10 @@ export const Maison = () => {
   );
   const [sorting, setSorting] = useState(false);
 
-  const maisonList = useAppSelector(state => state.maison.entities);
-  const loading = useAppSelector(state => state.maison.loading);
-  const links = useAppSelector(state => state.maison.links);
-  const updateSuccess = useAppSelector(state => state.maison.updateSuccess);
+  const objetList = useAppSelector(state => state.objet.entities);
+  const loading = useAppSelector(state => state.objet.loading);
+  const links = useAppSelector(state => state.objet.links);
+  const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
 
   const getAllEntities = () => {
     dispatch(
@@ -102,82 +102,94 @@ export const Maison = () => {
 
   return (
     <div>
-      <h2 id="maison-heading" data-cy="MaisonHeading">
-        <Translate contentKey="goFindApp.maison.home.title">Maisons</Translate>
+      <h2 id="objet-heading" data-cy="ObjetHeading">
+        Maisons
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} />{' '}
-            <Translate contentKey="goFindApp.maison.home.refreshListLabel">Refresh List</Translate>
+            <Translate contentKey="goFindApp.objet.home.refreshListLabel">Refresh List</Translate>
           </Button>
-          <Link to="/maison/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+          <Link to="/objet/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
-            &nbsp;
-            <Translate contentKey="goFindApp.maison.home.createLabel">Create new Maison</Translate>
+            &nbsp; Créer une nouvelle maison
           </Link>
         </div>
       </h2>
       <div className="table-responsive">
         <InfiniteScroll
-          dataLength={maisonList ? maisonList.length : 0}
+          dataLength={objetList ? objetList.length : 0}
           next={handleLoadMore}
           hasMore={paginationState.activePage - 1 < links.next}
           loader={<div className="loader">Loading ...</div>}
         >
-          {maisonList && maisonList.length > 0 ? (
+          {objetList && objetList.length > 0 ? (
             <Table responsive>
               <thead>
                 <tr>
                   <th className="hand" onClick={sort('id')}>
-                    <Translate contentKey="goFindApp.maison.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                    <Translate contentKey="goFindApp.objet.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                   </th>
-                  <th className="hand" onClick={sort('adresse')}>
-                    <Translate contentKey="goFindApp.maison.adresse">Adresse</Translate>{' '}
-                    <FontAwesomeIcon icon={getSortIconByFieldName('adresse')} />
+                  <th className="hand" onClick={sort('libelle')}>
+                    Localisation <FontAwesomeIcon icon={getSortIconByFieldName('libelle')} />
                   </th>
                   <th className="hand" onClick={sort('description')}>
-                    <Translate contentKey="goFindApp.maison.description">Description</Translate>{' '}
-                    <FontAwesomeIcon icon={getSortIconByFieldName('description')} />
+                    Description <FontAwesomeIcon icon={getSortIconByFieldName('description')} />
                   </th>
+
                   <th className="hand" onClick={sort('image')}>
-                    <Translate contentKey="goFindApp.maison.image">Image</Translate>{' '}
+                    <Translate contentKey="goFindApp.objet.image">Image</Translate>{' '}
                     <FontAwesomeIcon icon={getSortIconByFieldName('image')} />
                   </th>
+                  <th className="hand" onClick={sort('identifiant')}>
+                    <Translate contentKey="goFindApp.objet.identifiant">Identifiant</Translate>{' '}
+                    <FontAwesomeIcon icon={getSortIconByFieldName('identifiant')} />
+                  </th>
+
                   <th>
-                    <Translate contentKey="goFindApp.maison.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" />
+                    <Translate contentKey="goFindApp.objet.proprietaire">Proprietaire</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th>
+                    <Translate contentKey="goFindApp.objet.signalant">Signalant</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th />
                 </tr>
               </thead>
               <tbody>
-                {maisonList.map((maison, i) => (
+                {objetList.map((objet, i) => (
                   <tr key={`entity-${i}`} data-cy="entityTable">
                     <td>
-                      <Button tag={Link} to={`/maison/${maison.id}`} color="link" size="sm">
-                        {maison.id}
+                      <Button tag={Link} to={`/objet/${objet.id}`} color="link" size="sm">
+                        {objet.id}
                       </Button>
                     </td>
-                    <td>{maison.adresse}</td>
-                    <td>{maison.description}</td>
-                    <td>{maison.image}</td>
+                    <td>{objet.libelle}</td>
+                    <td>{objet.description}</td>
                     <td>
-                      {maison.proprietaire ? <Link to={`/utilisateur/${maison.proprietaire.id}`}>{maison.proprietaire.id}</Link> : ''}
+                      <Translate contentKey={`goFindApp.TypeObjet.${objet.type}`} />
                     </td>
+                    <td>{objet.image}</td>
+                    <td>{objet.identifiant}</td>
+                    <td>
+                      <Translate contentKey={`goFindApp.EtatObjet.${objet.etat}`} />
+                    </td>
+                    <td>{objet.proprietaire ? <Link to={`/utilisateur/${objet.proprietaire.id}`}>{objet.proprietaire.id}</Link> : ''}</td>
+                    <td>{objet.signalant ? <Link to={`/utilisateur/${objet.signalant.id}`}>{objet.signalant.id}</Link> : ''}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
-                        <Button tag={Link} to={`/maison/${maison.id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                        <Button tag={Link} to={`/objet/${objet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                           <FontAwesomeIcon icon="eye" />{' '}
                           <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.view">View</Translate>
                           </span>
                         </Button>
-                        <Button tag={Link} to={`/maison/${maison.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                        <Button tag={Link} to={`/objet/${objet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
                           <FontAwesomeIcon icon="pencil-alt" />{' '}
                           <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.edit">Edit</Translate>
                           </span>
                         </Button>
                         <Button
-                          onClick={() => (window.location.href = `/maison/${maison.id}/delete`)}
+                          onClick={() => (window.location.href = `/objet/${objet.id}/delete`)}
                           color="danger"
                           size="sm"
                           data-cy="entityDeleteButton"
@@ -194,11 +206,7 @@ export const Maison = () => {
               </tbody>
             </Table>
           ) : (
-            !loading && (
-              <div className="alert alert-warning">
-                <Translate contentKey="goFindApp.maison.home.notFound">No Maisons found</Translate>
-              </div>
-            )
+            !loading && <div className="alert alert-warning">Aucune maison trouvée</div>
           )}
         </InfiniteScroll>
       </div>
@@ -206,4 +214,4 @@ export const Maison = () => {
   );
 };
 
-export default Maison;
+export default Objet;

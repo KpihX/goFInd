@@ -3,21 +3,21 @@ import { Route } from 'react-router-dom';
 
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 
-import Maison from './maison';
-import MaisonDetail from './maison-detail';
-import MaisonUpdate from './maison-update';
-import MaisonDeleteDialog from './maison-delete-dialog';
+import Objet from './maison';
+import ObjetDetail from './maison-detail';
+import ObjetUpdate from './maison-update';
+import ObjetDeleteDialog from './maison-delete-dialog';
 
-const MaisonRoutes = () => (
+const ObjetRoutes = () => (
   <ErrorBoundaryRoutes>
-    <Route index element={<Maison />} />
-    <Route path="new" element={<MaisonUpdate />} />
+    <Route index element={<Objet />} />
+    <Route path="new" element={<ObjetUpdate />} />
     <Route path=":id">
-      <Route index element={<MaisonDetail />} />
-      <Route path="edit" element={<MaisonUpdate />} />
-      <Route path="delete" element={<MaisonDeleteDialog />} />
+      <Route index element={<ObjetDetail />} />
+      <Route path="edit" element={<ObjetUpdate />} />
+      <Route path="delete" element={<ObjetDeleteDialog />} />
     </Route>
   </ErrorBoundaryRoutes>
 );
 
-export default MaisonRoutes;
+export default ObjetRoutes;

@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './maison.reducer';
 
-export const MaisonDetail = () => {
+export const ObjetDetail = () => {
   const dispatch = useAppDispatch();
 
   const { id } = useParams<'id'>();
@@ -17,12 +17,12 @@ export const MaisonDetail = () => {
     dispatch(getEntity(id));
   }, []);
 
-  const maisonEntity = useAppSelector(state => state.maison.entity);
+  const objetEntity = useAppSelector(state => state.objet.entity);
   return (
     <Row>
       <Col md="8">
-        <h2 data-cy="maisonDetailsHeading">
-          <Translate contentKey="goFindApp.maison.detail.title">Maison</Translate>
+        <h2 data-cy="objetDetailsHeading">
+          <Translate contentKey="goFindApp.objet.detail.title">Objet</Translate>
         </h2>
         <dl className="jh-entity-details">
           <dt>
@@ -30,38 +30,54 @@ export const MaisonDetail = () => {
               <Translate contentKey="global.field.id">ID</Translate>
             </span>
           </dt>
-          <dd>{maisonEntity.id}</dd>
+          <dd>{objetEntity.id}</dd>
           <dt>
-            <span id="adresse">
-              <Translate contentKey="goFindApp.maison.adresse">Adresse</Translate>
+            <span id="libelle">
+              <Translate contentKey="goFindApp.objet.libelle">Localisation</Translate>
             </span>
           </dt>
-          <dd>{maisonEntity.adresse}</dd>
+          <dd>{objetEntity.libelle}</dd>
           <dt>
             <span id="description">
-              <Translate contentKey="goFindApp.maison.description">Description</Translate>
+              <Translate contentKey="goFindApp.objet.description">Description</Translate>
             </span>
           </dt>
-          <dd>{maisonEntity.description}</dd>
+          <dd>{objetEntity.description}</dd>
           <dt>
             <span id="image">
-              <Translate contentKey="goFindApp.maison.image">Image</Translate>
+              <Translate contentKey="goFindApp.objet.image">Image</Translate>
             </span>
           </dt>
-          <dd>{maisonEntity.image}</dd>
+          <dd>{objetEntity.image}</dd>
           <dt>
-            <Translate contentKey="goFindApp.maison.proprietaire">Proprietaire</Translate>
+            <span id="identifiant">
+              <Translate contentKey="goFindApp.objet.identifiant">Identifiant</Translate>
+            </span>
           </dt>
-          <dd>{maisonEntity.proprietaire ? maisonEntity.proprietaire.id : ''}</dd>
+          <dd>{objetEntity.identifiant}</dd>
+          <dt>
+            <span id="etat">
+              <Translate contentKey="goFindApp.objet.etat">Etat</Translate>
+            </span>
+          </dt>
+          <dd>{objetEntity.etat}</dd>
+          <dt>
+            <Translate contentKey="goFindApp.objet.proprietaire">Proprietaire</Translate>
+          </dt>
+          <dd>{objetEntity.proprietaire ? objetEntity.proprietaire.id : ''}</dd>
+          <dt>
+            <Translate contentKey="goFindApp.objet.signalant">Signalant</Translate>
+          </dt>
+          <dd>{objetEntity.signalant ? objetEntity.signalant.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/maison" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to="/objet" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/maison/${maisonEntity.id}/edit`} replace color="primary">
+        <Button tag={Link} to={`/objet/${objetEntity.id}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -72,4 +88,4 @@ export const MaisonDetail = () => {
   );
 };
 
-export default MaisonDetail;
+export default ObjetDetail;
