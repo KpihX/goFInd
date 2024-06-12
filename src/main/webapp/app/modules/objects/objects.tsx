@@ -164,7 +164,7 @@ export const Objects = () => {
           ),
         )}
       </Stack>
-      <div className="flex flex-row">
+      <div className="flex flex-row mt-3">
         <TextField
           variant="outlined"
           sx={{ ml: 1 }}
@@ -181,7 +181,7 @@ export const Objects = () => {
             ),
           }}
         />
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <FormControl sx={{ ml: 1, minWidth: 120 }}>
           <InputLabel id="demo-select-small-label">Type de recherche</InputLabel>
           <Select
             labelId="demo-select-small-label"

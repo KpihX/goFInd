@@ -131,9 +131,9 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
       });
     } else {
       const signalantNew = utilisateurs.find(it => it.loginId.toString() === account.id.toString());
-      console.log('* utilisateurs:', utilisateurs);
-      console.log('* account:', account);
-      console.log('** found:', found);
+      // console.log('* utilisateurs:', utilisateurs);
+      // console.log('* account:', account);
+      // console.log('** found:', found);
       saveEntity({
         etatNew: 'RETROUVE',
         signalantNew,
@@ -185,7 +185,7 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
               {found && (
                 <Stack direction="row" spacing={1}>
                   <Chip
-                    label="Votre objet a été retrouvé! Veuillez consulter vos mails pour plus d'infos!"
+                    label="Votre objet a été retrouvé! Consulter vos mails!"
                     variant="outlined"
                     color="success"
                     onClick={handleClick}
@@ -193,7 +193,7 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
                   />
                 </Stack>
               )}
-              <div className="flex flex-row pl-3 justify-center">
+              <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
                 {/* <Button tag={Link} to={`/objet/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
                 <FontAwesomeIcon icon="eye" />{' '}
                 <span className="d-none d-md-inline">
@@ -220,18 +220,18 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
               </div>
             </>
           ) : (
-            <div className="btn-group flex-btn-group-container">
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               {etat === 'VOLE' ? (
                 <Button color="warning" size="sm" data-cy="entityReportButton" onClick={handleReport}>
                   <FontAwesomeIcon icon="ban" />{' '}
-                  <span className="d-none d-md-inline">
+                  <span style={{ display: 'inline' }}>
                     <Translate contentKey="entity.action.report">Report as Stolen</Translate>
                   </span>
                 </Button>
               ) : (
                 <Button color="success" size="sm" data-cy="entityUnReportButton" onClick={handleUnreport}>
                   <FontAwesomeIcon icon="times-circle" />{' '}
-                  <span className="d-none d-md-inline">
+                  <span style={{ display: 'inline' }}>
                     <Translate contentKey="entity.action.unreport"> Unreport </Translate>
                   </span>
                 </Button>

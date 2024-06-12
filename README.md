@@ -43,6 +43,11 @@ auto-refreshes when files change on your hard drive.
 npm start
 ```
 
+if you have 500 error and the backend doesn't show any erro, or you have an error that you can't explain run
+
+- ./gradlew clean
+- npm cache clear --forced
+
 Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
 specifying a newer version in [package.json](package.json). You can also run `npm update` and `npm install` to manage dependencies.
 Add the `help` flag on any command to see how you can use it. For example, `npm help update`.
