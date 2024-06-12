@@ -265,6 +265,12 @@ export const Itinaries = () => {
                               </option>
                             ))
                           : null}
+                        {i === 0 && (
+                          <>
+                            <p>KpihX</p>
+                            <p>Admin</p>
+                          </>
+                        )}
                       </td>
                       <td className="text-end">
                         {trajet.proprietaire.loginId === account.id && (
