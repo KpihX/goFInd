@@ -1,9 +1,11 @@
+// maison.reducer.ts
+
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending } from '@reduxjs/toolkit';
-import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IMaison, defaultValue } from 'app/shared/model/maison.model';
+import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 
 const initialState: EntityState<IMaison> = {
   loading: false,
@@ -36,24 +38,50 @@ export const getEntity = createAsyncThunk(
 
 export const createEntity = createAsyncThunk(
   'maison/create_entity',
-  async (entity: IMaison, thunkAPI) => {
-    return axios.post<IMaison>(apiUrl, cleanEntity(entity));
+  async ({ entity, imagesPieces, prix }: { entity: IMaison; imagesPieces: string[]; prix: number }, thunkAPI) => {
+    const result = await axios.post<IMaison>(apiUrl, cleanEntity(entity));
+    const maisonId = result.data.id;
+    // Ajout des pièces
+    const pieceRequests = imagesPieces.map(image =>
+      axios.post('api/pieces', {
+        libelle: `Piece for maison ${maisonId}`,
+        image,
+        etat: 'NONLOUE',
+        maison_id:`${maisonId}`,
+      })
+    );
+    await Promise.all(pieceRequests);
+    // Ajout de la location
+    await axios.post('api/locations', {
+      prix,
+      maison_id: `${maisonId}`
+    });
+    return result;
   },
   { serializeError: serializeAxiosError },
 );
 
 export const updateEntity = createAsyncThunk(
   'maison/update_entity',
-  async (entity: IMaison, thunkAPI) => {
-    return axios.put<IMaison>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-  },
-  { serializeError: serializeAxiosError },
-);
-
-export const partialUpdateEntity = createAsyncThunk(
-  'maison/partial_update_entity',
-  async (entity: IMaison, thunkAPI) => {
-    return axios.patch<IMaison>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  async ({ entity, imagesPieces, prix }: { entity: IMaison; imagesPieces: string[]; prix: number }, thunkAPI) => {
+    const result = await axios.put<IMaison>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const maisonId = result.data.id;
+    // Ajout des pièces
+    const pieceRequests = imagesPieces.map(image =>
+      axios.post('api/pieces', {
+        libelle: `Piece for maison ${maisonId}`,
+        image,
+        etat: 'NONLOUE',
+        maison_id: `${maisonId}`,
+      })
+    );
+    await Promise.all(pieceRequests);
+    // Ajout de la location
+    await axios.post('api/locations', {
+      prix,
+      maison_id: `${maisonId}`,
+    });
+    return result;
   },
   { serializeError: serializeAxiosError },
 );
@@ -62,12 +90,11 @@ export const deleteEntity = createAsyncThunk(
   'maison/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return await axios.delete<IMaison>(requestUrl);
+    const result = await axios.delete<IMaison>(requestUrl);
+    return result;
   },
   { serializeError: serializeAxiosError },
 );
-
-// slice
 
 export const MaisonSlice = createEntitySlice({
   name: 'maison',
@@ -84,31 +111,20 @@ export const MaisonSlice = createEntitySlice({
         state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
-        const { data, headers } = action.payload;
-        const links = parseHeaderForLinks(headers.link);
-
-        return {
-          ...state,
-          loading: false,
-          links,
-          entities: loadMoreDataWhenScrolled(state.entities, data, links),
-          totalItems: parseInt(headers['x-total-count'], 10),
-        };
-      })
-      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
-        state.updating = false;
         state.loading = false;
+        state.links = parseHeaderForLinks(action.payload.headers.link);
+        state.totalItems = action.payload.headers['x-total-count'];
+        state.entities = loadMoreDataWhenScrolled(state.entities, action.payload.data, state.links);
+      })
+      .addMatcher(isFulfilled(createEntity, updateEntity), (state, action) => {
+        state.updating = false;
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
       .addMatcher(isPending(getEntities, getEntity), state => {
-        state.errorMessage = null;
-        state.updateSuccess = false;
         state.loading = true;
       })
-      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity), state => {
-        state.errorMessage = null;
-        state.updateSuccess = false;
+      .addMatcher(isPending(createEntity, updateEntity, deleteEntity), state => {
         state.updating = true;
       });
   },

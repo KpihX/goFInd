@@ -208,6 +208,8 @@ export const Houses = () => {
                     image={maison.image}
                     proprietaire={maison.proprietaire}
                     signalant={maison.signalant}
+                    piece={maison.piece}
+                    location={maison.location}
                     
                   />
                 

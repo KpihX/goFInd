@@ -1,4 +1,5 @@
 import { IPiece } from 'app/shared/model/piece.model'; //IPiece from './piece.model'
+import {ILocation} from 'app/shared/model/location.model';
 
 export interface IMaison {
   id?: number;
@@ -8,7 +9,7 @@ export interface IMaison {
   proprietaire?: any;
   signalant?: any;
   pieces?: IPiece;
-  prix?: number;
+  location?: ILocation;
 }
 
 export const defaultValue: Readonly<IMaison> = {};

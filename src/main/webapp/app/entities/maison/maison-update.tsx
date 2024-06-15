@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IUtilisateur } from 'app/shared/model/utilisateur.model';
 import { getEntities as getUtilisateurs } from 'app/entities/utilisateur/utilisateur.reducer';
 import { IMaison } from 'app/shared/model/maison.model';
 import { getEntity, updateEntity, createEntity, reset } from './maison.reducer';
-import Piece from '../piece/piece';
 
 export const MaisonUpdate = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +25,8 @@ export const MaisonUpdate = () => {
   const updating = useAppSelector(state => state.maison.updating);
   const updateSuccess = useAppSelector(state => state.maison.updateSuccess);
 
-  const [imagesPieces, setImagesPieces] = useState<string[]>(['']);
+  const [imagesPieces, setImagesPieces] = useState<string[]>([]);
+  const [prix, setPrix] = useState<number>(0);
 
   const handleClose = () => {
     navigate('/maison');
@@ -48,22 +46,17 @@ export const MaisonUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
   const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
-    }
-
     const entity = {
       ...maisonEntity,
       ...values,
-      proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
+      proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire.toString()),
     };
 
     if (isNew) {
-      dispatch(createEntity(entity));
+      dispatch(createEntity({ entity, imagesPieces, prix }));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity({ entity, imagesPieces, prix }));
     }
   };
 
@@ -75,16 +68,19 @@ export const MaisonUpdate = () => {
           proprietaire: maisonEntity?.proprietaire?.id,
         };
 
-        
-        const handleAddImagePiece = () => {
-          setImagesPieces([...imagesPieces, '']);
-        };
-      
-        const handleRemoveImagePiece = (index: number) => {
-          const updatedImages = [...imagesPieces];
-          updatedImages.splice(index, 1);
-          setImagesPieces(updatedImages);
-        };
+  const handleAddImagePiece = () => {
+    setImagesPieces([...imagesPieces, '']);
+  };
+
+  const handleRemoveImagePiece = index => {
+    setImagesPieces(imagesPieces.filter((_, i) => i !== index));
+  };
+
+  const handleImagePieceChange = (index, value) => {
+    const updatedImages = [...imagesPieces];
+    updatedImages[index] = value;
+    setImagesPieces(updatedImages);
+  };
 
   return (
     <div>
@@ -136,7 +132,6 @@ export const MaisonUpdate = () => {
                 label={translate('goFindApp.maison.proprietaire')}
                 type="select"
               >
-                
                 <option value="" key="0" />
                 {utilisateurs
                   ? utilisateurs.map(otherEntity => (
@@ -146,10 +141,36 @@ export const MaisonUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-
-              <Piece/>
-                  
-
+              <div>
+                <h5>Images des pièces</h5>
+                {imagesPieces.map((image, index) => (
+                  <div key={index} className="d-flex mb-2">
+                    <ValidatedField
+                      name={`piece-image-${index}`}
+                      label={`Image ${index + 1}`}
+                      value={image}
+                      onChange={e => handleImagePieceChange(index, e.target.value)}
+                      data-cy={`piece-image-${index}`}
+                      type="text"
+                    />
+                    <Button type="button" color="danger" onClick={() => handleRemoveImagePiece(index)} className="ms-2">
+                      <FontAwesomeIcon icon="trash" />
+                    </Button>
+                  </div>
+                ))}
+                <Button type="button" color="primary" onClick={handleAddImagePiece}>
+                  <FontAwesomeIcon icon="plus" /> Ajouter une image de pièce
+                </Button>
+              </div>
+              <ValidatedField
+                label={translate('goFindApp.maison.prix')}
+                id="maison-prix"
+                name="prix"
+                data-cy="prix"
+                type="number"
+                value={prix}
+                onChange={e => setPrix(Number(e.target.value))}
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/maison" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
