@@ -32,7 +32,7 @@ export const ObjetUpdate = () => {
   const typeObjetValues = Object.keys(TypeObjet);
   const etatObjetValues = Object.keys(EtatObjet);
 
-  const account = useAppSelector(state => state.authentication.account);
+ 
 
   const handleClose = () => {
     navigate('/objects');
