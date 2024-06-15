@@ -27,6 +27,8 @@ export const TrajetUpdate = () => {
   const updating = useAppSelector(state => state.trajet.updating);
   const updateSuccess = useAppSelector(state => state.trajet.updateSuccess);
 
+  const account = useAppSelector(state => state.authentication.account);
+
   const handleClose = () => {
     navigate('/itinaries');
   };
@@ -58,12 +60,17 @@ export const TrajetUpdate = () => {
       values.prix = Number(values.prix);
     }
 
+    const proprietaire = utilisateurs.find(it => it?.loginId?.toString() === account?.id?.toString());
+
     const entity = {
       ...trajetEntity,
       ...values,
-      proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
-      engages: mapIdList(values.engages),
+      proprietaire,
+      proprietaireId: proprietaire.id,
+      engages: [],
     };
+
+    console.log('* trajet:', entity);
 
     if (isNew) {
       dispatch(createEntity(entity));
@@ -162,7 +169,7 @@ export const TrajetUpdate = () => {
                   validate: v => isNumber(v) || translate('entity.validation.number'),
                 }}
               />
-              <ValidatedField
+              {/* <ValidatedField
                 id="trajet-proprietaire"
                 name="proprietaire"
                 data-cy="proprietaire"
@@ -177,8 +184,8 @@ export const TrajetUpdate = () => {
                       </option>
                     ))
                   : null}
-              </ValidatedField>
-              <ValidatedField
+              </ValidatedField> */}
+              {/* <ValidatedField
                 label={translate('goFindApp.trajet.engages')}
                 id="trajet-engages"
                 data-cy="engages"
@@ -194,8 +201,8 @@ export const TrajetUpdate = () => {
                       </option>
                     ))
                   : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/trajet" replace color="info">
+              </ValidatedField> */}
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/itinaries" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

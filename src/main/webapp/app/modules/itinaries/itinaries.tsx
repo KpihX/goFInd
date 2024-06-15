@@ -17,7 +17,8 @@ import { convertDateTimeToServer } from 'app/shared/util/date-utils';
 import { getEntities as getUtils } from 'app/entities/utilisateur/utilisateur.reducer';
 import { getUsers } from '../administration/user-management/user-management.reducer';
 
-import { partialUpdateEntity } from 'app/entities/trajet/trajet.reducer';
+import { updateEntity } from 'app/entities/trajet/trajet.reducer';
+import { toast } from 'react-toastify';
 
 export const Itinaries = () => {
   const [search, setSearch] = useState('');
@@ -40,7 +41,11 @@ export const Itinaries = () => {
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
   const [updateUtilisateurs, setUpdateUtilisateurs] = React.useState(false);
   const users = useAppSelector(state => state.userManagement.users);
-  const [engagesSpec, setEngagesSpec] = React.useState([]);
+
+  const [start, setStart] = React.useState(true);
+  const [isEngaged, setIsEngaged] = React.useState([]);
+  const [currentTrajet, setCurrentTrajet] = React.useState(null);
+  const [message, setMessage] = React.useState('');
 
   const getAllEntities = () => {
     dispatch(
@@ -66,13 +71,22 @@ export const Itinaries = () => {
     dispatch(getUtils({}));
     dispatch(getUsers({}));
     setUpdateUtilisateurs(true);
+    setStart(true);
+    setCurrentTrajet(null);
   }, []);
 
   useEffect(() => {
-    if (updateSuccess) {
-      resetAll();
+    setIsEngaged(trajetList.map(trajet => trajet.engages.some(engage => engage.loginId === account.id)));
+  }, [trajetList]);
+
+  useEffect(() => {
+    console.log('* start', start);
+    if (updateSuccess && !start) {
+      getAllEntities();
+      toast.success(message);
+      setStart(true);
     }
-  }, [updateSuccess]);
+  }, [updateSuccess, start]);
 
   useEffect(() => {
     getAllEntities();
@@ -119,33 +133,59 @@ export const Itinaries = () => {
     }
   };
 
-  const handleSubscribe = trajet => {
+  const handleSubscribe = (trajet, index) => {
+    setStart(false);
+    const newIsEngaged = [...isEngaged];
+    newIsEngaged[index] = true;
+    setIsEngaged(newIsEngaged);
+    setMessage('Vous avez bien été associé au trajet!');
+
     const util = utilisateurs.find(it => it.loginId.toString() === account?.id?.toString());
-    setEngagesSpec([...trajet.engages, util]);
+
+    const newTrajet = {
+      ...trajet,
+      places: trajet.places - 1,
+      engages: [...trajet.engages, { id: util.id, telephone: util.telephone, loginId: util.loginId }],
+    };
+    setCurrentTrajet(newTrajet);
   };
 
-  const handleUnsubscribe = trajet => {
-    setEngagesSpec(trajet.engages);
+  const handleUnsubscribe = (trajet, index) => {
+    setStart(false);
+    const newIsEngaged = [...isEngaged];
+    newIsEngaged[index] = false;
+    setIsEngaged(newIsEngaged);
+    setMessage('Vous avez bien été rétiré du trajet!');
+
+    const newTrajet = {
+      ...trajet,
+      places: trajet.places + 1,
+      engages: trajet.engages.filter(engage => engage.loginId !== account.id),
+    };
+    setCurrentTrajet(newTrajet);
   };
 
   // eslint-disable-next-line complexity
   const saveEntity = () => {
     const entity = {
-      engages: mapIdList(engagesSpec),
+      ...currentTrajet,
     };
 
-    dispatch(partialUpdateEntity(entity));
+    console.log('* trajet:', entity);
+
+    dispatch(updateEntity(entity));
   };
 
   const idToLogin = id => {
-    return users.find(it => it.id === id).login;
+    return users.find(it => it.id === id)?.login;
   };
 
   React.useEffect(() => {
-    if (engagesSpec.length !== 0) {
+    if (!start) {
+      console.log('* isEngaged: ', isEngaged);
       saveEntity();
     }
-  }, [engagesSpec, updateUtilisateurs]);
+  }, [currentTrajet, start, updateUtilisateurs, isEngaged]);
 
   return (
     <div>
@@ -228,98 +268,122 @@ export const Itinaries = () => {
                   </tr>
                 </thead>
                 <tbody>
+                  {console.log('* isEngaged :', isEngaged)}
                   {trajetList.map((trajet, i) => (
-                    <tr key={`entity-${i}`} data-cy="entityTable">
-                      <td>
-                        <Button tag={Link} to={`/trajet/${trajet.id}`} color="link" size="sm">
-                          {trajet.id}
-                        </Button>
-                      </td>
-                      <td>{trajet.depart}</td>
-                      <td>{trajet.arrivee}</td>
-                      <td>
-                        {trajet.dateHeureDepart ? <TextFormat type="date" value={trajet.dateHeureDepart} format={APP_DATE_FORMAT} /> : null}
-                      </td>
-                      <td>{trajet.places}</td>
-                      <td>{trajet.prix}</td>
-                      {trajet.proprietaire.loginId !== account.id && (
-                        <td>
-                          {trajet.proprietaire.telephone}
-                          {/* {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''} */}
-                        </td>
+                    <>
+                      {(trajet.places > 0 || trajet.proprietaire.loginId === account.id) && (
+                        <tr key={`entity-${i}`} data-cy="entityTable">
+                          <td>
+                            <Button tag={Link} to={`/trajet/${trajet.id}`} color="link" size="sm">
+                              {trajet.id}
+                            </Button>
+                          </td>
+                          <td>{trajet.depart}</td>
+                          <td>{trajet.arrivee}</td>
+                          <td>
+                            {trajet.dateHeureDepart ? (
+                              <TextFormat type="date" value={trajet.dateHeureDepart} format={APP_DATE_FORMAT} />
+                            ) : null}
+                          </td>
+                          <td>{trajet.places}</td>
+                          <td>{trajet.prix}</td>
+                          {trajet.proprietaire.loginId !== account.id && (
+                            <td>
+                              {trajet.proprietaire.telephone}
+                              {/* {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''} */}
+                            </td>
+                          )}
+                          {trajet.proprietaire.loginId === account.id && (
+                            <td>
+                              <Stack direction="row" spacing={1}>
+                                <Chip label="Vous êtes le proprio!" variant="outlined" color="success" />
+                              </Stack>
+                              {/* {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''} */}
+                            </td>
+                          )}
+                          <td>
+                            <option value="" key="0" />
+                            {/* {console.log("* trajet: ", trajet)} */}
+                            {trajet.engages && account.id === trajet.proprietaire.loginId ? (
+                              trajet.engages.map(otherEntity => (
+                                <option value={otherEntity.id} key={otherEntity.id}>
+                                  {/* {console.log("* trajet: ", trajet)} */}
+                                  {idToLogin(otherEntity.loginId)}
+                                </option>
+                              ))
+                            ) : (
+                              <Stack direction="row" spacing={1}>
+                                <Chip label="Réservé au proprio!" variant="outlined" color="warning" />
+                              </Stack>
+                            )}
+                          </td>
+                          <td className="text-end">
+                            {trajet.proprietaire.loginId === account.id && (
+                              <div className="flex flex-col">
+                                <div className="btn-group flex-btn-group-container mb-2">
+                                  <Button tag={Link} to={`/trajet/${trajet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                                    <FontAwesomeIcon icon="eye" />{' '}
+                                    <span className="d-none d-md-inline">
+                                      <Translate contentKey="entity.action.view">View</Translate>
+                                    </span>
+                                  </Button>
+                                  <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                                    <FontAwesomeIcon icon="pencil-alt" />{' '}
+                                    <span className="d-none d-md-inline">
+                                      <Translate contentKey="entity.action.edit">Edit</Translate>
+                                    </span>
+                                  </Button>
+                                  <Button
+                                    onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
+                                    color="danger"
+                                    size="sm"
+                                    data-cy="entityDeleteButton"
+                                  >
+                                    <FontAwesomeIcon icon="trash" />{' '}
+                                    <span className="d-none d-md-inline">
+                                      <Translate contentKey="entity.action.delete">Delete</Translate>
+                                    </span>
+                                  </Button>
+                                </div>
+                                {trajet.places === 0 && (
+                                  <Stack direction="row" spacing={1}>
+                                    <Chip label="Le nombre de places est au complet!" variant="outlined" color="success" />
+                                  </Stack>
+                                )}
+                              </div>
+                            )}
+                            {trajet.proprietaire.loginId !== account.id && (
+                              <div className="btn-group flex-btn-group-container">
+                                {!isEngaged[i] ? (
+                                  <Button
+                                    color="primary"
+                                    size="sm"
+                                    data-cy="entitySubscribe"
+                                    onClick={() => {
+                                      handleSubscribe(trajet, i);
+                                    }}
+                                  >
+                                    <FontAwesomeIcon icon="pencil-alt" />{' '}
+                                    <span className="d-none d-md-inline">
+                                      Souscrire
+                                      {/* <Translate contentKey="entity.action.edit">Edit</Translate> */}
+                                    </span>
+                                  </Button>
+                                ) : (
+                                  <Button onClick={() => handleUnsubscribe(trajet, i)} color="danger" size="sm" data-cy="entityUnsubscribe">
+                                    <FontAwesomeIcon icon="times-circle" />{' '}
+                                    <span className="d-none d-md-inline">
+                                      Se retracter
+                                      {/* <Translate contentKey="entity.action.delete">Delete</Translate> */}
+                                    </span>
+                                  </Button>
+                                )}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
                       )}
-                      {trajet.proprietaire.loginId === account.id && (
-                        <td>
-                          <Stack direction="row" spacing={1}>
-                            <Chip label="Vous êtes le proprio!" variant="outlined" color="success" />
-                          </Stack>
-                          {/* {trajet.proprietaire ? <Link to={`/utilisateur/${trajet.proprietaire.id}`}>{trajet.proprietaire.id}</Link> : ''} */}
-                        </td>
-                      )}
-                      <td>
-                        <option value="" key="0" />
-                        {trajet.engages
-                          ? trajet.engages.map(otherEntity => (
-                              <option value={otherEntity.id} key={otherEntity.id}>
-                                {idToLogin(otherEntity.loginId)}
-                              </option>
-                            ))
-                          : null}
-                        {i === 0 && (
-                          <>
-                            <p>KpihX</p>
-                            <p>Admin</p>
-                          </>
-                        )}
-                      </td>
-                      <td className="text-end">
-                        {trajet.proprietaire.loginId === account.id && (
-                          <div className="btn-group flex-btn-group-container">
-                            <Button tag={Link} to={`/trajet/${trajet.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                              <FontAwesomeIcon icon="eye" />{' '}
-                              <span className="d-none d-md-inline">
-                                <Translate contentKey="entity.action.view">View</Translate>
-                              </span>
-                            </Button>
-                            <Button tag={Link} to={`/trajet/${trajet.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                              <FontAwesomeIcon icon="pencil-alt" />{' '}
-                              <span className="d-none d-md-inline">
-                                <Translate contentKey="entity.action.edit">Edit</Translate>
-                              </span>
-                            </Button>
-                            <Button
-                              onClick={() => (window.location.href = `/trajet/${trajet.id}/delete`)}
-                              color="danger"
-                              size="sm"
-                              data-cy="entityDeleteButton"
-                            >
-                              <FontAwesomeIcon icon="trash" />{' '}
-                              <span className="d-none d-md-inline">
-                                <Translate contentKey="entity.action.delete">Delete</Translate>
-                              </span>
-                            </Button>
-                          </div>
-                        )}
-                        {trajet.proprietaire.loginId !== account.id && (
-                          <div className="btn-group flex-btn-group-container">
-                            <Button color="primary" size="sm" data-cy="entitySubscribe" onClick={() => handleSubscribe(trajet)}>
-                              <FontAwesomeIcon icon="pencil-alt" />{' '}
-                              <span className="d-none d-md-inline">
-                                Souscrire
-                                {/* <Translate contentKey="entity.action.edit">Edit</Translate> */}
-                              </span>
-                            </Button>
-                            <Button onClick={() => handleUnsubscribe(trajet)} color="danger" size="sm" data-cy="entityUnsubscribe">
-                              <FontAwesomeIcon icon="times-circle" />{' '}
-                              <span className="d-none d-md-inline">
-                                Se retracter
-                                {/* <Translate contentKey="entity.action.delete">Delete</Translate> */}
-                              </span>
-                            </Button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
+                    </>
                   ))}
                 </tbody>
               </Table>

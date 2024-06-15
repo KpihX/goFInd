@@ -1,13 +1,19 @@
 package com.gofind.gofind.repository.itinaries;
 
 import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.repository.EntityManager;
 import com.gofind.gofind.repository.rowmapper.TrajetRowMapper;
 import com.gofind.gofind.repository.rowmapper.UtilisateurRowMapper;
+import com.gofind.gofind.repository.users.UtilisateurRepository;
 import com.gofind.gofind.repository.users.UtilisateurSqlHelper;
+import com.gofind.gofind.web.rest.AccountResource;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
+import java.util.HashSet;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
@@ -43,13 +49,23 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
     private static final Table entityTable = Table.aliased("trajet", EntityManager.ENTITY_ALIAS);
     private static final Table proprietaireTable = Table.aliased("utilisateur", "proprietaire");
 
+    private final UtilisateurRepository utilisateurRepository;
+    private final Logger log = LoggerFactory.getLogger(TrajetRepositoryInternalImpl.class);
+
+    private static final EntityManager.LinkTable trajetsLink = new EntityManager.LinkTable(
+        "rel_utilisateur__trajets",
+        "trajets_id",
+        "utilisateur_id"
+    );
+
     public TrajetRepositoryInternalImpl(
         R2dbcEntityTemplate template,
         EntityManager entityManager,
         UtilisateurRowMapper utilisateurMapper,
         TrajetRowMapper trajetMapper,
         R2dbcEntityOperations entityOperations,
-        R2dbcConverter converter
+        R2dbcConverter converter,
+        UtilisateurRepository utilisateurRepository
     ) {
         super(
             new MappingRelationalEntityInformation(converter.getMappingContext().getRequiredPersistentEntity(Trajet.class)),
@@ -61,11 +77,23 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
         this.entityManager = entityManager;
         this.utilisateurMapper = utilisateurMapper;
         this.trajetMapper = trajetMapper;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
     public Flux<Trajet> findAllBy(Pageable pageable) {
-        return createQuery(pageable, null).all();
+        // Create a Flux of Trajet
+        Flux<Trajet> trajetFlux = createQuery(pageable, null).all();
+
+        // For each Trajet, find and set its engages
+        return trajetFlux.flatMap(trajet ->
+            utilisateurRepository
+                .findByTrajets(trajet.getId())
+                .collectList()
+                .map(engages -> {
+                    trajet.setEngages(new HashSet<>(engages));
+                    return trajet;
+                }));
     }
 
     RowsFetchSpec<Trajet> createQuery(Pageable pageable, Condition whereClause) {
@@ -90,7 +118,20 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
     @Override
     public Mono<Trajet> findById(Long id) {
         Comparison whereClause = Conditions.isEqual(entityTable.column("id"), Conditions.just(id.toString()));
-        return createQuery(null, whereClause).one();
+        // return createQuery(null, whereClause).one();
+        Mono<Trajet> trajetMono = createQuery(null, whereClause).one();
+
+        log.debug("!!!!!!!!!!! Trajet id: {}", id);
+        Flux<Utilisateur> engagesFlux = utilisateurRepository.findByTrajets(id);
+
+        // Combine the Trajet with its engages and return
+        return trajetMono.zipWith(engagesFlux.collectList(), (trajet, engages) -> {
+            trajet.setEngages(new HashSet<>(engages));
+
+            log.debug("!!!!!!!!!!! Engages found: {}", engages);
+            log.debug("!!!!!!!!!!! Trajets found: {}", trajet);
+            return trajet;
+        });
     }
 
     private Trajet process(Row row, RowMetadata metadata) {
@@ -101,6 +142,19 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
 
     @Override
     public <S extends Trajet> Mono<S> save(S entity) {
-        return super.save(entity);
+        Mono<S> entity2 = super.save(entity);
+        log.debug("!!!!!!!!!!! Trajet2: {}", entity2);
+        Mono<S> entity3 = entity2.flatMap((S e) -> updateRelations(e));
+        log.debug("!!!!!!!!!!! Trajet3: {}", entity3);
+        return entity3;
+    }
+
+    protected <S extends Trajet> Mono<S> updateRelations(S entity) {
+        log.debug("!!!!!!!!!!! Trajet: {}", entity);
+        Mono<Void> result = entityManager
+            .updateLinkTable(trajetsLink, entity.getId(), entity.getEngages().stream().map(Utilisateur::getId))
+            .then();
+        log.debug("!!!!!!!!!!! Result: {}", result);
+        return result.thenReturn(entity);
     }
 }

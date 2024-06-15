@@ -45,7 +45,8 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'trajet/update_entity',
   async (entity: ITrajet, thunkAPI) => {
-    return axios.put<ITrajet>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    console.log('** updateTrajet: ', entity);
+    return axios.put<ITrajet>(`${apiUrl}/${entity.id}`, entity);
   },
   { serializeError: serializeAxiosError },
 );

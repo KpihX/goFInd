@@ -22,6 +22,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, reset } from 'app/entities/objet/objet.reducer';
+import './object.css';
 
 export const Objects = () => {
   const [currentSearch, setCurrentSearch] = useState('');
@@ -218,7 +219,7 @@ export const Objects = () => {
         loader={<div className="loader">Loading ...</div>}
       >
         {objetList && objetList.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+          <div className="houses-grid">
             {objetList.map(
               (objet, i) =>
                 objet.type === currentTypeObjet || currentTypeObjet === Object.keys(GenTypeObjet)[0] ? (

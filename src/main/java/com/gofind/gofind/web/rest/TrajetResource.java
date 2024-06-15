@@ -1,6 +1,7 @@
 package com.gofind.gofind.web.rest;
 
 import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.repository.itinaries.TrajetRepository;
 import com.gofind.gofind.service.itinaries.TrajetService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,14 +92,18 @@ public class TrajetResource {
     public Mono<ResponseEntity<Trajet>> updateTrajet(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody Trajet trajet
+        // @RequestParam(required = false) Set<Utilisateur> engages
     ) throws URISyntaxException {
-        log.debug("REST request to update Trajet : {}, {}", id, trajet);
+        log.debug("!!!!!!!!!!!!!!! REST request to update Trajet : {}, {}", id, trajet);
         if (trajet.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, trajet.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
+
+        log.debug("!!!!!!!!!!!!!!! Engages : {}", trajet.getEngages());
+        // trajet.setEngages(engages);
 
         return trajetRepository
             .existsById(id)

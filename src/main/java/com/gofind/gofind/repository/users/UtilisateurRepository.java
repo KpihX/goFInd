@@ -30,7 +30,7 @@ public interface UtilisateurRepository extends ReactiveCrudRepository<Utilisateu
     Flux<Utilisateur> findAllWhereLoginIsNull();
 
     @Query(
-        "SELECT entity.* FROM utilisateur entity JOIN rel_utilisateur__trajets joinTable ON entity.id = joinTable.trajets_id WHERE joinTable.trajets_id = :id"
+        "SELECT entity.* FROM utilisateur entity JOIN rel_utilisateur__trajets joinTable ON entity.id = joinTable.utilisateur_id WHERE joinTable.trajets_id = :id"
     )
     Flux<Utilisateur> findByTrajets(Long id);
 
