@@ -1,11 +1,14 @@
-import { IUtilisateur } from 'app/shared/model/utilisateur.model';
+import { IPiece } from 'app/shared/model/piece.model'; //IPiece from './piece.model'
 
 export interface IMaison {
   id?: number;
   adresse?: string;
-  description?: string | null;
-  image?: string | null;
-  proprietaire?: IUtilisateur | null;
+  description?: string;
+  image?: string;
+  proprietaire?: any;
+  signalant?: any;
+  pieces?: IPiece;
+  prix?: number;
 }
 
 export const defaultValue: Readonly<IMaison> = {};

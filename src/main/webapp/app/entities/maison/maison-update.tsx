@@ -12,6 +12,7 @@ import { IUtilisateur } from 'app/shared/model/utilisateur.model';
 import { getEntities as getUtilisateurs } from 'app/entities/utilisateur/utilisateur.reducer';
 import { IMaison } from 'app/shared/model/maison.model';
 import { getEntity, updateEntity, createEntity, reset } from './maison.reducer';
+import Piece from '../piece/piece';
 
 export const MaisonUpdate = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +27,8 @@ export const MaisonUpdate = () => {
   const loading = useAppSelector(state => state.maison.loading);
   const updating = useAppSelector(state => state.maison.updating);
   const updateSuccess = useAppSelector(state => state.maison.updateSuccess);
+
+  const [imagesPieces, setImagesPieces] = useState<string[]>(['']);
 
   const handleClose = () => {
     navigate('/maison');
@@ -70,6 +73,17 @@ export const MaisonUpdate = () => {
       : {
           ...maisonEntity,
           proprietaire: maisonEntity?.proprietaire?.id,
+        };
+
+        
+        const handleAddImagePiece = () => {
+          setImagesPieces([...imagesPieces, '']);
+        };
+      
+        const handleRemoveImagePiece = (index: number) => {
+          const updatedImages = [...imagesPieces];
+          updatedImages.splice(index, 1);
+          setImagesPieces(updatedImages);
         };
 
   return (
@@ -122,6 +136,7 @@ export const MaisonUpdate = () => {
                 label={translate('goFindApp.maison.proprietaire')}
                 type="select"
               >
+                
                 <option value="" key="0" />
                 {utilisateurs
                   ? utilisateurs.map(otherEntity => (
@@ -131,6 +146,10 @@ export const MaisonUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
+
+              <Piece/>
+                  
+
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/maison" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

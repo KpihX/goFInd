@@ -15,7 +15,7 @@ export const MaisonDetail = () => {
 
   useEffect(() => {
     dispatch(getEntity(id));
-  }, []);
+  }, [id]);
 
   const maisonEntity = useAppSelector(state => state.maison.entity);
   return (
@@ -53,6 +53,26 @@ export const MaisonDetail = () => {
             <Translate contentKey="goFindApp.maison.proprietaire">Proprietaire</Translate>
           </dt>
           <dd>{maisonEntity.proprietaire ? maisonEntity.proprietaire.id : ''}</dd>
+          <dt>
+            <Translate contentKey="goFindApp.maison.prix">Prix</Translate>
+          </dt>
+          <dd>{maisonEntity.prix} €</dd>
+          <dt>
+            <Translate contentKey="goFindApp.maison.pieces">Photos des pièces</Translate>
+          </dt>
+          <dd>
+            {maisonEntity.pieces && maisonEntity.pieces.length > 0 ? (
+              <ul>
+                {maisonEntity.pieces.map((piece, index) => (
+                  <li key={index}>
+                    <img src={piece} alt={`Piece ${index}`} style={{ width: '100px', marginRight: '10px' }} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span>No photos available</span>
+            )}
+          </dd>
         </dl>
         <Button tag={Link} to="/maison" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
