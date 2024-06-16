@@ -382,6 +382,7 @@ export const MaisonUpdate = () => {
                     pieces={maisonEntity.pieces}
                     total={total}
                     setTotal={setTotal}
+                    locationId={objet.locationId}
                   />
                 ))}
               </div>

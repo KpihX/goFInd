@@ -61,6 +61,7 @@ export function Room({
   pieces,
   total,
   setTotal,
+  locationId,
 }) {
   const account = useAppSelector(state => state.authentication.account);
   // const [rent, setRent] = React.useState(false);
@@ -133,31 +134,42 @@ export function Room({
                 <Stack direction="row" spacing={1}>
                   <Chip label={etat} variant="outlined" color="success" />
                 </Stack>
-                <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
-                  {/* <Button tag={Link} to={`/piece/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
+
+                {etat !== 'LOUE' ? (
+                  <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
+                    {/* <Button tag={Link} to={`/piece/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
                 <FontAwesomeIcon icon="eye" />{' '}
                 <span className="d-none d-md-inline">
                   <Translate contentKey="entity.action.view">View</Translate>
                 </span>
               </Button> */}
-                  <Button tag={Link} to={`/piece/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                    <FontAwesomeIcon icon="pencil-alt" />{' '}
+                    <Button tag={Link} to={`/piece/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                      <FontAwesomeIcon icon="pencil-alt" />{' '}
+                      <span className="d-none d-md-inline">
+                        <Translate contentKey="entity.action.edit">Edit</Translate>
+                      </span>
+                    </Button>
+                    <Button
+                      onClick={() => (window.location.href = `/piece/${id}/delete`)}
+                      color="danger"
+                      size="sm"
+                      data-cy="entityDeleteButton"
+                    >
+                      <FontAwesomeIcon icon="trash" />{' '}
+                      <span className="d-none d-md-inline">
+                        <Translate contentKey="entity.action.delete">Delete</Translate>
+                      </span>
+                    </Button>
+                  </div>
+                ) : (
+                  <Button tag={Link} to={`/location/${locationId}`} color="info" size="sm" data-cy="entityDetailsButton">
+                    <FontAwesomeIcon icon="eye" />{' '}
                     <span className="d-none d-md-inline">
-                      <Translate contentKey="entity.action.edit">Edit</Translate>
+                      Détails de la location
+                      {/* <Translate contentKey="entity.action.view">View</Translate> */}
                     </span>
                   </Button>
-                  <Button
-                    onClick={() => (window.location.href = `/piece/${id}/delete`)}
-                    color="danger"
-                    size="sm"
-                    data-cy="entityDeleteButton"
-                  >
-                    <FontAwesomeIcon icon="trash" />{' '}
-                    <span className="d-none d-md-inline">
-                      <Translate contentKey="entity.action.delete">Delete</Translate>
-                    </span>
-                  </Button>
-                </div>
+                )}
               </div>
             ) : // <div style={{ display: 'flex', justifyContent: 'center' }} className="absolutemt-2 space-x-2 space-y-2">
             //   {true ? (

@@ -1,5 +1,6 @@
 package com.gofind.gofind.service.mail;
 
+import com.gofind.gofind.domain.itinaries.Trajet;
 import com.gofind.gofind.domain.objects.Objet;
 import com.gofind.gofind.domain.users.User;
 import com.gofind.gofind.domain.users.Utilisateur;
@@ -179,6 +180,150 @@ public class MailService {
                 log.debug("*** Sucessful sending of a unreport mail to '{}' about its object {}", user.getEmail(), objet);
             });
     }
+
+    public void sendAddTrajetEmail(Trajet trajet) {
+        Utilisateur proprietaireUtil = trajet.getProprietaire();
+        // User proprietaireUser = proprietaireUtil.getLogin();
+        // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+        // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+        Long loginId = proprietaireUtil.getLoginId();
+
+        String subject = "Avancement des souscriptions à votre trajet";
+
+        String engagesContacts = "";
+
+        for (Utilisateur engage : trajet.getEngages()) {
+            engagesContacts = engagesContacts + engage.getTelephone() + ", ";
+        }
+        engagesContacts = engagesContacts.substring(0, engagesContacts.length() - 2);
+
+        String content =
+            "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+            "Nous vous écrivons pour vous signaler qu'un nouvel utilisateur vient de s'ajouter à votre trajet d'informations:\n" +
+            trajet.toString() +
+            "\nAinsi voici les contacts des engagés en cas de besoin: \n" +
+            engagesContacts +
+            ".\nCordialement,\n" +
+            "L'equipe goFind!";
+
+        userService
+            .getUserWithAuthoritiesById(loginId)
+            .subscribe(user -> {
+                // log.debug("*** Sending a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+                this.sendEmail(user.getEmail(), subject, content, false, true);
+                // log.debug("*** Sucessful sending of a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+            });
+    }
+
+    public void sendRemTrajetEmail(Trajet trajet) {
+        Utilisateur proprietaireUtil = trajet.getProprietaire();
+        // User proprietaireUser = proprietaireUtil.getLogin();
+        // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+        // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+        Long loginId = proprietaireUtil.getLoginId();
+
+        String subject = "Avancement des souscriptions à votre trajet";
+
+        String engagesContacts = "";
+
+        for (Utilisateur engage : trajet.getEngages()) {
+            engagesContacts = engagesContacts + engage.getTelephone() + ", ";
+        }
+        engagesContacts = engagesContacts.substring(0, engagesContacts.length() - 2);
+
+        String content =
+            "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+            "Nous vous écrivons pour vous signaler qu'un utilisateur vient de se rétirer de votre trajet d'informations:\n" +
+            trajet.toString() +
+            "\nAinsi voici les contacts des engagés restants en cas de besoin: \n" +
+            engagesContacts +
+            ".\nCordialement,\n" +
+            "L'equipe goFind!";
+
+        userService
+            .getUserWithAuthoritiesById(loginId)
+            .subscribe(user -> {
+                // log.debug("*** Sending a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+                this.sendEmail(user.getEmail(), subject, content, false, true);
+                // log.debug("*** Sucessful sending of a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+            });
+    }
+
+    // public void sendModifTrajetEmail(Trajet trajet) {
+    //     Utilisateur proprietaireUtil = trajet.getProprietaire();
+    //     // User proprietaireUser = proprietaireUtil.getLogin();
+    //     // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+    //     // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+    //     Long loginId = proprietaireUtil.getLoginId();
+
+    //     String subject = "Modifications des infos d'un trajet";
+
+    //     String engagesContacts = "";
+
+    //     for (Utilisateur engage : trajet.getEngages()) {
+    //         engagesContacts = engagesContacts + engage.getTelephone() + ", ";
+    //     }
+    //     engagesContacts = engagesContacts.substring(0, engagesContacts.length() - 2);
+
+    //     String content =
+    //         "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+    //         "Nous vous écrivons pour vous signaler que les informations de votre trajet plannifié de " +
+    //         trajet.getDepart() + " à " +
+    //         trajet.getArrivee() +  " prévu pour le" +
+    //         trajet.getDateHeureDepart() +
+    //         " ont été modifiés.\n" +
+    //         trajet.toString() +
+    //         "\nAinsi voici les contacts des engagés restants en cas de besoin: \n" +
+    //         engagesContacts +
+    //         ".\nCordialement,\n" +
+    //         "L'equipe goFind!";
+
+    //     userService
+    //         .getUserWithAuthoritiesById(loginId)
+    //         .subscribe(user -> {
+    //             // log.debug("*** Sending a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+    //             this.sendEmail(user.getEmail(), subject, content, false, true);
+    //             // log.debug("*** Sucessful sending of a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+    //         });
+    // }
+
+    // public void sendDelTrajetEmail(Trajet trajet) {
+    //     Utilisateur proprietaireUtil = trajet.getProprietaire();
+    //     // User proprietaireUser = proprietaireUtil.getLogin();
+    //     // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+    //     // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+    //     Long loginId = proprietaireUtil.getLoginId();
+
+    //     String subject = "Modifications des infos d'un trajet";
+
+    //     String engagesContacts = "";
+
+    //     for (Utilisateur engage : trajet.getEngages()) {
+    //         engagesContacts = engagesContacts + engage.getTelephone() + ", ";
+    //     }
+    //     engagesContacts = engagesContacts.substring(0, engagesContacts.length() - 2);
+
+    //     String content =
+    //         "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+    //         "Nous vous écrivons pour vous signaler que les informations de votre trajet plannifié de " +
+    //         trajet.getDepart() + " à " +
+    //         trajet.getArrivee() +  " prévu pour le" +
+    //         trajet.getDateHeureDepart() +
+    //         " ont été modifiés.\n" +
+    //         trajet.toString() +
+    //         "\nAinsi voici les contacts des engagés restants en cas de besoin: \n" +
+    //         engagesContacts +
+    //         ".\nCordialement,\n" +
+    //         "L'equipe goFind!";
+
+    //     userService
+    //         .getUserWithAuthoritiesById(loginId)
+    //         .subscribe(user -> {
+    //             // log.debug("*** Sending a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+    //             this.sendEmail(user.getEmail(), subject, content, false, true);
+    //             // log.debug("*** Sucessful sending of a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
+    //         });
+    // }
 
     public void sendActivationEmail(User user) {
         log.debug("Sending activation email to '{}'", user.getEmail());
