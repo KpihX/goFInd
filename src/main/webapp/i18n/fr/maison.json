@@ -4,15 +4,15 @@
       "home": {
         "title": "Maisons",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Maison",
-        "createOrEditLabel": "Créer ou éditer un Maison",
-        "notFound": "Aucun Maison trouvé"
+        "createLabel": "Créer une nouvelle Maison",
+        "createOrEditLabel": "Créer ou éditer une Maison",
+        "notFound": "Aucune Maison trouvée"
       },
-      "created": "Un nouveau Maison a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Maison avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Maison avec l'identifiant {{ param }} a été supprimé",
+      "created": "Une nouvelle Maison a été créée avec l'identifiant {{ param }}",
+      "updated": "La Maison avec l'identifiant {{ param }} a été mise à jour",
+      "deleted": "La Maison avec l'identifiant {{ param }} a été supprimée",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Maison {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer la Maison {{ id }} ?"
       },
       "detail": {
         "title": "Maison"

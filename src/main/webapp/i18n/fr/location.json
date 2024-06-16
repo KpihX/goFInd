@@ -4,15 +4,15 @@
       "home": {
         "title": "Locations",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Location",
-        "createOrEditLabel": "Créer ou éditer un Location",
-        "notFound": "Aucun Location trouvé"
+        "createLabel": "Créer une nouvelle Location",
+        "createOrEditLabel": "Créer ou éditer une Location",
+        "notFound": "Aucune Location trouvée"
       },
-      "created": "Un nouveau Location a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Location avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Location avec l'identifiant {{ param }} a été supprimé",
+      "created": "Une nouvelle Location a été créée avec l'identifiant {{ param }}",
+      "updated": "La Location avec l'identifiant {{ param }} a été mise à jour",
+      "deleted": "La Location avec l'identifiant {{ param }} a été supprimée",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Location {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer la Location {{ id }} ?"
       },
       "detail": {
         "title": "Location"

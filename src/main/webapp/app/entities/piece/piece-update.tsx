@@ -15,6 +15,7 @@ import { getEntities as getLocations } from 'app/entities/location/location.redu
 import { IPiece } from 'app/shared/model/piece.model';
 import { EtatPiece } from 'app/shared/model/enumerations/etat-piece.model';
 import { getEntity, updateEntity, createEntity, reset } from './piece.reducer';
+import { useLocation } from 'react-router-dom';
 
 export const PieceUpdate = () => {
   const dispatch = useAppDispatch();
@@ -32,8 +33,18 @@ export const PieceUpdate = () => {
   const updateSuccess = useAppSelector(state => state.piece.updateSuccess);
   const etatPieceValues = Object.keys(EtatPiece);
 
+  const location = useLocation();
+
+  const { maisonId } = location.state || {};
+
+  useEffect(() => {
+    console.log('* state: ', location);
+    console.log('* maisonId: ', maisonId);
+  }, [maisonId]);
+
   const handleClose = () => {
-    navigate('/piece');
+    // navigate('/houses');
+    navigate(`/maison/${maisonId}/edit`);
   };
 
   useEffect(() => {
@@ -57,10 +68,17 @@ export const PieceUpdate = () => {
       values.id = Number(values.id);
     }
 
+    let maisonId2 = maisonId;
+
+    if (!maisonId2) {
+      maisonId2 = values.maison;
+    }
+
     const entity = {
       ...pieceEntity,
       ...values,
-      maison: maisons.find(it => it.id.toString() === values.maison?.toString()),
+      maison: maisons.find(it => it.id.toString() === maisonId2?.toString()),
+      maisonId: maisonId2,
       location: locations.find(it => it.id.toString() === values.location?.toString()),
     };
 
@@ -73,9 +91,11 @@ export const PieceUpdate = () => {
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? {
+          etat: 'EN ATTENTE LOCATION',
+        }
       : {
-          etat: 'LOUE',
+          etat: 'EN ATTENTE LOCATION',
           ...pieceEntity,
           maison: pieceEntity?.maison?.id,
           location: pieceEntity?.location?.id,
@@ -134,7 +154,7 @@ export const PieceUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <ValidatedField
+              {/* <ValidatedField
                 id="piece-location"
                 name="location"
                 data-cy="location"
@@ -149,8 +169,8 @@ export const PieceUpdate = () => {
                       </option>
                     ))
                   : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/piece" replace color="info">
+              </ValidatedField> */}
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to={-1} replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

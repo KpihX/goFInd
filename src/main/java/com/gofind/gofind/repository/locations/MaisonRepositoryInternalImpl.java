@@ -1,13 +1,19 @@
 package com.gofind.gofind.repository.locations;
 
+import com.gofind.gofind.domain.itinaries.Trajet;
 import com.gofind.gofind.domain.locations.Maison;
+import com.gofind.gofind.domain.locations.Piece;
+import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.repository.EntityManager;
 import com.gofind.gofind.repository.rowmapper.MaisonRowMapper;
 import com.gofind.gofind.repository.rowmapper.UtilisateurRowMapper;
 import com.gofind.gofind.repository.users.UtilisateurSqlHelper;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
+import java.util.HashSet;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
@@ -43,13 +49,17 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
     private static final Table entityTable = Table.aliased("maison", EntityManager.ENTITY_ALIAS);
     private static final Table proprietaireTable = Table.aliased("utilisateur", "proprietaire");
 
+    private final Logger log = LoggerFactory.getLogger(MaisonRepositoryInternalImpl.class);
+    private final PieceRepository pieceRepository;
+
     public MaisonRepositoryInternalImpl(
         R2dbcEntityTemplate template,
         EntityManager entityManager,
         UtilisateurRowMapper utilisateurMapper,
         MaisonRowMapper maisonMapper,
         R2dbcEntityOperations entityOperations,
-        R2dbcConverter converter
+        R2dbcConverter converter,
+        PieceRepository pieceRepository
     ) {
         super(
             new MappingRelationalEntityInformation(converter.getMappingContext().getRequiredPersistentEntity(Maison.class)),
@@ -61,11 +71,23 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
         this.entityManager = entityManager;
         this.utilisateurMapper = utilisateurMapper;
         this.maisonMapper = maisonMapper;
+        this.pieceRepository = pieceRepository;
     }
 
     @Override
     public Flux<Maison> findAllBy(Pageable pageable) {
-        return createQuery(pageable, null).all();
+        // Create a Flux of Maison
+        Flux<Maison> maisonFlux = createQuery(pageable, null).all();
+
+        // For each Maison, find and set its pieces
+        return maisonFlux.flatMap(maison ->
+            pieceRepository
+                .findByMaison(maison.getId())
+                .collectList()
+                .map(pieces -> {
+                    maison.setPieces(new HashSet<>(pieces));
+                    return maison;
+                }));
     }
 
     RowsFetchSpec<Maison> createQuery(Pageable pageable, Condition whereClause) {
@@ -90,7 +112,18 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
     @Override
     public Mono<Maison> findById(Long id) {
         Comparison whereClause = Conditions.isEqual(entityTable.column("id"), Conditions.just(id.toString()));
-        return createQuery(null, whereClause).one();
+        Mono<Maison> maisonMono = createQuery(null, whereClause).one();
+
+        log.debug("!!!!!!!!!!! Maison id: {}", id);
+        Flux<Piece> piecesFlux = pieceRepository.findByMaison(id);
+
+        return maisonMono.zipWith(piecesFlux.collectList(), (maison, pieces) -> {
+            maison.setPieces(new HashSet<>(pieces));
+
+            log.debug("!!!!!!!!!!! Pieces found: {}", pieces);
+            log.debug("!!!!!!!!!!! Maisons found: {}", maison);
+            return maison;
+        });
     }
 
     private Maison process(Row row, RowMetadata metadata) {

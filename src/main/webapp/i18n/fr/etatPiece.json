@@ -3,7 +3,8 @@
     "EtatPiece": {
       "null": "",
       "LOUE": "LOUE",
-      "NONLOUE": "NONLOUE"
+      "NONLOUE": "NONLOUE",
+      "ATTENTE": "EN ATTENTE LOCATION"
     }
   }
 }

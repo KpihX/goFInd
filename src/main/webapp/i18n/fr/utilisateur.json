@@ -4,7 +4,7 @@
       "home": {
         "title": "Utilisateurs",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Utilisateur",
+        "createLabel": "Créer un nouvel Utilisateur",
         "createOrEditLabel": "Créer ou éditer un Utilisateur",
         "notFound": "Aucun Utilisateur trouvé"
       },

@@ -4,15 +4,15 @@
       "home": {
         "title": "Pieces",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Piece",
-        "createOrEditLabel": "Créer ou éditer un Piece",
-        "notFound": "Aucun Piece trouvé"
+        "createLabel": "Créer une nouvelle Piece",
+        "createOrEditLabel": "Créer ou éditer une Piece",
+        "notFound": "Aucunz Pièce trouvéz"
       },
-      "created": "Un nouveau Piece a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Piece avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Piece avec l'identifiant {{ param }} a été supprimé",
+      "created": "Une nouvelle Pièce a été créée avec l'identifiant {{ param }}",
+      "updated": "La Pièce avec l'identifiant {{ param }} a été mise à jour",
+      "deleted": "La Pièce avec l'identifiant {{ param }} a été supprimée",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Piece {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer la Pièce {{ id }} ?"
       },
       "detail": {
         "title": "Piece"

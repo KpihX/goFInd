@@ -58,7 +58,7 @@ export const PieceDetail = () => {
           </dt>
           <dd>{pieceEntity.location ? pieceEntity.location.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/piece" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to={-1} replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
