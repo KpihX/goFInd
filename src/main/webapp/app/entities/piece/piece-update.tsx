@@ -15,7 +15,6 @@ import { getEntities as getLocations } from 'app/entities/location/location.redu
 import { IPiece } from 'app/shared/model/piece.model';
 import { EtatPiece } from 'app/shared/model/enumerations/etat-piece.model';
 import { getEntity, updateEntity, createEntity, reset } from './piece.reducer';
-import { useLocation } from 'react-router-dom';
 
 export const PieceUpdate = () => {
   const dispatch = useAppDispatch();
@@ -33,9 +32,7 @@ export const PieceUpdate = () => {
   const updateSuccess = useAppSelector(state => state.piece.updateSuccess);
   const etatPieceValues = Object.keys(EtatPiece);
 
-  const location = useLocation();
-
-  const { maisonId } = location.state || {};
+  const { maisonId } = useParams<'maisonId'>();
 
   useEffect(() => {
     console.log('* state: ', location);
@@ -44,7 +41,7 @@ export const PieceUpdate = () => {
 
   const handleClose = () => {
     // navigate('/houses');
-    navigate(`/maison/${maisonId}/edit`);
+    navigate(-1);
   };
 
   useEffect(() => {

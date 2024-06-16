@@ -50,8 +50,8 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 export function Room({ id, libelle, image, etat, proprietaire }) {
   const [expanded, setExpanded] = React.useState(false);
   const account = useAppSelector(state => state.authentication.account);
-  const [rent, setRent]: [boolean, any] = React.useState(false);
-  const rentInit = false;
+  // const [rent, setRent] = React.useState(false);
+  // const rentInit = false;
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
   const objetEntity = useAppSelector(state => state.objet.entity);
   const [updateUtilisateurs, setUpdateUtilisateurs] = React.useState(false);
@@ -63,7 +63,7 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
   };
 
   React.useEffect(() => {
-    setRent(false);
+    // setRent(false);
     dispatch(getEntities({}));
     setUpdateUtilisateurs(true);
   }, []);
@@ -71,18 +71,13 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
   // eslint-disable-next-line complexity
   const saveEntity = () => {
     // const prop = utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString());
-
     // console.log("* values", {...values});
-
     // const entity = {
     //   // ...objetEntity,
-
     // };
-
     // console.log("* entity:", entity)
-
     // console.log("* rent:", rent);
-    const rentStatus = rent ? 'report' : 'unreport';
+    // const rentStatus = rent ? 'report' : 'unreport';
     // console.log("* report:", report);
     // dispatch(updateEntity({ entity, rentStatus }));
   };
@@ -92,40 +87,12 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
   };
 
   const handleRent = () => {
-    setRent(true);
+    // setRent(true);
   };
-
-  React.useEffect(() => {
-    if (updateSuccess && rent !== rentInit) {
-      if (rent) {
-        toast.success(
-          `La location a été confirmée. Voici le numéro de téléphone du propriétaire en cas de besoin: ${proprietaire.telephone}!`,
-        );
-      } else {
-        toast.success('La location a été annulée!');
-      }
-    }
-  }, [updateSuccess, rent]);
 
   const handleUnreport = () => {
-    setRent(false);
+    // setRent(false);
   };
-
-  React.useEffect(() => {
-    if (rent === rentInit) {
-      return;
-    }
-    if (!rent) {
-      // console.log("** rent:", rent);
-      //   saveEntity();
-    } else {
-      const signalantNew = utilisateurs.find(it => it.loginId.toString() === account.id.toString());
-      // console.log('* utilisateurs:', utilisateurs);
-      // console.log('* account:', account);
-      // console.log('** rent:', rent);
-      //   saveEntity();
-    }
-  }, [rent, updateUtilisateurs]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -143,7 +110,7 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
     <>
       {/* {(account.id?.toString() === proprietaire.loginId?.toString() ||
         (signalant.loginId?.toString() === account.id?.toString() && rent) || */}
-      {!rent && (
+      {true && (
         <div key={id} className="house-card">
           <img src={image} alt={libelle} className="house-image" />
           <div className="house-info">
@@ -151,17 +118,9 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
             {/* {account.id === proprietaire.loginId ? ( */}
             {true ? (
               <div style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}>
-                {rent && (
-                  <Stack direction="row" spacing={1}>
-                    <Chip
-                      label="Votre maison est en location! Consulter vos mails!"
-                      variant="outlined"
-                      color="success"
-                      onClick={handleClick}
-                      onDelete={handleDelete}
-                    />
-                  </Stack>
-                )}
+                <Stack direction="row" spacing={1}>
+                  <Chip label={etat} variant="outlined" color="success" onClick={handleClick} onDelete={handleDelete} />
+                </Stack>
                 <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
                   {/* <Button tag={Link} to={`/piece/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
                 <FontAwesomeIcon icon="eye" />{' '}
@@ -190,7 +149,7 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
               </div>
             ) : (
               <div style={{ display: 'flex', justifyContent: 'center' }} className="absolutemt-2 space-x-2 space-y-2">
-                {rent !== true ? (
+                {true ? (
                   <Button color="warning" size="sm" data-cy="entityReportButton" onClick={handleRent}>
                     <FontAwesomeIcon icon="ban" />{' '}
                     <span style={{ display: 'inline' }}>

@@ -263,9 +263,8 @@ export const MaisonUpdate = () => {
                 <Translate contentKey="goFindApp.piece.home.refreshListLabel">Refresh List</Translate>
               </Button>
               {utilisateur ? null : (
-                <Button
-                  tag={Link}
-                  to={{ pathname: '/piece/new', state: { maisonId: id } }}
+                <Link
+                  to={`/piece/new/${id}`}
                   className="btn btn-primary jh-create-entity"
                   id="jh-create-entity"
                   data-cy="entityCreateButton"
@@ -274,7 +273,7 @@ export const MaisonUpdate = () => {
                   {/* <>{console.log("** maisonId: ", id)}</> */}
                   &nbsp;
                   <Translate contentKey="goFindApp.piece.home.createLabel">Create new Piece</Translate>
-                </Button>
+                </Link>
               )}
             </div>
           </h3>
