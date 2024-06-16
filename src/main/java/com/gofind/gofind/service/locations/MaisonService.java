@@ -39,7 +39,7 @@ public interface MaisonService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Flux<Maison> findAll(Pageable pageable);
+    Flux<Maison> findAll(Pageable pageable, String search, String searchType);
 
     /**
      * Returns the number of maisons available.

@@ -24,6 +24,7 @@ import org.springframework.data.relational.core.sql.Comparison;
 import org.springframework.data.relational.core.sql.Condition;
 import org.springframework.data.relational.core.sql.Conditions;
 import org.springframework.data.relational.core.sql.Expression;
+import org.springframework.data.relational.core.sql.SQL;
 import org.springframework.data.relational.core.sql.Select;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectFromAndJoinCondition;
 import org.springframework.data.relational.core.sql.Table;
@@ -75,9 +76,14 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
     }
 
     @Override
-    public Flux<Maison> findAllBy(Pageable pageable) {
+    public Flux<Maison> findAllBy(Pageable pageable, String search, String searchType) {
+        Expression searchExpression = SQL.literalOf("%" + search + "%");
+        log.debug("*** Search: " + search);
+        log.debug("*** SearchType: " + searchType);
+        Condition whereClause = Conditions.like(entityTable.column(searchType), searchExpression);
+
         // Create a Flux of Maison
-        Flux<Maison> maisonFlux = createQuery(pageable, null).all();
+        Flux<Maison> maisonFlux = createQuery(pageable, whereClause).all();
 
         // For each Maison, find and set its pieces
         return maisonFlux.flatMap(maison ->
@@ -105,8 +111,8 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
     }
 
     @Override
-    public Flux<Maison> findAll() {
-        return findAllBy(null);
+    public Flux<Maison> findAll(String search, String searchType) {
+        return findAllBy(null, search, searchType);
     }
 
     @Override

@@ -20,8 +20,8 @@ const apiUrl = 'api/maisons';
 
 // Actions
 
-export const getEntities = createAsyncThunk('maison/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+export const getEntities = createAsyncThunk('maison/fetch_entity_list', async ({ page, size, sort, search, searchType }: IQueryParams) => {
+  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}search=${search ? search : ''}&searchType=${searchType ? searchType : 'adresse'}&cacheBuster=${new Date().getTime()}`;
   return axios.get<IMaison[]>(requestUrl);
 });
 

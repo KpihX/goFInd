@@ -24,6 +24,7 @@ import org.springframework.data.relational.core.sql.Comparison;
 import org.springframework.data.relational.core.sql.Condition;
 import org.springframework.data.relational.core.sql.Conditions;
 import org.springframework.data.relational.core.sql.Expression;
+import org.springframework.data.relational.core.sql.SQL;
 import org.springframework.data.relational.core.sql.Select;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectFromAndJoinCondition;
 import org.springframework.data.relational.core.sql.Table;
@@ -81,9 +82,19 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
     }
 
     @Override
-    public Flux<Trajet> findAllBy(Pageable pageable) {
+    public Flux<Trajet> findAllBy(Pageable pageable, String search, String search2) {
         // Create a Flux of Trajet
-        Flux<Trajet> trajetFlux = createQuery(pageable, null).all();
+        Expression searchExpression = SQL.literalOf("%" + search + "%");
+        Expression searchExpression2 = SQL.literalOf("%" + search2 + "%");
+        log.debug("*** Search: " + search);
+        log.debug("*** SearchType: " + search2);
+        // Condition whereClause = Conditions.like(entityTable.column("depart"), searchExpression);
+
+        Condition whereClause = Conditions.like(entityTable.column("depart"), searchExpression).and(
+            Conditions.like(entityTable.column("arrivee"), searchExpression2)
+        );
+
+        Flux<Trajet> trajetFlux = createQuery(pageable, whereClause).all();
 
         // For each Trajet, find and set its engages
         return trajetFlux.flatMap(trajet ->
@@ -111,8 +122,8 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
     }
 
     @Override
-    public Flux<Trajet> findAll() {
-        return findAllBy(null);
+    public Flux<Trajet> findAll(String search, String search2) {
+        return findAllBy(null, search, search2);
     }
 
     @Override

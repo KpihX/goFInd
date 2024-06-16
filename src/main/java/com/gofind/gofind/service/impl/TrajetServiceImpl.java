@@ -68,9 +68,9 @@ public class TrajetServiceImpl implements TrajetService {
 
     @Override
     @Transactional(readOnly = true)
-    public Flux<Trajet> findAll(Pageable pageable) {
+    public Flux<Trajet> findAll(Pageable pageable, String search, String search2) {
         log.debug("Request to get all Trajets");
-        return trajetRepository.findAllBy(pageable);
+        return trajetRepository.findAllBy(pageable, search, search2);
     }
 
     public Mono<Long> countAll() {

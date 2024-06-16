@@ -22,6 +22,9 @@ import { toast } from 'react-toastify';
 
 export const Itinaries = () => {
   const [search, setSearch] = useState('');
+  const [search2, setSearch2] = useState('');
+  const [currentSearch, setCurrentSearch] = useState('');
+  const [currentSearch2, setCurrentSearch2] = useState('');
 
   const dispatch = useAppDispatch();
 
@@ -53,6 +56,8 @@ export const Itinaries = () => {
         page: paginationState.activePage - 1,
         size: paginationState.itemsPerPage,
         sort: `${paginationState.sort},${paginationState.order}`,
+        search: currentSearch,
+        search2: currentSearch2,
       }),
     );
   };
@@ -80,7 +85,7 @@ export const Itinaries = () => {
   }, [trajetList]);
 
   useEffect(() => {
-    console.log('* start', start);
+    // console.log('* start', start);
     if (updateSuccess && !start) {
       getAllEntities();
       toast.success(message);
@@ -90,7 +95,19 @@ export const Itinaries = () => {
 
   useEffect(() => {
     getAllEntities();
-  }, [paginationState.activePage]);
+  }, [paginationState.activePage, search, search2]);
+
+  React.useEffect(() => {
+    if (currentSearch === '') {
+      setSearch('');
+    }
+  }, [currentSearch]);
+
+  React.useEffect(() => {
+    if (currentSearch2 === '') {
+      setSearch2('');
+    }
+  }, [currentSearch2]);
 
   const handleLoadMore = () => {
     if ((window as any).pageYOffset > 0) {
@@ -171,7 +188,7 @@ export const Itinaries = () => {
       ...currentTrajet,
     };
 
-    console.log('* trajet:', entity);
+    // console.log('* trajet:', entity);
 
     dispatch(updateEntity(entity));
   };
@@ -189,25 +206,40 @@ export const Itinaries = () => {
 
   return (
     <div>
-      <TextField
-        variant="outlined"
-        sx={{ ml: 1 }}
-        placeholder="Rechercher"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Button2
-                variant="contained"
-                // onClick={() => console.log('search', search)}
-              >
-                <FontAwesomeIcon icon="search" />
-              </Button2>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <div className="flex flex-row">
+        <TextField
+          variant="outlined"
+          sx={{ ml: 1 }}
+          placeholder="Rechercher un lieu de départ ..."
+          value={currentSearch}
+          onChange={e => setCurrentSearch(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button2 variant="contained" onClick={() => setSearch(currentSearch)}>
+                  <FontAwesomeIcon icon="search" />
+                </Button2>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          variant="outlined"
+          sx={{ ml: 1 }}
+          placeholder="Rechercher un lieu d'arrivée ..."
+          value={currentSearch2}
+          onChange={e => setCurrentSearch2(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button2 variant="contained" onClick={() => setSearch2(currentSearch2)}>
+                  <FontAwesomeIcon icon="search" />
+                </Button2>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
       <div>
         <h2 id="trajet-heading" data-cy="TrajetHeading">
           <div className="d-flex justify-content-end">
@@ -268,7 +300,7 @@ export const Itinaries = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {console.log('* isEngaged :', isEngaged)}
+                  {/* {console.log('* isEngaged :', isEngaged)} */}
                   {trajetList.map((trajet, i) => (
                     <>
                       {(trajet.places > 0 || trajet.proprietaire.loginId === account.id) && (

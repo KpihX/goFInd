@@ -39,7 +39,7 @@ public interface TrajetService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Flux<Trajet> findAll(Pageable pageable);
+    Flux<Trajet> findAll(Pageable pageable, String search, String search2);
 
     /**
      * Returns the number of trajets available.

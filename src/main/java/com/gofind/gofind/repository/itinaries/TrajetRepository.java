@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @SuppressWarnings("unused")
 @Repository
 public interface TrajetRepository extends ReactiveCrudRepository<Trajet, Long>, TrajetRepositoryInternal {
-    Flux<Trajet> findAllBy(Pageable pageable);
+    Flux<Trajet> findAllBy(Pageable pageable, String search, String search2);
 
     @Query("SELECT * FROM trajet entity WHERE entity.proprietaire_id = :id")
     Flux<Trajet> findByProprietaire(Long id);
@@ -26,7 +26,7 @@ public interface TrajetRepository extends ReactiveCrudRepository<Trajet, Long>, 
     <S extends Trajet> Mono<S> save(S entity);
 
     @Override
-    Flux<Trajet> findAll();
+    Flux<Trajet> findAll(String search, String search2);
 
     @Override
     Mono<Trajet> findById(Long id);
@@ -38,9 +38,9 @@ public interface TrajetRepository extends ReactiveCrudRepository<Trajet, Long>, 
 interface TrajetRepositoryInternal {
     <S extends Trajet> Mono<S> save(S entity);
 
-    Flux<Trajet> findAllBy(Pageable pageable);
+    Flux<Trajet> findAllBy(Pageable pageable, String search, String search2);
 
-    Flux<Trajet> findAll();
+    Flux<Trajet> findAll(String search, String search2);
 
     Mono<Trajet> findById(Long id);
     // this is not supported at the moment because of https://github.com/jhipster/generator-jhipster/issues/18269

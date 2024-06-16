@@ -157,8 +157,8 @@ export const Houses = () => {
             label="Type de recherche"
             onChange={handleChange}
           >
-            <MenuItem value="libelle">Adresse</MenuItem>
-            <MenuItem value="identifiant">Description</MenuItem>
+            <MenuItem value="adresse">Adresse</MenuItem>
+            <MenuItem value="description">Description</MenuItem>
           </Select>
         </FormControl>
       </div>

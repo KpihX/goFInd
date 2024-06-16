@@ -172,12 +172,14 @@ public class MaisonResource {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<Maison>>> getAllMaisons(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = true) String search,
+        @RequestParam(required = true) String searchType,
         ServerHttpRequest request
     ) {
         log.debug("REST request to get a page of Maisons");
         return maisonService
             .countAll()
-            .zipWith(maisonService.findAll(pageable).collectList())
+            .zipWith(maisonService.findAll(pageable, search, searchType).collectList())
             .map(
                 countWithEntities ->
                     ResponseEntity.ok()

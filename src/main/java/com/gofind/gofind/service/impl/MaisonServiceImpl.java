@@ -62,9 +62,9 @@ public class MaisonServiceImpl implements MaisonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Flux<Maison> findAll(Pageable pageable) {
+    public Flux<Maison> findAll(Pageable pageable, String search, String searchType) {
         log.debug("Request to get all Maisons");
-        return maisonRepository.findAllBy(pageable);
+        return maisonRepository.findAllBy(pageable, search, searchType);
     }
 
     public Mono<Long> countAll() {

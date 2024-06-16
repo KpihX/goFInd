@@ -178,12 +178,14 @@ public class TrajetResource {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<Trajet>>> getAllTrajets(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = true) String search,
+        @RequestParam(required = true) String search2,
         ServerHttpRequest request
     ) {
         log.debug("REST request to get a page of Trajets");
         return trajetService
             .countAll()
-            .zipWith(trajetService.findAll(pageable).collectList())
+            .zipWith(trajetService.findAll(pageable, search, search2).collectList())
             .map(
                 countWithEntities ->
                     ResponseEntity.ok()
