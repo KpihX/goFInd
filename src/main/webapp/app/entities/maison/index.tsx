@@ -14,7 +14,7 @@ const MaisonRoutes = () => (
     <Route path="new" element={<MaisonUpdate />} />
     <Route path=":id">
       <Route index element={<MaisonDetail />} />
-      <Route path="edit" element={<MaisonUpdate />} />
+      <Route path="edit/:locataireId" element={<MaisonUpdate />} />
       <Route path="delete" element={<MaisonDeleteDialog />} />
     </Route>
   </ErrorBoundaryRoutes>

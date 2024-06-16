@@ -87,6 +87,15 @@ VALUES (1050, 'ROLE_USER'),
 /*!40000 ALTER TABLE `jhi_user_authority` ENABLE KEYS */
 ;
 
+INSERT INTO
+    `utilisateur`
+VALUES (1500, '678936658', 2),
+    (1501, '675836168', 1050),
+    (1502, '0675836168', 1),
+    (1503, '697772316', 1051);
+/*!40000 ALTER TABLE `utilisateur` ENABLE KEYS */
+;
+
 --
 -- Table structure for table `location`
 --
@@ -135,7 +144,7 @@ VALUES (
     ),
     (
         1501,
-        'Iphone 13 Pro MAXX',
+        'Iphone 13 Pro MAX',
         'Telephone apple',
         'TELEPHONE',
         'http://localhost:9000/images/iphone.png',
@@ -176,33 +185,60 @@ VALUES (
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /*!40000 ALTER TABLE `piece` DISABLE KEYS */
 ;
--- INSERT INTO `piece` VALUES (1500,'Salon','http://localhost:9000/images/houses/house1/living.jpeg','ATTENTE',1500,NULL),(1501,'Chambre','http://localhost:9000/images/houses/house1/bed.jpeg','NONLOUE',1500,NULL),(1503,'Kitchen','http://localhost:9000/images/houses/house2/kitchen.jpeg','NONLOUE',1501,NULL),(1504,'Salon','http://localhost:9000/images/houses/house2/living.jpeg','ATTENTE',1501,NULL),(1506,'Cuisine','http://localhost:9000/images/houses/house1/kitchen.jpeg','NONLOUE',1500,NULL);
+
+INSERT INTO
+    `piece`
+VALUES (
+        1500,
+        'Salon',
+        'http://localhost:9000/images/houses/house1/living.jpeg',
+        'ATTENTE',
+        12000,
+        1500,
+        NULL
+    ),
+    (
+        1501,
+        'Chambre',
+        'http://localhost:9000/images/houses/house1/bed.jpeg',
+        'NONLOUE',
+        10000,
+        1500,
+        NULL
+    ),
+    (
+        1503,
+        'Cuisine',
+        'http://localhost:9000/images/houses/house2/kitchen.jpeg',
+        'NONLOUE',
+        8000,
+        1501,
+        NULL
+    ),
+    (
+        1504,
+        'Salon',
+        'http://localhost:9000/images/houses/house2/living.jpeg',
+        'ATTENTE',
+        15000,
+        1501,
+        NULL
+    ),
+    (
+        1506,
+        'Cuisine',
+        'http://localhost:9000/images/houses/house1/kitchen.jpeg',
+        'NONLOUE',
+        9000,
+        1500,
+        NULL
+    );
 /*!40000 ALTER TABLE `piece` ENABLE KEYS */
 ;
 
 --
 -- Table structure for table `rel_utilisateur__trajets`
 --
-
-/*!40000 ALTER TABLE `rel_utilisateur__trajets` DISABLE KEYS */
-;
-
-INSERT INTO
-    `rel_utilisateur__trajets`
-VALUES (1500, 1501),
-    (1500, 1503),
-    (1502, 1500),
-    (1502, 1502),
-    (1502, 1503);
-/*!40000 ALTER TABLE `rel_utilisateur__trajets` ENABLE KEYS */
-;
-
---
--- Table structure for table `trajet`
---
-
-/*!40000 ALTER TABLE `trajet` DISABLE KEYS */
-;
 
 INSERT INTO
     `trajet`
@@ -224,6 +260,27 @@ VALUES (
         1500,
         1501
     );
+
+/*!40000 ALTER TABLE `rel_utilisateur__trajets` DISABLE KEYS */
+;
+
+INSERT INTO
+    `rel_utilisateur__trajets`
+VALUES (1500, 1501),
+    (1500, 1503),
+    (1502, 1500),
+    (1502, 1502),
+    (1502, 1503);
+/*!40000 ALTER TABLE `rel_utilisateur__trajets` ENABLE KEYS */
+;
+
+--
+-- Table structure for table `trajet`
+--
+
+/*!40000 ALTER TABLE `trajet` DISABLE KEYS */
+;
+
 /*!40000 ALTER TABLE `trajet` ENABLE KEYS */
 ;
 
@@ -232,15 +289,6 @@ VALUES (
 --
 
 /*!40000 ALTER TABLE `utilisateur` DISABLE KEYS */
-;
-
-INSERT INTO
-    `utilisateur`
-VALUES (1500, '678936658', 2),
-    (1501, '675836168', 1050),
-    (1502, '0675836168', 1),
-    (1503, '697772316', 1051);
-/*!40000 ALTER TABLE `utilisateur` ENABLE KEYS */
 ;
 
 --

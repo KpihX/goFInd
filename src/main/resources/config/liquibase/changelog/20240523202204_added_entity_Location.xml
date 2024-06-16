@@ -17,11 +17,22 @@
             <column name="prix" type="${floatType}">
                 <constraints nullable="false" />
             </column>
+            <column name="date_heure_debut" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="date_heure_fin" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
             <column name="maison_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="locataire_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="location" columnName="date_heure_debut" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="location" columnName="date_heure_fin" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -42,6 +53,8 @@
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="prix" type="numeric"/>
+            <column name="date_heure_debut" type="date"/>
+            <column name="date_heure_fin" type="date"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

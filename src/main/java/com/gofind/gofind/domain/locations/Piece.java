@@ -32,6 +32,9 @@ public class Piece implements Serializable {
     @Column("etat")
     private EtatPiece etat;
 
+    @Column("prix")
+    private Double prix;
+
     @Transient
     @JsonIgnoreProperties(value = { "pieces", "proprietaire", "locations" }, allowSetters = true)
     private Maison maison;
@@ -98,6 +101,19 @@ public class Piece implements Serializable {
 
     public void setEtat(EtatPiece etat) {
         this.etat = etat;
+    }
+
+    public Double getPrix() {
+        return this.prix;
+    }
+
+    public Piece prix(Double prix) {
+        this.setPrix(prix);
+        return this;
+    }
+
+    public void setPrix(Double prix) {
+        this.prix = prix;
     }
 
     public Maison getMaison() {
@@ -171,6 +187,7 @@ public class Piece implements Serializable {
             ", libelle='" + getLibelle() + "'" +
             ", image='" + getImage() + "'" +
             ", etat='" + getEtat() + "'" +
+            ", prix='" + getPrix() + "'" +
             "}";
     }
 }

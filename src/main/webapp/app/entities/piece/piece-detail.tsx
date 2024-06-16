@@ -50,6 +50,13 @@ export const PieceDetail = () => {
           </dt>
           <dd>{pieceEntity.etat}</dd>
           <dt>
+            <span id="prix">
+              Prix
+              {/* <Translate contentKey="goFindApp.location.prix">Prix</Translate> */}
+            </span>
+          </dt>
+          <dd>{pieceEntity.prix}</dd>
+          <dt>
             <Translate contentKey="goFindApp.piece.maison">Maison</Translate>
           </dt>
           <dd>{pieceEntity.maison ? pieceEntity.maison.id : ''}</dd>

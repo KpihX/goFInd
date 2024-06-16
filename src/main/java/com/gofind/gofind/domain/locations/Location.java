@@ -1,8 +1,12 @@
 package com.gofind.gofind.domain.locations;
 
+import ch.qos.logback.classic.pattern.Util;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.users.Utilisateur;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
@@ -27,6 +31,14 @@ public class Location implements Serializable {
     @Column("prix")
     private Float prix;
 
+    @NotNull(message = "must not be null")
+    @Column("date_heure_debut")
+    private ZonedDateTime dateHeureDebut;
+
+    @NotNull(message = "must not be null")
+    @Column("date_heure_fin")
+    private ZonedDateTime dateHeureFin;
+
     @Transient
     @JsonIgnoreProperties(value = { "maison", "location" }, allowSetters = true)
     private Set<Piece> pieces = new HashSet<>();
@@ -37,6 +49,13 @@ public class Location implements Serializable {
 
     @Column("maison_id")
     private Long maisonId;
+
+    @Transient
+    @JsonIgnoreProperties(value = { "objectsSignales", "objects", "trajetsProps", "maisons", "trajets" }, allowSetters = true)
+    private Utilisateur locataire;
+
+    @Column("locataire_id")
+    private Long locataireId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -64,6 +83,32 @@ public class Location implements Serializable {
 
     public void setPrix(Float prix) {
         this.prix = prix;
+    }
+
+    public ZonedDateTime getDateHeureDebut() {
+        return this.dateHeureDebut;
+    }
+
+    public Location dateHeureDebut(ZonedDateTime dateHeureDebut) {
+        this.setDateHeureDebut(dateHeureDebut);
+        return this;
+    }
+
+    public void setDateHeureDebut(ZonedDateTime dateHeureDebut) {
+        this.dateHeureDebut = dateHeureDebut;
+    }
+
+    public ZonedDateTime getDateHeureFin() {
+        return this.dateHeureFin;
+    }
+
+    public Location dateHeureFin(ZonedDateTime dateHeureFin) {
+        this.setDateHeureFin(dateHeureFin);
+        return this;
+    }
+
+    public void setDateHeureFin(ZonedDateTime dateHeureFin) {
+        this.dateHeureFin = dateHeureFin;
     }
 
     public Set<Piece> getPieces() {
@@ -119,6 +164,28 @@ public class Location implements Serializable {
         this.maisonId = maison;
     }
 
+    public Utilisateur getLocataire() {
+        return this.locataire;
+    }
+
+    public void setLocataire(Utilisateur locataire) {
+        this.locataire = locataire;
+        this.locataireId = locataire != null ? locataire.getId() : null;
+    }
+
+    public Location locataire(Utilisateur locataire) {
+        this.setLocataire(locataire);
+        return this;
+    }
+
+    public Long getLocataireId() {
+        return this.locataireId;
+    }
+
+    public void setLocataireId(Long locataire) {
+        this.locataireId = locataire;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -144,6 +211,8 @@ public class Location implements Serializable {
         return "Location{" +
             "id=" + getId() +
             ", prix=" + getPrix() +
+            ", dateHeureDebut=" + getDateHeureDebut() +
+            ", dateHeureFin=" + getDateHeureFin() +
             "}";
     }
 }

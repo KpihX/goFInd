@@ -31,6 +31,7 @@ import { toast } from 'react-toastify';
 import { getEntities } from 'app/entities/utilisateur/utilisateur.reducer';
 
 import './houses.css';
+import { Checkbox } from '@mui/material';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -47,8 +48,20 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export function Room({ id, libelle, image, etat, proprietaire }) {
-  const [expanded, setExpanded] = React.useState(false);
+export function Room({
+  id,
+  libelle,
+  image,
+  etat,
+  proprietaire,
+  locataireId,
+  selectedPieces,
+  setSelectedPieces,
+  prix,
+  pieces,
+  total,
+  setTotal,
+}) {
   const account = useAppSelector(state => state.authentication.account);
   // const [rent, setRent] = React.useState(false);
   // const rentInit = false;
@@ -57,10 +70,30 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
   const [updateUtilisateurs, setUpdateUtilisateurs] = React.useState(false);
   const updateSuccess = useAppSelector(state => state.objet.updateSuccess);
   const dispatch = useAppDispatch();
+  const [begin, setBegin] = React.useState(true);
 
-  const handleClick = () => {
-    toast.success('Votre maison est en location. Dirigez vous vers la page de locations pour en savoir plus!');
+  const [checked, setChecked] = React.useState(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
   };
+
+  React.useEffect(() => {
+    if (begin) {
+      return;
+    }
+    if (checked) {
+      setSelectedPieces([...selectedPieces, pieces.filter(piece => piece.id === id)[0]]);
+      setTotal(total + prix);
+    } else {
+      setSelectedPieces(selectedPieces.filter(piece => piece.id !== id));
+      setTotal(total - prix);
+    }
+  }, [checked, begin]);
+
+  React.useEffect(() => {
+    console.log('* selectedPieces: ', selectedPieces);
+  }, [selectedPieces]);
 
   React.useEffect(() => {
     // setRent(false);
@@ -68,39 +101,9 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
     setUpdateUtilisateurs(true);
   }, []);
 
-  // eslint-disable-next-line complexity
-  const saveEntity = () => {
-    // const prop = utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString());
-    // console.log("* values", {...values});
-    // const entity = {
-    //   // ...objetEntity,
-    // };
-    // console.log("* entity:", entity)
-    // console.log("* rent:", rent);
-    // const rentStatus = rent ? 'report' : 'unreport';
-    // console.log("* report:", report);
-    // dispatch(updateEntity({ entity, rentStatus }));
-  };
-
-  const handleDelete = () => {
-    toast.success('Votre maison est en location. Dirigez vous vers la page de locations pour en savoir plus!');
-  };
-
-  const handleRent = () => {
-    // setRent(true);
-  };
-
-  const handleUnreport = () => {
-    // setRent(false);
-  };
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
   React.useEffect(() => {
     // console.log("* libelle", libelle);
-    // console.log("- proprio", proprietaire.loginId);
+    // console.log("- proprio", proprietaire);
     // console.log("- account", account.id);
     // console.log("- rent", rent);
     // console.log("- signalant", signalant);
@@ -108,18 +111,27 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
 
   return (
     <>
-      {/* {(account.id?.toString() === proprietaire.loginId?.toString() ||
-        (signalant.loginId?.toString() === account.id?.toString() && rent) || */}
-      {true && (
+      {(account.id?.toString() === proprietaire.loginId?.toString() || etat === 'ATTENTE') && (
         <div key={id} className="house-card">
+          {locataireId !== '0' && (
+            <Checkbox
+              checked={checked}
+              onChange={event => {
+                handleChange(event);
+                setBegin(false);
+              }}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          )}
           <img src={image} alt={libelle} className="house-image" />
           <div className="house-info">
             <h2>{libelle}</h2>
+            <h2>{prix}&nbsp;FCFA / mois</h2>
             {/* {account.id === proprietaire.loginId ? ( */}
-            {true ? (
+            {locataireId === '0' ? (
               <div style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}>
                 <Stack direction="row" spacing={1}>
-                  <Chip label={etat} variant="outlined" color="success" onClick={handleClick} onDelete={handleDelete} />
+                  <Chip label={etat} variant="outlined" color="success" />
                 </Stack>
                 <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
                   {/* <Button tag={Link} to={`/piece/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
@@ -147,27 +159,26 @@ export function Room({ id, libelle, image, etat, proprietaire }) {
                   </Button>
                 </div>
               </div>
-            ) : (
-              <div style={{ display: 'flex', justifyContent: 'center' }} className="absolutemt-2 space-x-2 space-y-2">
-                {true ? (
-                  <Button color="warning" size="sm" data-cy="entityReportButton" onClick={handleRent}>
-                    <FontAwesomeIcon icon="ban" />{' '}
-                    <span style={{ display: 'inline' }}>
-                      Louer
-                      {/* <Translate contentKey="entity.action.report">Louer</Translate> */}
-                    </span>
-                  </Button>
-                ) : (
-                  <Button color="success" size="sm" data-cy="entityUnReportButton" onClick={handleUnreport}>
-                    <FontAwesomeIcon icon="times-circle" />{' '}
-                    <span style={{ display: 'inline' }}>
-                      Se retracter
-                      {/* <Translate contentKey="entity.action.unreport"> Unreport </Translate> */}
-                    </span>
-                  </Button>
-                )}
-              </div>
-            )}
+            ) : // <div style={{ display: 'flex', justifyContent: 'center' }} className="absolutemt-2 space-x-2 space-y-2">
+            //   {true ? (
+            //     <Button color="warning" size="sm" data-cy="entityReportButton" onClick={handleRent}>
+            //       <FontAwesomeIcon icon="ban" />{' '}
+            //       <span style={{ display: 'inline' }}>
+            //         Louer
+            //         {/* <Translate contentKey="entity.action.report">Louer</Translate> */}
+            //       </span>
+            //     </Button>
+            //   ) : (
+            //     <Button color="success" size="sm" data-cy="entityUnReportButton" onClick={handleUnreport}>
+            //       <FontAwesomeIcon icon="times-circle" />{' '}
+            //       <span style={{ display: 'inline' }}>
+            //         Se retracter
+            //         {/* <Translate contentKey="entity.action.unreport"> Unreport </Translate> */}
+            //       </span>
+            //     </Button>
+            //   )}
+            // </div>
+            null}
           </div>
         </div>
       )}

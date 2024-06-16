@@ -14,6 +14,7 @@ public class PieceSqlHelper {
         columns.add(Column.aliased("libelle", table, columnPrefix + "_libelle"));
         columns.add(Column.aliased("image", table, columnPrefix + "_image"));
         columns.add(Column.aliased("etat", table, columnPrefix + "_etat"));
+        columns.add(Column.aliased("prix", table, columnPrefix + "_prix"));
 
         columns.add(Column.aliased("maison_id", table, columnPrefix + "_maison_id"));
         columns.add(Column.aliased("location_id", table, columnPrefix + "_location_id"));

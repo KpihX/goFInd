@@ -16,5 +16,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="maison"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="locataire_id"
+                                 baseTableName="location"
+                                 constraintName="fk_location__locataire_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="utilisateur"
+                                 />
     </changeSet>
 </databaseChangeLog>

@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import { TextFormat, Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './location.reducer';
+import { APP_DATE_FORMAT } from 'app/config/constants';
 
 export const LocationDetail = () => {
   const dispatch = useAppDispatch();
@@ -38,9 +39,34 @@ export const LocationDetail = () => {
           </dt>
           <dd>{locationEntity.prix}</dd>
           <dt>
+            <span id="dateHeureDebut">
+              Date et heure de début
+              {/* <Translate contentKey="goFindApp.trajet.dateHeureDepart">Date Heure Depart</Translate> */}
+            </span>
+          </dt>
+          <dd>
+            {locationEntity.dateHeureDebut ? (
+              <TextFormat value={locationEntity.dateHeureDebut} type="date" format={APP_DATE_FORMAT} />
+            ) : null}
+          </dd>
+          <dt>
+            <span id="dateHeureDebut">
+              Date et heure de Fin
+              {/* <Translate contentKey="goFindApp.trajet.dateHeureDepart">Date Heure Depart</Translate> */}
+            </span>
+          </dt>
+          <dd>
+            {locationEntity.dateHeureFin ? <TextFormat value={locationEntity.dateHeureFin} type="date" format={APP_DATE_FORMAT} /> : null}
+          </dd>
+          <dt>
             <Translate contentKey="goFindApp.location.maison">Maison</Translate>
           </dt>
           <dd>{locationEntity.maison ? locationEntity.maison.id : ''}</dd>
+          <dt>
+            Locataire
+            {/* <Translate contentKey="goFindApp.location.maison">Maison</Translate> */}
+          </dt>
+          <dd>{locationEntity.locataire ? locationEntity.locataire.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/location" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

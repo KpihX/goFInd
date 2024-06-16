@@ -72,7 +72,7 @@ export function House({ id, adresse, description, image, proprietaire, pieces })
 
   const handleRent = () => {
     // setRent(true);
-    toast.success(`La location a été confirmée. Voici le numéro de téléphone du propriétaire en cas de besoin: ${proprietaire.telephone}!`);
+    // toast.success(`La location a été confirmée. Voici le numéro de téléphone du propriétaire en cas de besoin: ${proprietaire.telephone}!`);
   };
 
   //   React.useEffect(() => {
@@ -127,7 +127,7 @@ export function House({ id, adresse, description, image, proprietaire, pieces })
                   <Translate contentKey="entity.action.view">View</Translate>
                 </span>
               </Button> */}
-                  <Button tag={Link} to={`/maison/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                  <Button tag={Link} to={`/maison/${id}/edit/0`} color="primary" size="sm" data-cy="entityEditButton">
                     <FontAwesomeIcon icon="pencil-alt" />{' '}
                     <span className="d-none d-md-inline">
                       <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -151,10 +151,7 @@ export function House({ id, adresse, description, image, proprietaire, pieces })
                 {/* {rent !== true ? ( */}
                 <Button
                   tag={Link}
-                  to={{
-                    pathname: `/maison/${id}/edit`,
-                    state: { utilisateur: utilisateurs.find(it => it.loginId.toString() === account.id.toString()) },
-                  }}
+                  to={`/maison/${id}/edit/${utilisateurs.find(it => it.loginId.toString() === account.id.toString())?.id}`}
                   color="success"
                   size="sm"
                   data-cy="entityReportButton"

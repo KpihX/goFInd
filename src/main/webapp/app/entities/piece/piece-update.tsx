@@ -36,6 +36,7 @@ export const PieceUpdate = () => {
 
   useEffect(() => {
     console.log('* state: ', location);
+    console.log('* id: ', id);
     console.log('* maisonId: ', maisonId);
   }, [maisonId]);
 
@@ -113,7 +114,7 @@ export const PieceUpdate = () => {
             <p>Loading...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
+              {/* {!isNew ? (
                 <ValidatedField
                   name="id"
                   required
@@ -122,7 +123,7 @@ export const PieceUpdate = () => {
                   label={translate('global.field.id')}
                   validate={{ required: true }}
                 />
-              ) : null}
+              ) : null} */}
               <ValidatedField
                 label={translate('goFindApp.piece.libelle')}
                 id="piece-libelle"
@@ -141,6 +142,22 @@ export const PieceUpdate = () => {
                   </option>
                 ))}
               </ValidatedField>
+              <ValidatedField
+                // label={translate('goFindApp.location.prix')}
+                label="prix"
+                id="piece-prix"
+                name="prix"
+                data-cy="prix"
+                type="text"
+                // validate={{
+                //   required: { value: true, message: translate('entity.validation.required') },
+                //   validate: v => isNumber(v) || translate('entity.validation.number'),
+                // }}
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
+              />
               <ValidatedField id="piece-maison" name="maison" data-cy="maison" label={translate('goFindApp.piece.maison')} type="select">
                 <option value="" key="0" />
                 {maisons

@@ -23,6 +23,9 @@
             <column name="etat" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="prix" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
             <column name="maison_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -53,6 +56,7 @@
             <column name="libelle" type="string"/>
             <column name="image" type="string"/>
             <column name="etat" type="string"/>
+            <column name="prix" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>
