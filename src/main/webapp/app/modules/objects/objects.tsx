@@ -145,6 +145,10 @@ export const Objects = () => {
             <Button2
               key={typeObjet}
               variant="contained"
+              sx={{
+                color: 'white',
+                backgroundColor: 'green',
+              }}
               onClick={() => {
                 setCurrentTypeObjet(typeObjet);
               }}
@@ -155,6 +159,9 @@ export const Objects = () => {
             <Button2
               key={typeObjet}
               variant="outlined"
+              sx={{
+                color: 'green',
+              }}
               onClick={() => {
                 setCurrentTypeObjet(typeObjet);
               }}
@@ -165,22 +172,24 @@ export const Objects = () => {
         )}
       </Stack>
       <div className="flex flex-row">
-        <TextField
-          variant="outlined"
-          sx={{ ml: 1 }}
-          placeholder="Rechercher un objet ..."
-          value={currentSearch}
-          onChange={e => setCurrentSearch(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Button2 variant="contained" onClick={() => setSearch(currentSearch)}>
-                  <FontAwesomeIcon icon="search" />
-                </Button2>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <TextField
+            variant="outlined"
+            sx={{ ml: 1 }}
+            placeholder="Rechercher un objet ..."
+            value={currentSearch}
+            onChange={e => setCurrentSearch(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button2 variant="contained" color="success" onClick={() => setSearch(currentSearch)}>
+                    <FontAwesomeIcon icon="search" />
+                  </Button2>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
         <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="demo-select-small-label">Type de recherche</InputLabel>
           <Select
@@ -198,11 +207,11 @@ export const Objects = () => {
       <div>
         <h2 id="objet-heading" data-cy="ObjetHeading">
           <div className="d-flex justify-content-end">
-            <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
+            <Button variant="success" className="me-2" color="success" onClick={handleSyncList} disabled={loading}>
               <FontAwesomeIcon icon="sync" spin={loading} />{' '}
               <Translate contentKey="goFindApp.objet.home.refreshListLabel">Refresh List</Translate>
             </Button>
-            <Link to="/objet/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <Link to="/objet/new" className="btn btn-success jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
               <FontAwesomeIcon icon="plus" />
               &nbsp;
               <Translate contentKey="goFindApp.objet.home.createLabel">Create new Objet</Translate>

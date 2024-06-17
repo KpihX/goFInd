@@ -1,10 +1,61 @@
-/* ==========================================================================
-Main page styles
-========================================================================== */
-.hipster {
-  display: inline-block;
-  width: 100%;
-  height: 700px;
-  background: url('/content/images/assistant.png') no-repeat center top;
-  background-size: contain;
+.home-container {
+  padding-top: 50px;
+  .hipster {
+    display: inline-block;
+    width: 100%;
+    height: 700px;
+    background: url('/content/images/assistant.png') no-repeat center top;
+    background-size: contain;
+  }
+  .features-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 50px;
+  }
+  .feature-card {
+    width: 30%;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    &:hover {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .feature-icon {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .feature-content {
+    text-align: center;
+  }
+  .feature-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  .feature-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .feature-description {
+    font-size: 16px;
+    color: #666;
+  }
+  .intro-list {
+    list-style-type: circle;
+    padding-left: 20px;
+  }
+  .register-alert {
+    margin-top: 20px;
+  }
+  .gitHub-link {
+    font-weight: bold;
+  }
 }
