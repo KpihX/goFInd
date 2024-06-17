@@ -37,8 +37,8 @@ spring:
   mail:
     host: smtp-mail.outlook.com
     port: 587
-    username: kapoivha@outlook.com # Replace this field with your Outlook username.
-    password: 3BacoiimapQ5 # Replace this field with your Outlook password.
+    username: gofind.0@outlook.com # kapoivha@outlook.com # Replace this field with your Outlook username.
+    password: 0.gofind
     protocol: smtp
     tls: true
     properties.mail.smtp:

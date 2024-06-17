@@ -154,21 +154,35 @@ export const TrajetUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField
-                label={translate('goFindApp.trajet.places')}
-                id="trajet-places"
-                name="places"
-                data-cy="places"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                  validate: v =>
-                    (isNumber(v) &&
-                      (v >= trajetEntity.engages.length ||
-                        'Il y a déjà ' + trajetEntity.engages.length + ' engagés. Vous ne pouvez allez en deça!')) ||
-                    translate('entity.validation.number'),
-                }}
-              />
+              {isNew ? (
+                <ValidatedField
+                  label={translate('goFindApp.trajet.places')}
+                  id="trajet-places"
+                  name="places"
+                  data-cy="places"
+                  type="text"
+                  validate={{
+                    required: { value: true, message: translate('entity.validation.required') },
+                    validate: v => isNumber(v) || translate('entity.validation.number'),
+                  }}
+                />
+              ) : (
+                <ValidatedField
+                  label={translate('goFindApp.trajet.places')}
+                  id="trajet-places"
+                  name="places"
+                  data-cy="places"
+                  type="text"
+                  validate={{
+                    required: { value: true, message: translate('entity.validation.required') },
+                    validate: v =>
+                      (isNumber(v) &&
+                        (v >= trajetEntity.engages.length ||
+                          'Il y a déjà ' + trajetEntity.engages.length + ' engagés. Vous ne pouvez allez en deça!')) ||
+                      translate('entity.validation.number'),
+                  }}
+                />
+              )}
               <ValidatedField
                 label={translate('goFindApp.trajet.prix')}
                 id="trajet-prix"

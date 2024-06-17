@@ -62,9 +62,20 @@ export const partialUpdateEntity = createAsyncThunk(
 
 export const deleteEntity = createAsyncThunk(
   'trajet/delete_entity',
-  async (id: string | number, thunkAPI) => {
-    const requestUrl = `${apiUrl}/${id}`;
+  async ({ id, motif }: { id: string | number; motif: string }, thunkAPI) => {
+    const requestUrl = `${apiUrl}/${id}?motif=${motif}`;
     return await axios.delete<ITrajet>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
+export const deleteEntities = createAsyncThunk(
+  'trajet/delete_entities',
+  async ({ ids, motif }: { ids: (string | number)[]; motif: string }, thunkAPI) => {
+    console.log('* ids: ', ids);
+    console.log('* motif: ', motif);
+    const requestUrl = `${apiUrl}/delete-entities?motif=${motif}`;
+    return await axios.delete(requestUrl, { data: ids });
   },
   { serializeError: serializeAxiosError },
 );

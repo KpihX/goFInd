@@ -36,7 +36,7 @@ export const TrajetDeleteDialog = () => {
   }, [updateSuccess]);
 
   const confirmDelete = () => {
-    dispatch(deleteEntity(trajetEntity.id));
+    dispatch(deleteEntity({ id: trajetEntity.id, motif: 'prop' }));
   };
 
   return (

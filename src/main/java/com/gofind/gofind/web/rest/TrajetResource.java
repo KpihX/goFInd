@@ -25,6 +25,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.ForwardedHeaderUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -237,17 +238,41 @@ public class TrajetResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> deleteTrajet(@PathVariable("id") Long id) {
+    public Mono<ResponseEntity<Void>> deleteTrajet(@PathVariable("id") Long id, @RequestParam(required = true) String motif) {
         log.debug("REST request to delete Trajet : {}", id);
 
-        mailService.sendDelTrajetEmail(id);
-
+        if (motif.equals("prop")) {
+            mailService.sendDelTrajetEmail(id);
+        }
         return trajetService
             .delete(id)
             .then(
                 Mono.just(
                     ResponseEntity.noContent()
                         .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+                        .build()
+                )
+            );
+    }
+
+    @DeleteMapping("/delete-entities")
+    public Mono<ResponseEntity<Void>> deleteTrajets(
+        @RequestBody(required = true) List<Long> ids,
+        @RequestParam(required = true) String motif
+    ) {
+        log.debug("REST request to delete Trajets : {}", ids);
+
+        if (motif.equals("pass")) {
+            mailService.sendDelTrajetPassEmail(ids);
+        }
+
+        return Flux.fromIterable(ids)
+            // .map(Long::valueOf)
+            .flatMap(trajetService::delete)
+            .then(
+                Mono.just(
+                    ResponseEntity.noContent()
+                        .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, ids.toString()))
                         .build()
                 )
             );

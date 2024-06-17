@@ -163,7 +163,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: kapoivha@outlook.com # goFind@localhost
+    from: gofind.0@outlook.com # kapoivha@outlook.com # goFind@localhost
   api-docs:
     default-include-pattern: /api/**
     management-include-pattern: /management/**

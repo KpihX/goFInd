@@ -10,6 +10,7 @@ import com.gofind.gofind.service.users.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,7 +51,7 @@ public class MailService {
 
     private final TrajetService trajetService;
 
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10); // Use a thread pool to limit concurrent connections
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2); // Use a thread pool to limit concurrent connections
 
     public MailService(
         JHipsterProperties jHipsterProperties,
@@ -426,6 +427,115 @@ public class MailService {
                         }
                     });
             });
+    }
+
+    public void sendDelTrajetPassEmail(List<Long> ids) {
+        String subject = "Suppression de trajet";
+
+        log.debug("! ! ! ! ! ! ! Ids: {}", ids);
+
+        for (Long idTrajet : ids) {
+            trajetService
+                .findOne(idTrajet)
+                .subscribe(trajet -> {
+                    Utilisateur proprietaireUtil = trajet.getProprietaire();
+                    // User proprietaireUser = proprietaireUtil.getLogin();
+                    // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+                    // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+                    Long loginId = proprietaireUtil.getLoginId();
+
+                    userService
+                        .getUserWithAuthoritiesById(loginId)
+                        .subscribe(user -> {
+                            log.debug(
+                                "! ! ! ! ! ! ! ! ! ! ! Sending Email since del on trajet by ProprietaireUtil: {} concerning trajet: {}",
+                                proprietaireUtil,
+                                trajet
+                            );
+
+                            String contentUser =
+                                "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+                                "Nous vous écrivons pour vous signaler que votre trajet d'informations:\n" +
+                                "   - depart: " +
+                                trajet.getDepart() +
+                                "\n" +
+                                "   - arrivée: " +
+                                trajet.getArrivee() +
+                                "\n" +
+                                "   - date & heure de départ: " +
+                                trajet.getDateHeureDepart() +
+                                "\n" +
+                                "a été supprimé car la date de départ a été dépassée de 2 jours!\n" +
+                                "Plus d'infos sur notre plateforme.\n" +
+                                ".\nCordialement,\n" +
+                                "L'equipe goFind!";
+
+                            String content =
+                                "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+                                "Nous vous écrivons pour vous signaler que le trajet que vous avez conclu avec l'utilisateur d'infos:\n" +
+                                "   - nom: " +
+                                user.getLogin() +
+                                "\n" +
+                                "   - telephone: " +
+                                proprietaireUtil.getTelephone() +
+                                "\n" +
+                                "   - email: " +
+                                user.getEmail() +
+                                "\n" +
+                                "dont les infos sont les suivantes:\n" +
+                                "   - depart: " +
+                                trajet.getDepart() +
+                                "\n" +
+                                "   - arrivée: " +
+                                trajet.getArrivee() +
+                                "\n" +
+                                "   - date & heure de départ: " +
+                                trajet.getDateHeureDepart() +
+                                "\n" +
+                                "a été supprimé car la date de départ a été dépassée de 2 jours!\n" +
+                                "Plus d'infos sur notre plateforme.\n" +
+                                ".\nCordialement,\n" +
+                                "L'equipe goFind!";
+
+                            try {
+                                executorService.schedule(
+                                    () -> this.sendEmailSync(user.getEmail(), subject, contentUser, false, false),
+                                    1,
+                                    TimeUnit.SECONDS
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            for (Utilisateur engage : trajet.getEngages()) {
+                                userService
+                                    .getUserWithAuthoritiesById(engage.getLoginId())
+                                    .subscribe(userEngage -> {
+                                        log.debug(
+                                            "! ! ! ! ! ! ! ! ! ! ! Sending Email since modifs on trajet to the engageNew: {}",
+                                            engage
+                                        );
+                                        if (userEngage.getEmail() == null) {
+                                            log.debug("!!!!!!!!!!!!!!!! Email doesn't exist for user '{}'", user.getLogin());
+                                            return;
+                                        }
+
+                                        try {
+                                            executorService.schedule(
+                                                () -> this.sendEmailSync(userEngage.getEmail(), subject, content, false, false),
+                                                1,
+                                                TimeUnit.SECONDS
+                                            );
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        // this.sendEmail(userEngage.getEmail(), subject, content, false, false);
+
+                                    });
+                            }
+                        });
+                });
+        }
     }
 
     public void sendActivationEmail(User user) {

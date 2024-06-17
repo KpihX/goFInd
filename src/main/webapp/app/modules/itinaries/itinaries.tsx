@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button as Button2, Chip, InputAdornment, Stack, TextField } from '@mui/material';
+import { Button as Button2, Chip, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,14 +11,17 @@ import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { mapIdList, overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import Box from '@mui/material/Box';
+import { orange } from '@mui/material/colors';
 
 import { getEntities, reset } from 'app/entities/trajet/trajet.reducer';
 import { convertDateTimeToServer } from 'app/shared/util/date-utils';
 import { getEntities as getUtils } from 'app/entities/utilisateur/utilisateur.reducer';
 import { getUsers } from '../administration/user-management/user-management.reducer';
 
-import { updateEntity } from 'app/entities/trajet/trajet.reducer';
+import { updateEntity, deleteEntities } from 'app/entities/trajet/trajet.reducer';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 
 export const Itinaries = () => {
   const [search, setSearch] = useState('');
@@ -47,6 +50,7 @@ export const Itinaries = () => {
 
   const [start, setStart] = React.useState(true);
   const [isEngaged, setIsEngaged] = React.useState([]);
+  const [isPassed, setIsPassed] = React.useState([]);
   const [currentTrajet, setCurrentTrajet] = React.useState(null);
   const [message, setMessage] = React.useState('');
 
@@ -82,7 +86,28 @@ export const Itinaries = () => {
 
   useEffect(() => {
     setIsEngaged(trajetList.map(trajet => trajet.engages.some(engage => engage.loginId === account.id)));
+    setIsPassed(trajetList.map(trajet => dayjs(trajet.dateHeureDepart).isBefore(dayjs())));
   }, [trajetList]);
+
+  useEffect(() => {
+    console.log('** trajetList', trajetList);
+    console.log('** isPased', isPassed);
+
+    if (trajetList && trajetList.length !== 0) {
+      let ids = [];
+      for (let i = 0; i < isPassed.length; i++) {
+        if (trajetList[i] && isPassed[i] && dayjs(trajetList[i].dateHeureDepart).isBefore(dayjs().subtract(2, 'days'))) {
+          ids = [...ids, trajetList[i].id];
+        }
+      }
+
+      if (ids.length !== 0) {
+        dispatch(deleteEntities({ ids, motif: 'pass' }));
+        dispatch(getEntities({}));
+        toast.success('Les trajets dont la date de départ est passée de 2 jours ont été supprimés');
+      }
+    }
+  }, [isPassed, trajetList, updateSuccess]);
 
   useEffect(() => {
     // console.log('* start', start);
@@ -209,6 +234,25 @@ export const Itinaries = () => {
     }
   }, [currentTrajet, start, updateUtilisateurs, isEngaged, message]);
 
+  function calculerDifference(dateDayjs) {
+    // Ajouter 2 jours à la date fournie
+    const datePlusDeuxJours = dayjs(dateDayjs).add(2, 'day');
+
+    // Obtenir la date actuelle
+    const dateActuelle = dayjs();
+
+    // Calculer la différence en millisecondes
+    const differenceMs = datePlusDeuxJours.diff(dateActuelle);
+
+    // Convertir la différence en jours, heures et minutes
+    const jours = Math.floor(differenceMs / (24 * 60 * 60 * 1000));
+    const heures = Math.floor((differenceMs / (60 * 60 * 1000)) % 24);
+    const minutes = Math.floor((differenceMs / (60 * 1000)) % 60);
+
+    // Renvoyer le résultat formaté
+    return `${jours} jr + ${heures} h + ${minutes} mn`;
+  }
+
   return (
     <div>
       <div className="flex flex-row">
@@ -308,7 +352,9 @@ export const Itinaries = () => {
                   {/* {console.log('* isEngaged :', isEngaged)} */}
                   {trajetList.map((trajet, i) => (
                     <>
-                      {(trajet.places > 0 || trajet.proprietaire.loginId === account.id) && (
+                      {((trajet.places > 0 && !isPassed[i]) ||
+                        trajet.proprietaire.loginId === account.id ||
+                        trajet.engages.some(engage => engage.loginId === account.id)) && (
                         <tr key={`entity-${i}`} data-cy="entityTable">
                           <td>
                             <Button tag={Link} to={`/trajet/${trajet.id}`} color="link" size="sm">
@@ -416,6 +462,27 @@ export const Itinaries = () => {
                                   </Button>
                                 )}
                               </div>
+                            )}
+                            {isPassed[i] && (
+                              <Stack direction="row" spacing={1}>
+                                <Box
+                                  sx={{
+                                    border: 1,
+                                    borderColor: 'warning.main',
+                                    borderRadius: '16px',
+                                    padding: '0.3rem',
+                                    backgroundColor: orange[10], // Utilisez la couleur appropriée de votre thème
+                                    color: orange[900], // Utilisez la couleur appropriée de votre thème
+                                    typography: 'body2',
+                                  }}
+                                >
+                                  La date de départ est dépassé!
+                                  <br />
+                                  Le trajet va être supprimé dans:
+                                  <br />
+                                  {calculerDifference(trajet.dateHeureDepart)}
+                                </Box>
+                              </Stack>
                             )}
                           </td>
                         </tr>
