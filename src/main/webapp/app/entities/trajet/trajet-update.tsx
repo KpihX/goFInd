@@ -62,20 +62,27 @@ export const TrajetUpdate = () => {
 
     const proprietaire = utilisateurs.find(it => it?.loginId?.toString() === account?.id?.toString());
 
-    const entity = {
+    let entity = {
       ...trajetEntity,
       ...values,
       proprietaire,
       proprietaireId: proprietaire.id,
-      engages: [],
+      engages: trajetEntity.engages,
     };
+
+    if (isNew) {
+      entity = {
+        ...entity,
+        engages: [],
+      };
+    }
 
     console.log('* trajet:', entity);
 
     if (isNew) {
       dispatch(createEntity(entity));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity({ entity, motif: 'prop' }));
     }
   };
 
@@ -155,7 +162,11 @@ export const TrajetUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
-                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                  validate: v =>
+                    (isNumber(v) &&
+                      (v >= trajetEntity.engages.length ||
+                        'Il y a déjà ' + trajetEntity.engages.length + ' engagés. Vous ne pouvez allez en deça!')) ||
+                    translate('entity.validation.number'),
                 }}
               />
               <ValidatedField

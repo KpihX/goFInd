@@ -4,6 +4,7 @@ import com.gofind.gofind.domain.itinaries.Trajet;
 import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.repository.itinaries.TrajetRepository;
 import com.gofind.gofind.service.itinaries.TrajetService;
+import com.gofind.gofind.service.mail.MailService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -47,9 +48,12 @@ public class TrajetResource {
 
     private final TrajetRepository trajetRepository;
 
-    public TrajetResource(TrajetService trajetService, TrajetRepository trajetRepository) {
+    private final MailService mailService;
+
+    public TrajetResource(TrajetService trajetService, TrajetRepository trajetRepository, MailService mailService) {
         this.trajetService = trajetService;
         this.trajetRepository = trajetRepository;
+        this.mailService = mailService;
     }
 
     /**
@@ -91,6 +95,7 @@ public class TrajetResource {
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Trajet>> updateTrajet(
         @PathVariable(value = "id", required = false) final Long id,
+        @RequestParam(required = false) String motif,
         @Valid @RequestBody Trajet trajet
         // @RequestParam(required = false) Set<Utilisateur> engages
     ) throws URISyntaxException {
@@ -114,6 +119,19 @@ public class TrajetResource {
 
                 return trajetService
                     .update(trajet)
+                    .doOnSuccess(trajetObtained -> {
+                        if (motif.equals("prop")) {
+                            log.debug("! ! ! ! ! ! ! ! ! ! !  Sending trajet modif by prop email: {}", trajetObtained);
+                            mailService.sendModifTrajetEmail(trajetObtained);
+                        } else if (motif.equals("add")) {
+                            log.debug("! ! ! ! ! ! ! ! ! ! !  Sending trajet modif add email: {}", trajetObtained);
+                            mailService.sendAddTrajetEmail(trajetObtained);
+                        }
+                        if (motif.equals("rem")) {
+                            log.debug("! ! ! ! ! ! ! ! ! ! !  Sending trajet modif rem email: {}", trajetObtained);
+                            mailService.sendRemTrajetEmail(trajetObtained);
+                        }
+                    })
                     .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                     .map(
                         result ->

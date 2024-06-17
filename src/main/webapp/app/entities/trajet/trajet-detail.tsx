@@ -82,7 +82,7 @@ export const TrajetDetail = () => {
               : null}
           </dd>
         </dl>
-        <Button tag={Link} to="/trajet" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to="/itinaries" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>

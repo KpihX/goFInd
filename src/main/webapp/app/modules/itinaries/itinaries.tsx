@@ -190,7 +190,12 @@ export const Itinaries = () => {
 
     // console.log('* trajet:', entity);
 
-    dispatch(updateEntity(entity));
+    let motif = 'add';
+    if (message === 'Vous avez bien été rétiré du trajet!') {
+      motif = 'rem';
+    }
+
+    dispatch(updateEntity({ entity, motif }));
   };
 
   const idToLogin = id => {
@@ -202,7 +207,7 @@ export const Itinaries = () => {
       console.log('* isEngaged: ', isEngaged);
       saveEntity();
     }
-  }, [currentTrajet, start, updateUtilisateurs, isEngaged]);
+  }, [currentTrajet, start, updateUtilisateurs, isEngaged, message]);
 
   return (
     <div>
