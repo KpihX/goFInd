@@ -357,43 +357,76 @@ public class MailService {
             });
     }
 
-    // public void sendDelTrajetEmail(Trajet trajet) {
-    //     Utilisateur proprietaireUtil = trajet.getProprietaire();
-    //     // User proprietaireUser = proprietaireUtil.getLogin();
-    //     // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
-    //     // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
-    //     Long loginId = proprietaireUtil.getLoginId();
+    public void sendDelTrajetEmail(Long idTrajet) {
+        String subject = "Suppression de trajet";
 
-    //     String subject = "Modifications des infos d'un trajet";
+        trajetService
+            .findOne(idTrajet)
+            .subscribe(trajet -> {
+                Utilisateur proprietaireUtil = trajet.getProprietaire();
+                // User proprietaireUser = proprietaireUtil.getLogin();
+                // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+                // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+                Long loginId = proprietaireUtil.getLoginId();
 
-    //     String engagesContacts = "";
+                userService
+                    .getUserWithAuthoritiesById(loginId)
+                    .subscribe(user -> {
+                        log.debug(
+                            "! ! ! ! ! ! ! ! ! ! ! Sending Email since del on trajet by ProprietaireUtil: {} concerning trajet: {}",
+                            proprietaireUtil,
+                            trajet
+                        );
 
-    //     for (Utilisateur engage : trajet.getEngages()) {
-    //         engagesContacts = engagesContacts + engage.getTelephone() + ", ";
-    //     }
-    //     engagesContacts = engagesContacts.substring(0, engagesContacts.length() - 2);
+                        String content =
+                            "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+                            "Nous vous écrivons pour vous signaler que le trajet que vous avez conclu avec l'utilisateur d'infos:\n" +
+                            "   - nom: " +
+                            user.getLogin() +
+                            "\n" +
+                            "   - telephone: " +
+                            proprietaireUtil.getTelephone() +
+                            "\n" +
+                            "   - email: " +
+                            user.getEmail() +
+                            "\n" +
+                            "dont les infos sont les suivantes:\n" +
+                            "   - depart: " +
+                            trajet.getDepart() +
+                            "\n" +
+                            "   - arrivée: " +
+                            trajet.getArrivee() +
+                            "\n" +
+                            "   - date & heure de départ: " +
+                            trajet.getDateHeureDepart() +
+                            "\n" +
+                            "a été supprimé par ce dernier!\n" +
+                            "Plus d'infos sur notre plateforme.\n" +
+                            ".\nCordialement,\n" +
+                            "L'equipe goFind!";
 
-    //     String content =
-    //         "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
-    //         "Nous vous écrivons pour vous signaler que les informations de votre trajet plannifié de " +
-    //         trajet.getDepart() + " à " +
-    //         trajet.getArrivee() +  " prévu pour le" +
-    //         trajet.getDateHeureDepart() +
-    //         " ont été modifiés.\n" +
-    //         trajet.toString() +
-    //         "\nAinsi voici les contacts des engagés restants en cas de besoin: \n" +
-    //         engagesContacts +
-    //         ".\nCordialement,\n" +
-    //         "L'equipe goFind!";
+                        for (Utilisateur engage : trajet.getEngages()) {
+                            userService
+                                .getUserWithAuthoritiesById(engage.getLoginId())
+                                .subscribe(userEngage -> {
+                                    log.debug("! ! ! ! ! ! ! ! ! ! ! Sending Email since modifs on trajet to the engageNew: {}", engage);
+                                    if (userEngage.getEmail() == null) {
+                                        log.debug("!!!!!!!!!!!!!!!! Email doesn't exist for user '{}'", user.getLogin());
+                                        return;
+                                    }
 
-    //     userService
-    //         .getUserWithAuthoritiesById(loginId)
-    //         .subscribe(user -> {
-    //             // log.debug("*** Sending a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
-    //             this.sendEmail(user.getEmail(), subject, content, false, true);
-    //             // log.debug("*** Sucessful sending of a report mail to '{}' from {} about its object {}", user.getEmail(), signalant, objet);
-    //         });
-    // }
+                                    executorService.schedule(
+                                        () -> this.sendEmailSync(userEngage.getEmail(), subject, content, false, false),
+                                        1,
+                                        TimeUnit.SECONDS
+                                    );
+                                    // this.sendEmail(userEngage.getEmail(), subject, content, false, false);
+
+                                });
+                        }
+                    });
+            });
+    }
 
     public void sendActivationEmail(User user) {
         log.debug("Sending activation email to '{}'", user.getEmail());

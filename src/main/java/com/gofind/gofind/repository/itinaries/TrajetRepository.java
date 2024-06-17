@@ -42,6 +42,8 @@ interface TrajetRepositoryInternal {
 
     Flux<Trajet> findAll(String search, String search2);
 
+    Mono<Void> deleteById(Long id);
+
     Mono<Trajet> findById(Long id);
     // this is not supported at the moment because of https://github.com/jhipster/generator-jhipster/issues/18269
     // Flux<Trajet> findAllBy(Pageable pageable, Criteria criteria);

@@ -168,4 +168,13 @@ class TrajetRepositoryInternalImpl extends SimpleR2dbcRepository<Trajet, Long> i
         log.debug("!!!!!!!!!!! Result: {}", result);
         return result.thenReturn(entity);
     }
+
+    @Override
+    public Mono<Void> deleteById(Long entityId) {
+        return deleteRelations(entityId).then(super.deleteById(entityId));
+    }
+
+    protected Mono<Void> deleteRelations(Long entityId) {
+        return entityManager.deleteFromLinkTable(trajetsLink, entityId);
+    }
 }

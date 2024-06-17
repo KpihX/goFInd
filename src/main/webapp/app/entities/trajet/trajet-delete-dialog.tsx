@@ -25,7 +25,7 @@ export const TrajetDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.trajet.updateSuccess);
 
   const handleClose = () => {
-    navigate('/trajet');
+    navigate('/itinaries');
   };
 
   useEffect(() => {

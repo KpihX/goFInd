@@ -239,6 +239,9 @@ public class TrajetResource {
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteTrajet(@PathVariable("id") Long id) {
         log.debug("REST request to delete Trajet : {}", id);
+
+        mailService.sendDelTrajetEmail(id);
+
         return trajetService
             .delete(id)
             .then(
