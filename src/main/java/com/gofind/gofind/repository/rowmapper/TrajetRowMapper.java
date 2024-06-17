@@ -1,6 +1,6 @@
 package com.gofind.gofind.repository.rowmapper;
 
-import com.gofind.gofind.domain.Trajet;
+import com.gofind.gofind.domain.itinaries.Trajet;
 import io.r2dbc.spi.Row;
 import java.time.ZonedDateTime;
 import java.util.function.BiFunction;

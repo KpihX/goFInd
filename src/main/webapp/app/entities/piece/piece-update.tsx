@@ -32,8 +32,17 @@ export const PieceUpdate = () => {
   const updateSuccess = useAppSelector(state => state.piece.updateSuccess);
   const etatPieceValues = Object.keys(EtatPiece);
 
+  const { maisonId } = useParams<'maisonId'>();
+
+  useEffect(() => {
+    console.log('* state: ', location);
+    console.log('* id: ', id);
+    console.log('* maisonId: ', maisonId);
+  }, [maisonId]);
+
   const handleClose = () => {
-    navigate('/piece');
+    // navigate('/houses');
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -57,10 +66,17 @@ export const PieceUpdate = () => {
       values.id = Number(values.id);
     }
 
+    let maisonId2 = maisonId;
+
+    if (!maisonId2) {
+      maisonId2 = values.maison;
+    }
+
     const entity = {
       ...pieceEntity,
       ...values,
-      maison: maisons.find(it => it.id.toString() === values.maison?.toString()),
+      maison: maisons.find(it => it.id.toString() === maisonId2?.toString()),
+      maisonId: maisonId2,
       location: locations.find(it => it.id.toString() === values.location?.toString()),
     };
 
@@ -73,9 +89,11 @@ export const PieceUpdate = () => {
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? {
+          etat: 'EN ATTENTE LOCATION',
+        }
       : {
-          etat: 'LOUE',
+          etat: 'EN ATTENTE LOCATION',
           ...pieceEntity,
           maison: pieceEntity?.maison?.id,
           location: pieceEntity?.location?.id,
@@ -96,7 +114,7 @@ export const PieceUpdate = () => {
             <p>Loading...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? (
+              {/* {!isNew ? (
                 <ValidatedField
                   name="id"
                   required
@@ -105,7 +123,7 @@ export const PieceUpdate = () => {
                   label={translate('global.field.id')}
                   validate={{ required: true }}
                 />
-              ) : null}
+              ) : null} */}
               <ValidatedField
                 label={translate('goFindApp.piece.libelle')}
                 id="piece-libelle"
@@ -124,6 +142,22 @@ export const PieceUpdate = () => {
                   </option>
                 ))}
               </ValidatedField>
+              <ValidatedField
+                // label={translate('goFindApp.location.prix')}
+                label="prix"
+                id="piece-prix"
+                name="prix"
+                data-cy="prix"
+                type="text"
+                // validate={{
+                //   required: { value: true, message: translate('entity.validation.required') },
+                //   validate: v => isNumber(v) || translate('entity.validation.number'),
+                // }}
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
+              />
               <ValidatedField id="piece-maison" name="maison" data-cy="maison" label={translate('goFindApp.piece.maison')} type="select">
                 <option value="" key="0" />
                 {maisons
@@ -134,7 +168,7 @@ export const PieceUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <ValidatedField
+              {/* <ValidatedField
                 id="piece-location"
                 name="location"
                 data-cy="location"
@@ -149,8 +183,8 @@ export const PieceUpdate = () => {
                       </option>
                     ))
                   : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/piece" replace color="info">
+              </ValidatedField> */}
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to={-1} replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

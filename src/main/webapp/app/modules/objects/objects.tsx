@@ -22,6 +22,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, reset } from 'app/entities/objet/objet.reducer';
+import './object.css';
 
 export const Objects = () => {
   const [currentSearch, setCurrentSearch] = useState('');
@@ -171,6 +172,7 @@ export const Objects = () => {
           ),
         )}
       </Stack>
+<<<<<<< HEAD
       <div className="flex flex-row">
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <TextField
@@ -191,6 +193,26 @@ export const Objects = () => {
           />
         </div>
         <FormControl sx={{ m: 1, minWidth: 120 }}>
+=======
+      <div className="flex flex-row mt-3">
+        <TextField
+          variant="outlined"
+          sx={{ ml: 1 }}
+          placeholder="Rechercher un objet ..."
+          value={currentSearch}
+          onChange={e => setCurrentSearch(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button2 variant="contained" onClick={() => setSearch(currentSearch)}>
+                  <FontAwesomeIcon icon="search" />
+                </Button2>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+>>>>>>> origin
           <InputLabel id="demo-select-small-label">Type de recherche</InputLabel>
           <Select
             labelId="demo-select-small-label"
@@ -227,7 +249,7 @@ export const Objects = () => {
         loader={<div className="loader">Loading ...</div>}
       >
         {objetList && objetList.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+          <div className="houses-grid">
             {objetList.map(
               (objet, i) =>
                 objet.type === currentTypeObjet || currentTypeObjet === Object.keys(GenTypeObjet)[0] ? (

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending } from '@reduxjs/toolkit';
 import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
+import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError, IQueryParamsIti } from 'app/shared/reducers/reducer.utils';
 import { ITrajet, defaultValue } from 'app/shared/model/trajet.model';
 
 const initialState: EntityState<ITrajet> = {
@@ -20,8 +20,8 @@ const apiUrl = 'api/trajets';
 
 // Actions
 
-export const getEntities = createAsyncThunk('trajet/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+export const getEntities = createAsyncThunk('trajet/fetch_entity_list', async ({ page, size, sort, search, search2 }: IQueryParamsIti) => {
+  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}search=${search ? search : ''}&search2=${search2 ? search2 : ''}&cacheBuster=${new Date().getTime()}`;
   return axios.get<ITrajet[]>(requestUrl);
 });
 
@@ -44,8 +44,10 @@ export const createEntity = createAsyncThunk(
 
 export const updateEntity = createAsyncThunk(
   'trajet/update_entity',
-  async (entity: ITrajet, thunkAPI) => {
-    return axios.put<ITrajet>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  async ({ entity, motif }: { entity: ITrajet; motif: string }) => {
+    // entity: ITrajet, thunkAPI) => {
+    // console.log('** updateTrajet: ', entity);
+    return axios.put<ITrajet>(`${apiUrl}/${entity.id}?motif=${motif}`, entity);
   },
   { serializeError: serializeAxiosError },
 );

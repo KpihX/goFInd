@@ -4,6 +4,8 @@ import static com.gofind.gofind.domain.TrajetTestSamples.*;
 import static com.gofind.gofind.domain.UtilisateurTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.web.rest.TestUtil;
 import java.util.HashSet;
 import java.util.Set;

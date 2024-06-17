@@ -4,7 +4,7 @@
       "home": {
         "title": "Objets",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau objet",
+        "createLabel": "Créer un nouvel objet",
         "createOrEditLabel": "Créer ou éditer un objet",
         "notFound": "Aucun Objet trouvé"
       },

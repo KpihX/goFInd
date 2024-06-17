@@ -1,8 +1,10 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Trajet;
-import com.gofind.gofind.repository.TrajetRepository;
-import com.gofind.gofind.service.TrajetService;
+import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.users.Utilisateur;
+import com.gofind.gofind.repository.itinaries.TrajetRepository;
+import com.gofind.gofind.service.itinaries.TrajetService;
+import com.gofind.gofind.service.mail.MailService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +31,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Trajet}.
+ * REST controller for managing {@link com.gofind.gofind.domain.itinaries.Trajet}.
  */
 @RestController
 @RequestMapping("/api/trajets")
@@ -45,9 +48,12 @@ public class TrajetResource {
 
     private final TrajetRepository trajetRepository;
 
-    public TrajetResource(TrajetService trajetService, TrajetRepository trajetRepository) {
+    private final MailService mailService;
+
+    public TrajetResource(TrajetService trajetService, TrajetRepository trajetRepository, MailService mailService) {
         this.trajetService = trajetService;
         this.trajetRepository = trajetRepository;
+        this.mailService = mailService;
     }
 
     /**
@@ -89,15 +95,20 @@ public class TrajetResource {
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Trajet>> updateTrajet(
         @PathVariable(value = "id", required = false) final Long id,
+        @RequestParam(required = false) String motif,
         @Valid @RequestBody Trajet trajet
+        // @RequestParam(required = false) Set<Utilisateur> engages
     ) throws URISyntaxException {
-        log.debug("REST request to update Trajet : {}, {}", id, trajet);
+        log.debug("!!!!!!!!!!!!!!! REST request to update Trajet : {}, {}", id, trajet);
         if (trajet.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, trajet.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
+
+        log.debug("!!!!!!!!!!!!!!! Engages : {}", trajet.getEngages());
+        // trajet.setEngages(engages);
 
         return trajetRepository
             .existsById(id)
@@ -108,6 +119,19 @@ public class TrajetResource {
 
                 return trajetService
                     .update(trajet)
+                    .doOnSuccess(trajetObtained -> {
+                        if (motif.equals("prop")) {
+                            log.debug("! ! ! ! ! ! ! ! ! ! !  Sending trajet modif by prop email: {}", trajetObtained);
+                            mailService.sendModifTrajetEmail(trajetObtained);
+                        } else if (motif.equals("add")) {
+                            log.debug("! ! ! ! ! ! ! ! ! ! !  Sending trajet modif add email: {}", trajetObtained);
+                            mailService.sendAddTrajetEmail(trajetObtained);
+                        }
+                        if (motif.equals("rem")) {
+                            log.debug("! ! ! ! ! ! ! ! ! ! !  Sending trajet modif rem email: {}", trajetObtained);
+                            mailService.sendRemTrajetEmail(trajetObtained);
+                        }
+                    })
                     .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                     .map(
                         result ->
@@ -172,12 +196,14 @@ public class TrajetResource {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<Trajet>>> getAllTrajets(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = true) String search,
+        @RequestParam(required = true) String search2,
         ServerHttpRequest request
     ) {
         log.debug("REST request to get a page of Trajets");
         return trajetService
             .countAll()
-            .zipWith(trajetService.findAll(pageable).collectList())
+            .zipWith(trajetService.findAll(pageable, search, search2).collectList())
             .map(
                 countWithEntities ->
                     ResponseEntity.ok()

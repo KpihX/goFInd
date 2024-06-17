@@ -13,6 +13,8 @@ import { getEntities as getMaisons } from 'app/entities/maison/maison.reducer';
 import { ILocation } from 'app/shared/model/location.model';
 import { getEntity, updateEntity, createEntity, reset } from './location.reducer';
 
+import { getEntities as getUtilisateurs } from 'app/entities/utilisateur/utilisateur.reducer';
+
 export const LocationUpdate = () => {
   const dispatch = useAppDispatch();
 
@@ -27,8 +29,11 @@ export const LocationUpdate = () => {
   const updating = useAppSelector(state => state.location.updating);
   const updateSuccess = useAppSelector(state => state.location.updateSuccess);
 
+  const account = useAppSelector(state => state.authentication.account);
+  const utilisateurs = useAppSelector(state => state.utilisateur.entities);
+
   const handleClose = () => {
-    navigate('/location');
+    navigate('/locations');
   };
 
   useEffect(() => {
@@ -37,6 +42,7 @@ export const LocationUpdate = () => {
     }
 
     dispatch(getMaisons({}));
+    dispatch(getUtilisateurs({}));
   }, []);
 
   useEffect(() => {
@@ -54,10 +60,13 @@ export const LocationUpdate = () => {
       values.prix = Number(values.prix);
     }
 
+    const locataire = utilisateurs.find(it => it?.loginId?.toString() === account?.id?.toString());
+
     const entity = {
       ...locationEntity,
       ...values,
       maison: maisons.find(it => it.id.toString() === values.maison?.toString()),
+      locataire,
     };
 
     if (isNew) {
@@ -112,6 +121,30 @@ export const LocationUpdate = () => {
                 }}
               />
               <ValidatedField
+                // label={translate('goFindApp.trajet.dateHeureDepart')}
+                label="Date et heure de début"
+                id="location-dateHeureDebut"
+                name="dateHeureDebut"
+                data-cy="dateHeureDebut"
+                type="datetime-local"
+                placeholder="YYYY-MM-DD HH:mm"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                // label={translate('goFindApp.trajet.dateHeureDepart')}
+                label="Date et heure de fin"
+                id="location-dateHeureFin"
+                name="dateHeureFin"
+                data-cy="dateHeureFin"
+                type="datetime-local"
+                placeholder="YYYY-MM-DD HH:mm"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
                 id="location-maison"
                 name="maison"
                 data-cy="maison"
@@ -127,7 +160,7 @@ export const LocationUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/location" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/locations" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

@@ -1,5 +1,6 @@
 package com.gofind.gofind.domain;
 
+import com.gofind.gofind.domain.users.Authority;
 import java.util.UUID;
 
 public class AuthorityTestSamples {

@@ -58,6 +58,7 @@ const Header = (props: IHeaderProps) => {
             {props.isAuthenticated && <Houses />}
             {props.isAuthenticated && <Locations />}
             {props.isAuthenticated && <EntitiesMenu />}
+            {/* {props.isAuthenticated && props.isAdmin && <EntitiesMenu />} */}
             {props.isAuthenticated && props.isAdmin && <AdminMenu showOpenAPI={props.isOpenAPIEnabled} />}
             <LocaleMenu currentLocale={props.currentLocale} onClick={handleLocaleChange} />
             <AccountMenu isAuthenticated={props.isAuthenticated} />

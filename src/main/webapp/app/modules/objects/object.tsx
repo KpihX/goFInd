@@ -27,6 +27,8 @@ import { toast } from 'react-toastify';
 import { getEntities, updateEntity } from 'app/entities/objet/objet.reducer';
 import { Link } from 'react-router-dom';
 
+import './object.css';
+
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
@@ -117,6 +119,12 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
       });
     } else {
       const signalantNew = utilisateurs.find(it => it.loginId.toString() === account.id.toString());
+<<<<<<< HEAD
+=======
+      // console.log('* utilisateurs:', utilisateurs);
+      // console.log('* account:', account);
+      // console.log('** found:', found);
+>>>>>>> origin
       saveEntity({
         etatNew: 'RETROUVE',
         signalantNew,
@@ -133,6 +141,7 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
       {(account.id?.toString() === proprietaire.loginId?.toString() ||
         (signalant.loginId?.toString() === account.id?.toString() && found) ||
         !found) && (
+<<<<<<< HEAD
         <Card sx={{ maxWidth: 345, backgroundColor: green[50], borderRadius: '15px' }}>
           <CardHeader
             title={libelle}
@@ -193,6 +202,154 @@ export function Object({ id, libelle, description, identifiant, image, etat, typ
             </div>
           )}
         </Card>
+=======
+        <div key={id} className="house-card">
+          <img src={image} alt={libelle} className="house-image" />
+          <div className="house-info">
+            <h2>{libelle}</h2>
+            <p>ID:&nbsp;{identifiant}</p>
+            <p>{description}</p>
+            {account.id === proprietaire.loginId ? (
+              <div style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}>
+                {found && (
+                  <Stack direction="row" spacing={1}>
+                    <Chip
+                      label="Votre objet a été retrouvé! Consulter vos mails!"
+                      variant="outlined"
+                      color="success"
+                      onClick={handleClick}
+                      onDelete={handleDelete}
+                    />
+                  </Stack>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
+                  {/* <Button tag={Link} to={`/objet/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                <FontAwesomeIcon icon="eye" />{' '}
+                <span className="d-none d-md-inline">
+                  <Translate contentKey="entity.action.view">View</Translate>
+                </span>
+              </Button> */}
+                  <Button tag={Link} to={`/objet/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                    <FontAwesomeIcon icon="pencil-alt" />{' '}
+                    <span className="d-none d-md-inline">
+                      <Translate contentKey="entity.action.edit">Edit</Translate>
+                    </span>
+                  </Button>
+                  <Button
+                    onClick={() => (window.location.href = `/objet/${id}/delete`)}
+                    color="danger"
+                    size="sm"
+                    data-cy="entityDeleteButton"
+                  >
+                    <FontAwesomeIcon icon="trash" />{' '}
+                    <span className="d-none d-md-inline">
+                      <Translate contentKey="entity.action.delete">Delete</Translate>
+                    </span>
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'center' }} className="absolutemt-2 space-x-2 space-y-2">
+                {etat === 'VOLE' ? (
+                  <Button color="warning" size="sm" data-cy="entityReportButton" onClick={handleReport}>
+                    <FontAwesomeIcon icon="ban" />{' '}
+                    <span style={{ display: 'inline' }}>
+                      <Translate contentKey="entity.action.report">Report as Stolen</Translate>
+                    </span>
+                  </Button>
+                ) : (
+                  <Button color="success" size="sm" data-cy="entityUnReportButton" onClick={handleUnreport}>
+                    <FontAwesomeIcon icon="times-circle" />{' '}
+                    <span style={{ display: 'inline' }}>
+                      <Translate contentKey="entity.action.unreport"> Unreport </Translate>
+                    </span>
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        // <Card sx={{ maxWidth: 345 }}>
+        //   <CardHeader
+        //     // avatar={
+        //     //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+        //     //     R
+        //     //   </Avatar>
+        //     // }
+        //     // action={
+        //     //   <IconButton aria-label="settings">
+        //     //     <MoreVertIcon />
+        //     //   </IconButton>
+        //     // }
+        //     title={libelle}
+        //     subheader={`id:${identifiant}`}
+        //   />
+        //   <CardMedia component="img" height="400" image={image} alt="libelle" />
+        //   <CardContent>
+        //     {/* <p>{proprietaire ? <Link to={`/utilisateur/${proprietaire.id}`}>{proprietaire.login}</Link> : ''}</p> */}
+        //     <Typography variant="body2" color="text.secondary">
+        //       {description}
+        //     </Typography>
+        //   </CardContent>
+        //   {account.id === proprietaire.loginId ? (
+        //     <>
+        //       {found && (
+        //         <Stack direction="row" spacing={1}>
+        //           <Chip
+        //             label="Votre objet a été retrouvé! Consulter vos mails!"
+        //             variant="outlined"
+        //             color="success"
+        //             onClick={handleClick}
+        //             onDelete={handleDelete}
+        //           />
+        //         </Stack>
+        //       )}
+        //       <div style={{ display: 'flex', justifyContent: 'center' }} className="flex flex-row pl-3 justify-center">
+        //         {/* <Button tag={Link} to={`/objet/${id}`} color="info" size="sm" data-cy="entityDetailsButton">
+        //         <FontAwesomeIcon icon="eye" />{' '}
+        //         <span className="d-none d-md-inline">
+        //           <Translate contentKey="entity.action.view">View</Translate>
+        //         </span>
+        //       </Button> */}
+        //         <Button tag={Link} to={`/objet/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+        //           <FontAwesomeIcon icon="pencil-alt" />{' '}
+        //           <span className="d-none d-md-inline">
+        //             <Translate contentKey="entity.action.edit">Edit</Translate>
+        //           </span>
+        //         </Button>
+        //         <Button
+        //           onClick={() => (window.location.href = `/objet/${id}/delete`)}
+        //           color="danger"
+        //           size="sm"
+        //           data-cy="entityDeleteButton"
+        //         >
+        //           <FontAwesomeIcon icon="trash" />{' '}
+        //           <span className="d-none d-md-inline">
+        //             <Translate contentKey="entity.action.delete">Delete</Translate>
+        //           </span>
+        //         </Button>
+        //       </div>
+        //     </>
+        //   ) : (
+        //     <div style={{ display: 'flex', justifyContent: 'center' }}>
+        //       {etat === 'VOLE' ? (
+        //         <Button color="warning" size="sm" data-cy="entityReportButton" onClick={handleReport}>
+        //           <FontAwesomeIcon icon="ban" />{' '}
+        //           <span style={{ display: 'inline' }}>
+        //             <Translate contentKey="entity.action.report">Report as Stolen</Translate>
+        //           </span>
+        //         </Button>
+        //       ) : (
+        //         <Button color="success" size="sm" data-cy="entityUnReportButton" onClick={handleUnreport}>
+        //           <FontAwesomeIcon icon="times-circle" />{' '}
+        //           <span style={{ display: 'inline' }}>
+        //             <Translate contentKey="entity.action.unreport"> Unreport </Translate>
+        //           </span>
+        //         </Button>
+        //       )}
+        //     </div>
+        //   )}
+>>>>>>> origin
       )}
     </>
   );

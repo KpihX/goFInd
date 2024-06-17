@@ -25,7 +25,8 @@ export const PieceDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.piece.updateSuccess);
 
   const handleClose = () => {
-    navigate('/piece');
+    // navigate('/piece');
+    navigate(-1);
   };
 
   useEffect(() => {

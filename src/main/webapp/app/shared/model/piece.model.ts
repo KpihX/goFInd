@@ -7,6 +7,7 @@ export interface IPiece {
   libelle?: string;
   image?: string | null;
   etat?: keyof typeof EtatPiece | null;
+  prix?: number;
   maison?: IMaison | null;
   location?: ILocation | null;
 }

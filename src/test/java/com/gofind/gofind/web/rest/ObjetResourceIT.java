@@ -8,11 +8,11 @@ import static org.hamcrest.Matchers.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.Objet;
 import com.gofind.gofind.domain.enumeration.EtatObjet;
 import com.gofind.gofind.domain.enumeration.TypeObjet;
+import com.gofind.gofind.domain.objects.Objet;
 import com.gofind.gofind.repository.EntityManager;
-import com.gofind.gofind.repository.ObjetRepository;
+import com.gofind.gofind.repository.objects.ObjetRepository;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;

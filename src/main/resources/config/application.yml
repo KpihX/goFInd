@@ -126,6 +126,9 @@ spring:
   output:
     ansi:
       console-available: true
+  r2dbc:
+    properties:
+      serverTimezone: Africa/Douala
 
 server:
   servlet:

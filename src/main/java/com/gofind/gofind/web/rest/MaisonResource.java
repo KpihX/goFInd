@@ -1,8 +1,8 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Maison;
-import com.gofind.gofind.repository.MaisonRepository;
-import com.gofind.gofind.service.MaisonService;
+import com.gofind.gofind.domain.locations.Maison;
+import com.gofind.gofind.repository.locations.MaisonRepository;
+import com.gofind.gofind.service.locations.MaisonService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +28,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Maison}.
+ * REST controller for managing {@link com.gofind.gofind.domain.locations.Maison}.
  */
 @RestController
 @RequestMapping("/api/maisons")
@@ -172,12 +172,14 @@ public class MaisonResource {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<List<Maison>>> getAllMaisons(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = true) String search,
+        @RequestParam(required = true) String searchType,
         ServerHttpRequest request
     ) {
         log.debug("REST request to get a page of Maisons");
         return maisonService
             .countAll()
-            .zipWith(maisonService.findAll(pageable).collectList())
+            .zipWith(maisonService.findAll(pageable, search, searchType).collectList())
             .map(
                 countWithEntities ->
                     ResponseEntity.ok()

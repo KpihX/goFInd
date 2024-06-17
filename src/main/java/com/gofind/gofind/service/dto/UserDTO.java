@@ -1,6 +1,6 @@
 package com.gofind.gofind.service.dto;
 
-import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.users.User;
 import java.io.Serializable;
 
 /**

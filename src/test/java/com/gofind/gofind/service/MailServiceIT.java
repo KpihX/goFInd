@@ -6,7 +6,8 @@ import static org.mockito.Mockito.*;
 
 import com.gofind.gofind.IntegrationTest;
 import com.gofind.gofind.config.Constants;
-import com.gofind.gofind.domain.User;
+import com.gofind.gofind.domain.users.User;
+import com.gofind.gofind.service.mail.MailService;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeBodyPart;

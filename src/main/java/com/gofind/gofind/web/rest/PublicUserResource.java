@@ -1,7 +1,7 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.service.UserService;
 import com.gofind.gofind.service.dto.UserDTO;
+import com.gofind.gofind.service.users.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

@@ -5,5 +5,6 @@ package com.gofind.gofind.domain.enumeration;
  */
 public enum EtatPiece {
     LOUE,
+    ATTENTE,
     NONLOUE,
 }

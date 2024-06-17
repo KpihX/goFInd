@@ -1,8 +1,8 @@
 package com.gofind.gofind.web.rest;
 
-import com.gofind.gofind.domain.Piece;
-import com.gofind.gofind.repository.PieceRepository;
-import com.gofind.gofind.service.PieceService;
+import com.gofind.gofind.domain.locations.Piece;
+import com.gofind.gofind.repository.locations.PieceRepository;
+import com.gofind.gofind.service.locations.PieceService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +28,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.gofind.gofind.domain.Piece}.
+ * REST controller for managing {@link com.gofind.gofind.domain.locations.Piece}.
  */
 @RestController
 @RequestMapping("/api/pieces")

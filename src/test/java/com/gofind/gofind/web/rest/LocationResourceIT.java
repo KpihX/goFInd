@@ -8,9 +8,13 @@ import static org.hamcrest.Matchers.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.Location;
+import com.gofind.gofind.domain.locations.Location;
 import com.gofind.gofind.repository.EntityManager;
-import com.gofind.gofind.repository.LocationRepository;
+import com.gofind.gofind.repository.locations.LocationRepository;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
@@ -32,6 +36,12 @@ class LocationResourceIT {
 
     private static final Float DEFAULT_PRIX = 1F;
     private static final Float UPDATED_PRIX = 2F;
+
+    private static final ZonedDateTime DEFAULT_DATE_HEURE_DEBUT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_DATE_HEURE_DEBUT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final ZonedDateTime DEFAULT_DATE_HEURE_FIN = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_DATE_HEURE_FIN = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     private static final String ENTITY_API_URL = "/api/locations";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -60,7 +70,7 @@ class LocationResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Location createEntity(EntityManager em) {
-        Location location = new Location().prix(DEFAULT_PRIX);
+        Location location = new Location().prix(DEFAULT_PRIX).dateHeureDebut(DEFAULT_DATE_HEURE_DEBUT).dateHeureFin(DEFAULT_DATE_HEURE_FIN);
         return location;
     }
 
@@ -71,7 +81,7 @@ class LocationResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Location createUpdatedEntity(EntityManager em) {
-        Location location = new Location().prix(UPDATED_PRIX);
+        Location location = new Location().prix(UPDATED_PRIX).dateHeureDebut(UPDATED_DATE_HEURE_DEBUT).dateHeureFin(UPDATED_DATE_HEURE_FIN);
         return location;
     }
 

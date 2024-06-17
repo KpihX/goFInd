@@ -2,6 +2,8 @@ package com.gofind.gofind.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gofind.gofind.domain.locations.Piece;
+
 public class PieceAsserts {
 
     /**

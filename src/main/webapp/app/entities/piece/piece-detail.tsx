@@ -50,6 +50,13 @@ export const PieceDetail = () => {
           </dt>
           <dd>{pieceEntity.etat}</dd>
           <dt>
+            <span id="prix">
+              Prix
+              {/* <Translate contentKey="goFindApp.location.prix">Prix</Translate> */}
+            </span>
+          </dt>
+          <dd>{pieceEntity.prix}</dd>
+          <dt>
             <Translate contentKey="goFindApp.piece.maison">Maison</Translate>
           </dt>
           <dd>{pieceEntity.maison ? pieceEntity.maison.id : ''}</dd>
@@ -58,7 +65,7 @@ export const PieceDetail = () => {
           </dt>
           <dd>{pieceEntity.location ? pieceEntity.location.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/piece" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to={-1} replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>

@@ -1,0 +1,39 @@
+.houses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.house-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.house-card:hover {
+  transform: translateY(-10px);
+}
+
+.house-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.house-info {
+  padding: 15px;
+}
+
+.house-info h2 {
+  margin: 0 0 10px;
+  font-size: 1.5em;
+}
+
+.house-info p {
+  margin: 0;
+  color: #666;
+}

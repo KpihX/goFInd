@@ -141,6 +141,11 @@ export const Piece = () => {
                   <th className="hand" onClick={sort('etat')}>
                     <Translate contentKey="goFindApp.piece.etat">Etat</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('etat')} />
                   </th>
+                  <th className="hand" onClick={sort('prix')}>
+                    Prix
+                    {/* <Translate contentKey="goFindApp.location.prix">Prix</Translate>{' '} */}
+                    <FontAwesomeIcon icon={getSortIconByFieldName('prix')} />
+                  </th>
                   <th>
                     <Translate contentKey="goFindApp.piece.maison">Maison</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -163,6 +168,7 @@ export const Piece = () => {
                     <td>
                       <Translate contentKey={`goFindApp.EtatPiece.${piece.etat}`} />
                     </td>
+                    <td>{piece.prix}</td>
                     <td>{piece.maison ? <Link to={`/maison/${piece.maison.id}`}>{piece.maison.id}</Link> : ''}</td>
                     <td>{piece.location ? <Link to={`/location/${piece.location.id}`}>{piece.location.id}</Link> : ''}</td>
                     <td className="text-end">

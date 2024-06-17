@@ -6,7 +6,10 @@ import Stack from '@mui/material/Stack';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputAdornment } from '@mui/material';
 import TextField from '@mui/material/TextField';
+<<<<<<< HEAD
 import { House as Maison } from './house';
+=======
+>>>>>>> origin
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -22,14 +25,23 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, reset } from 'app/entities/maison/maison.reducer';
+<<<<<<< HEAD
 import { MiscellaneousServicesTwoTone } from '@mui/icons-material';
+=======
+import './houses.css';
+import House from './house';
+>>>>>>> origin
 
 export const Houses = () => {
   const [currentSearch, setCurrentSearch] = useState('');
   const [search, setSearch] = useState('');
+<<<<<<< HEAD
   
   
   const [typeSearch, setTypeSearch] = React.useState('libelle'); // ou 'identifiant
+=======
+  const [typeSearch, setTypeSearch] = React.useState('adresse'); // ou 'description'
+>>>>>>> origin
 
   const handleChange = (event: SelectChangeEvent) => {
     setTypeSearch(event.target.value);
@@ -47,7 +59,11 @@ export const Houses = () => {
   const maisonList = useAppSelector(state => state.maison.entities);
   const loading = useAppSelector(state => state.maison.loading);
   const links = useAppSelector(state => state.maison.links);
+<<<<<<< HEAD
   const updateSuccess = useAppSelector(state => state.maisonupdateSuccess);
+=======
+  const updateSuccess = useAppSelector(state => state.maison.updateSuccess);
+>>>>>>> origin
 
   const getAllEntities = () => {
     dispatch(
@@ -133,6 +149,7 @@ export const Houses = () => {
 
   return (
     <div className="flex flex-col">
+<<<<<<< HEAD
       <Stack
         direction="row"
         spacing={2}
@@ -163,6 +180,26 @@ export const Houses = () => {
           />
         </div>
         <FormControl sx={{ m: 1, minWidth: 120 }}>
+=======
+      <div className="flex flex-row mt-3">
+        <TextField
+          variant="outlined"
+          sx={{ ml: 1 }}
+          placeholder="Rechercher une maison ..."
+          value={currentSearch}
+          onChange={e => setCurrentSearch(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button2 variant="contained" onClick={() => setSearch(currentSearch)}>
+                  <FontAwesomeIcon icon="search" />
+                </Button2>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+>>>>>>> origin
           <InputLabel id="demo-select-small-label">Type de recherche</InputLabel>
           <Select
             labelId="demo-select-small-label"
@@ -171,14 +208,20 @@ export const Houses = () => {
             label="Type de recherche"
             onChange={handleChange}
           >
+<<<<<<< HEAD
             <MenuItem value="libelle">Libelle</MenuItem>
             <MenuItem value="identifiant">Identifiant</MenuItem>
+=======
+            <MenuItem value="adresse">Adresse</MenuItem>
+            <MenuItem value="description">Description</MenuItem>
+>>>>>>> origin
           </Select>
         </FormControl>
       </div>
       <div>
         <h2 id="objet-heading" data-cy="ObjetHeading">
           <div className="d-flex justify-content-end">
+<<<<<<< HEAD
             <Button className="me-2" variant="success" onClick={handleSyncList} disabled={loading}>
               <FontAwesomeIcon icon="sync" spin={loading} />{' '}
               <Translate contentKey="goFindApp.objet.home.refreshListLabel">Refresh List</Translate>
@@ -187,6 +230,16 @@ export const Houses = () => {
               <FontAwesomeIcon icon="plus" />
               &nbsp;
               Créer une nouvelle maison
+=======
+            <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
+              <FontAwesomeIcon icon="sync" spin={loading} />{' '}
+              <Translate contentKey="goFindApp.objet.home.refreshListLabel">Refresh List</Translate>
+            </Button>
+            <Link to="/maison/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+              <FontAwesomeIcon icon="plus" />
+              &nbsp; Créer une nouvelle maison
+              {/* <Translate contentKey="goFindApp.objet.home.createLabel">Create new Objet</Translate> */}
+>>>>>>> origin
             </Link>
           </div>
         </h2>
@@ -199,6 +252,7 @@ export const Houses = () => {
         loader={<div className="loader">Loading ...</div>}
       >
         {maisonList && maisonList.length > 0 ? (
+<<<<<<< HEAD
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
             {maisonList.map((maison, i) => (
               
@@ -260,6 +314,19 @@ export const Houses = () => {
               //     </div>
               //   </div>
               // </div>
+=======
+          <div className="houses-grid">
+            {maisonList.map((objet, i) => (
+              <House
+                key={`entity-${i}`}
+                id={objet.id}
+                adresse={objet.adresse}
+                description={objet.description}
+                image={objet.image}
+                proprietaire={objet.proprietaire}
+                pieces={objet.pieces}
+              />
+>>>>>>> origin
             ))}
           </div>
         ) : (

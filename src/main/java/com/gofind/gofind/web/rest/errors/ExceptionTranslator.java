@@ -94,13 +94,14 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler implemen
 
     private ProblemDetailWithCause getProblemDetailWithCause(Throwable ex) {
         if (
-            ex instanceof com.gofind.gofind.service.UsernameAlreadyUsedException
+            ex instanceof com.gofind.gofind.service.users.UsernameAlreadyUsedException
         ) return (ProblemDetailWithCause) new LoginAlreadyUsedException().getBody();
         if (
-            ex instanceof com.gofind.gofind.service.EmailAlreadyUsedException
+            ex instanceof com.gofind.gofind.service.mail.EmailAlreadyUsedException
         ) return (ProblemDetailWithCause) new EmailAlreadyUsedException().getBody();
-        if (ex instanceof com.gofind.gofind.service.InvalidPasswordException) return (ProblemDetailWithCause) new InvalidPasswordException()
-            .getBody();
+        if (
+            ex instanceof com.gofind.gofind.service.users.InvalidPasswordException
+        ) return (ProblemDetailWithCause) new InvalidPasswordException().getBody();
 
         if (ex instanceof AuthenticationException) {
             // Ensure no information about existing users is revealed via failed authentication attempts

@@ -11,7 +11,7 @@ import PieceDeleteDialog from './piece-delete-dialog';
 const PieceRoutes = () => (
   <ErrorBoundaryRoutes>
     <Route index element={<Piece />} />
-    <Route path="new" element={<PieceUpdate />} />
+    <Route path="new/:maisonId" element={<PieceUpdate />} />
     <Route path=":id">
       <Route index element={<PieceDetail />} />
       <Route path="edit" element={<PieceUpdate />} />

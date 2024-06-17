@@ -53,6 +53,12 @@ export const Trajet = () => {
   }, []);
 
   useEffect(() => {
+    if (!loading) {
+      console.log('*trajetList: ', trajetList);
+    }
+  }, [loading]);
+
+  useEffect(() => {
     if (updateSuccess) {
       resetAll();
     }

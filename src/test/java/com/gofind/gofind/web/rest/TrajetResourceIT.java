@@ -9,9 +9,9 @@ import static org.hamcrest.Matchers.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.Trajet;
+import com.gofind.gofind.domain.itinaries.Trajet;
 import com.gofind.gofind.repository.EntityManager;
-import com.gofind.gofind.repository.TrajetRepository;
+import com.gofind.gofind.repository.itinaries.TrajetRepository;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;

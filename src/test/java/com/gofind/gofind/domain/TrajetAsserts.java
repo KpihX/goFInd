@@ -3,6 +3,8 @@ package com.gofind.gofind.domain;
 import static com.gofind.gofind.domain.AssertUtils.zonedDataTimeSameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gofind.gofind.domain.itinaries.Trajet;
+
 public class TrajetAsserts {
 
     /**

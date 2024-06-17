@@ -1,8 +1,8 @@
 package com.gofind.gofind.service.impl;
 
-import com.gofind.gofind.domain.Maison;
-import com.gofind.gofind.repository.MaisonRepository;
-import com.gofind.gofind.service.MaisonService;
+import com.gofind.gofind.domain.locations.Maison;
+import com.gofind.gofind.repository.locations.MaisonRepository;
+import com.gofind.gofind.service.locations.MaisonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * Service Implementation for managing {@link com.gofind.gofind.domain.Maison}.
+ * Service Implementation for managing {@link com.gofind.gofind.domain.locations.Maison}.
  */
 @Service
 @Transactional
@@ -62,9 +62,9 @@ public class MaisonServiceImpl implements MaisonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Flux<Maison> findAll(Pageable pageable) {
+    public Flux<Maison> findAll(Pageable pageable, String search, String searchType) {
         log.debug("Request to get all Maisons");
-        return maisonRepository.findAllBy(pageable);
+        return maisonRepository.findAllBy(pageable, search, searchType);
     }
 
     public Mono<Long> countAll() {

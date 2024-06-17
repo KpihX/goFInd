@@ -29,8 +29,10 @@ export const TrajetUpdate = () => {
   const updating = useAppSelector(state => state.trajet.updating);
   const updateSuccess = useAppSelector(state => state.trajet.updateSuccess);
 
+  const account = useAppSelector(state => state.authentication.account);
+
   const handleClose = () => {
-    navigate('/trajet');
+    navigate('/itinaries');
   };
 
   useEffect(() => {
@@ -60,16 +62,33 @@ export const TrajetUpdate = () => {
       values.prix = Number(values.prix);
     }
 
-    const entity = {
+    const proprietaire = utilisateurs.find(it => it?.loginId?.toString() === account?.id?.toString());
+
+    let entity = {
       ...trajetEntity,
       ...values,
+<<<<<<< HEAD
       proprietaire: utilisateurs.find(it => it.id.toString() === values.proprietaire?.toString()),
+=======
+      proprietaire,
+      proprietaireId: proprietaire.id,
+      engages: trajetEntity.engages,
+>>>>>>> origin
     };
+
+    if (isNew) {
+      entity = {
+        ...entity,
+        engages: [],
+      };
+    }
+
+    console.log('* trajet:', entity);
 
     if (isNew) {
       dispatch(createEntity(entity));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity({ entity, motif: 'prop' }));
     }
   };
 
@@ -149,7 +168,11 @@ export const TrajetUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
-                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                  validate: v =>
+                    (isNumber(v) &&
+                      (v >= trajetEntity.engages.length ||
+                        'Il y a déjà ' + trajetEntity.engages.length + ' engagés. Vous ne pouvez allez en deça!')) ||
+                    translate('entity.validation.number'),
                 }}
               />
               <ValidatedField
@@ -163,11 +186,12 @@ export const TrajetUpdate = () => {
                   validate: v => isNumber(v) || translate('entity.validation.number'),
                 }}
               />
-              <ValidatedField
+              {/* <ValidatedField
                 id="trajet-proprietaire"
                 name="proprietaire"
                 data-cy="proprietaire"
                 label={translate('goFindApp.trajet.proprietaire')}
+<<<<<<< HEAD
                 type="text"
                 readOnly
                 defaultValue={account.login}
@@ -176,6 +200,37 @@ export const TrajetUpdate = () => {
                 }}
               ></ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/trajet" replace color="info">
+=======
+                type="select"
+              >
+                <option value="" key="0" />
+                {utilisateurs
+                  ? utilisateurs.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField> */}
+              {/* <ValidatedField
+                label={translate('goFindApp.trajet.engages')}
+                id="trajet-engages"
+                data-cy="engages"
+                type="select"
+                multiple
+                name="engages"
+              >
+                <option value="" key="0" />
+                {utilisateurs
+                  ? utilisateurs.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField> */}
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/itinaries" replace color="info">
+>>>>>>> origin
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">

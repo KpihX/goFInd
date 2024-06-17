@@ -8,10 +8,10 @@ import static org.hamcrest.Matchers.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gofind.gofind.IntegrationTest;
-import com.gofind.gofind.domain.Piece;
 import com.gofind.gofind.domain.enumeration.EtatPiece;
+import com.gofind.gofind.domain.locations.Piece;
 import com.gofind.gofind.repository.EntityManager;
-import com.gofind.gofind.repository.PieceRepository;
+import com.gofind.gofind.repository.locations.PieceRepository;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
@@ -40,6 +40,9 @@ class PieceResourceIT {
     private static final EtatPiece DEFAULT_ETAT = EtatPiece.LOUE;
     private static final EtatPiece UPDATED_ETAT = EtatPiece.NONLOUE;
 
+    private static final Double DEFAULT_PRIX = 1.0;
+    private static final Double UPDATED_PRIX = 2.0;
+
     private static final String ENTITY_API_URL = "/api/pieces";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,7 +70,7 @@ class PieceResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Piece createEntity(EntityManager em) {
-        Piece piece = new Piece().libelle(DEFAULT_LIBELLE).image(DEFAULT_IMAGE).etat(DEFAULT_ETAT);
+        Piece piece = new Piece().libelle(DEFAULT_LIBELLE).image(DEFAULT_IMAGE).etat(DEFAULT_ETAT).prix(DEFAULT_PRIX);
         return piece;
     }
 
@@ -78,7 +81,7 @@ class PieceResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Piece createUpdatedEntity(EntityManager em) {
-        Piece piece = new Piece().libelle(UPDATED_LIBELLE).image(UPDATED_IMAGE).etat(UPDATED_ETAT);
+        Piece piece = new Piece().libelle(UPDATED_LIBELLE).image(UPDATED_IMAGE).etat(UPDATED_ETAT).prix(UPDATED_PRIX);
         return piece;
     }
 

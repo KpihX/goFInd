@@ -1,8 +1,8 @@
 package com.gofind.gofind.repository.rowmapper;
 
-import com.gofind.gofind.domain.Objet;
 import com.gofind.gofind.domain.enumeration.EtatObjet;
 import com.gofind.gofind.domain.enumeration.TypeObjet;
+import com.gofind.gofind.domain.objects.Objet;
 import io.r2dbc.spi.Row;
 import java.util.function.BiFunction;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
-import { Translate, getPaginationState } from 'react-jhipster';
+import { TextFormat, Translate, getPaginationState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
@@ -10,6 +10,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities, reset } from './location.reducer';
+import { APP_DATE_FORMAT } from 'app/config/constants';
 
 export const Location = () => {
   const dispatch = useAppDispatch();
@@ -134,6 +135,16 @@ export const Location = () => {
                     <Translate contentKey="goFindApp.location.prix">Prix</Translate>{' '}
                     <FontAwesomeIcon icon={getSortIconByFieldName('prix')} />
                   </th>
+                  <th className="hand" onClick={sort('dateHeureDebut')}>
+                    Date et heure de début
+                    {/* <Translate contentKey="goFindApp.trajet.dateHeureDepart">Date Heure Depart</Translate>{' '} */}
+                    <FontAwesomeIcon icon={getSortIconByFieldName('dateHeureDebut')} />
+                  </th>
+                  <th className="hand" onClick={sort('dateHeureFin')}>
+                    Date et heure de fin
+                    {/* <Translate contentKey="goFindApp.trajet.dateHeureDepart">Date Heure Depart</Translate>{' '} */}
+                    <FontAwesomeIcon icon={getSortIconByFieldName('dateHeureFin')} />
+                  </th>
                   <th>
                     <Translate contentKey="goFindApp.location.maison">Maison</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -149,6 +160,12 @@ export const Location = () => {
                       </Button>
                     </td>
                     <td>{location.prix}</td>
+                    <td>
+                      {location.dateHeureDebut ? <TextFormat type="date" value={location.dateHeureDebut} format={APP_DATE_FORMAT} /> : null}
+                    </td>
+                    <td>
+                      {location.dateHeureFin ? <TextFormat type="date" value={location.dateHeureFin} format={APP_DATE_FORMAT} /> : null}
+                    </td>
                     <td>{location.maison ? <Link to={`/maison/${location.maison.id}`}>{location.maison.id}</Link> : ''}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">

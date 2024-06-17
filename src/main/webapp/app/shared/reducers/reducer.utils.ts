@@ -14,6 +14,8 @@ import { AxiosError } from 'axios';
  */
 export type IQueryParams = { query?: string; page?: number; size?: number; sort?: string; search?: string; searchType?: string };
 
+export type IQueryParamsIti = { query?: string; page?: number; size?: number; sort?: string; search?: string; search2?: string };
+
 /**
  * Useful types for working with actions
  */

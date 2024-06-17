@@ -4,6 +4,7 @@ import io.r2dbc.spi.ConnectionFactory;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableR2dbcRepositories({ "com.gofind.gofind.repository" })
 @EnableTransactionManagement
 public class DatabaseConfiguration {
+
+    private static final String TIMEZONE = "Africa/Douala";
 
     /**
      * Simple singleton to convert {@link UUID}s to their {@link String} representation.
@@ -125,7 +128,8 @@ public class DatabaseConfiguration {
         @Override
         public ZonedDateTime convert(LocalDateTime localDateTime) {
             // Be aware - we are using the UTC timezone
-            return ZonedDateTime.of(localDateTime, ZoneOffset.UTC);
+            // return ZonedDateTime.of(localDateTime, ZoneOffset.UTC);
+            return ZonedDateTime.of(localDateTime, ZoneId.of(TIMEZONE));
         }
     }
 
@@ -135,7 +139,8 @@ public class DatabaseConfiguration {
 
         @Override
         public LocalDateTime convert(ZonedDateTime zonedDateTime) {
-            return zonedDateTime.toLocalDateTime();
+            // return zonedDateTime.toLocalDateTime();
+            return zonedDateTime.withZoneSameInstant(ZoneId.of(TIMEZONE)).toLocalDateTime();
         }
     }
 
