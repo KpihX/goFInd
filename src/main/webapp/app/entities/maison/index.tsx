@@ -11,7 +11,7 @@ import MaisonDeleteDialog from './maison-delete-dialog';
 const MaisonRoutes = () => (
   <ErrorBoundaryRoutes>
     <Route index element={<Maison />} />
-    <Route path="new" element={<MaisonUpdate />} />
+    <Route path="new/:locataireId" element={<MaisonUpdate />} />
     <Route path=":id">
       <Route index element={<MaisonDetail />} />
       <Route path="edit/:locataireId" element={<MaisonUpdate />} />

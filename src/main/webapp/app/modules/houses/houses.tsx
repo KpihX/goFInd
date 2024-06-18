@@ -169,7 +169,7 @@ export const Houses = () => {
               <FontAwesomeIcon icon="sync" spin={loading} />{' '}
               <Translate contentKey="goFindApp.objet.home.refreshListLabel">Refresh List</Translate>
             </Button>
-            <Link to="/maison/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <Link to="/maison/new/0" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
               <FontAwesomeIcon icon="plus" />
               &nbsp; Créer une nouvelle maison
               {/* <Translate contentKey="goFindApp.objet.home.createLabel">Create new Objet</Translate> */}
