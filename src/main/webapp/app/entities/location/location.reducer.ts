@@ -67,6 +67,17 @@ export const deleteEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const deleteEntities = createAsyncThunk(
+  'trajet/delete_entities',
+  async ({ ids, motif }: { ids: (string | number)[]; motif: string }, thunkAPI) => {
+    // console.log('* ids: ', ids);
+    // console.log('* motif: ', motif);
+    const requestUrl = `${apiUrl}/delete-entities?motif=${motif}`;
+    return await axios.delete(requestUrl, { data: ids });
+  },
+  { serializeError: serializeAxiosError },
+);
+
 // slice
 
 export const LocationSlice = createEntitySlice({

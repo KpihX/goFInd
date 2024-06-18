@@ -2,10 +2,13 @@ package com.gofind.gofind.service.mail;
 
 import ch.qos.logback.core.util.Duration;
 import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.locations.Maison;
 import com.gofind.gofind.domain.objects.Objet;
 import com.gofind.gofind.domain.users.User;
 import com.gofind.gofind.domain.users.Utilisateur;
 import com.gofind.gofind.service.itinaries.TrajetService;
+import com.gofind.gofind.service.locations.LocationService;
+import com.gofind.gofind.service.locations.MaisonService;
 import com.gofind.gofind.service.users.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -51,6 +54,10 @@ public class MailService {
 
     private final TrajetService trajetService;
 
+    private final LocationService locationService;
+
+    private final MaisonService maisonService;
+
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2); // Use a thread pool to limit concurrent connections
 
     public MailService(
@@ -59,7 +66,9 @@ public class MailService {
         MessageSource messageSource,
         SpringTemplateEngine templateEngine,
         UserService userService,
-        TrajetService trajetService
+        TrajetService trajetService,
+        LocationService locationService,
+        MaisonService maisonService
     ) {
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
@@ -67,6 +76,8 @@ public class MailService {
         this.templateEngine = templateEngine;
         this.userService = userService;
         this.trajetService = trajetService;
+        this.locationService = locationService;
+        this.maisonService = maisonService;
     }
 
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -533,6 +544,105 @@ public class MailService {
 
                                     });
                             }
+                        });
+                });
+        }
+    }
+
+    public void sendDelLocationPassEmail(List<Long> ids) {
+        String subject = "Suppression de location";
+
+        log.debug("! ! ! ! ! ! ! Ids: {}", ids);
+
+        for (Long id : ids) {
+            locationService
+                .findOne(id)
+                .subscribe(loc -> {
+                    Long idM = loc.getMaisonId();
+
+                    maisonService
+                        .findOne(idM)
+                        .subscribe(maison -> {
+                            Utilisateur proprietaireUtil = maison.getProprietaire();
+                            // User proprietaireUser = proprietaireUtil.getLogin();
+                            // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+                            // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+                            Long loginId = proprietaireUtil.getLoginId();
+
+                            userService
+                                .getUserWithAuthoritiesById(loginId)
+                                .subscribe(user -> {
+                                    log.debug(
+                                        "! ! ! ! ! ! ! ! ! ! ! Sending Email since del on location by ProprietaireUtil: {} concerning trajet: {}",
+                                        proprietaireUtil,
+                                        loc
+                                    );
+
+                                    String contentUser =
+                                        "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+                                        "Nous vous écrivons pour vous signaler que votre location en tant que bayeur d'informations:\n" +
+                                        "   - adresse maison: " +
+                                        maison.getAdresse() +
+                                        "\n" +
+                                        "   - description maison: " +
+                                        maison.getDescription() +
+                                        "\n" +
+                                        "   - date de fin: " +
+                                        loc.getDateHeureFin() +
+                                        "\n" +
+                                        "a été supprimé car la date de départ a été dépassée de 2 jours!\n" +
+                                        "Plus d'infos sur notre plateforme.\n" +
+                                        ".\nCordialement,\n" +
+                                        "L'equipe goFind!";
+
+                                    String content =
+                                        "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+                                        "Nous vous écrivons pour vous signaler que votre location en tant que locataire d'informations:\n" +
+                                        "   - adresse maison: " +
+                                        maison.getAdresse() +
+                                        "\n" +
+                                        "   - description maison: " +
+                                        maison.getDescription() +
+                                        "\n" +
+                                        "   - date de fin: " +
+                                        loc.getDateHeureFin() +
+                                        "\n" +
+                                        "a été supprimé car la date de départ a été dépassée de 2 jours!\n" +
+                                        "Plus d'infos sur notre plateforme.\n" +
+                                        ".\nCordialement,\n" +
+                                        "L'equipe goFind!";
+
+                                    try {
+                                        executorService.schedule(
+                                            () -> this.sendEmailSync(user.getEmail(), subject, contentUser, false, false),
+                                            1,
+                                            TimeUnit.SECONDS
+                                        );
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    userService
+                                        .getUserWithAuthoritiesById(loc.getLocataireId())
+                                        .subscribe(userEngage -> {
+                                            if (userEngage.getEmail() == null) {
+                                                log.debug("!!!!!!!!!!!!!!!! Email doesn't exist for user '{}'", user.getLogin());
+                                                return;
+                                            }
+
+                                            try {
+                                                executorService.schedule(
+                                                    () -> this.sendEmailSync(userEngage.getEmail(), subject, content, false, false),
+                                                    1,
+                                                    TimeUnit.SECONDS
+                                                );
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            // this.sendEmail(userEngage.getEmail(), subject, content, false, false);
+
+                                        });
+                                });
                         });
                 });
         }

@@ -143,23 +143,31 @@ export function Room({
                   <Translate contentKey="entity.action.view">View</Translate>
                 </span>
               </Button> */}
-                    <Button tag={Link} to={`/piece/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                      <FontAwesomeIcon icon="pencil-alt" />{' '}
-                      <span className="d-none d-md-inline">
-                        <Translate contentKey="entity.action.edit">Edit</Translate>
-                      </span>
-                    </Button>
-                    <Button
-                      onClick={() => (window.location.href = `/piece/${id}/delete`)}
-                      color="danger"
-                      size="sm"
-                      data-cy="entityDeleteButton"
-                    >
-                      <FontAwesomeIcon icon="trash" />{' '}
-                      <span className="d-none d-md-inline">
-                        <Translate contentKey="entity.action.delete">Delete</Translate>
-                      </span>
-                    </Button>
+                    {etat !== 'LOUE' ? (
+                      <>
+                        <Button tag={Link} to={`/piece/${id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                          <FontAwesomeIcon icon="pencil-alt" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.edit">Edit</Translate>
+                          </span>
+                        </Button>
+                        <Button
+                          onClick={() => (window.location.href = `/piece/${id}/delete`)}
+                          color="danger"
+                          size="sm"
+                          data-cy="entityDeleteButton"
+                        >
+                          <FontAwesomeIcon icon="trash" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.delete">Delete</Translate>
+                          </span>
+                        </Button>
+                      </>
+                    ) : (
+                      <Stack direction="row" spacing={1}>
+                        <Chip label={'Vous ne pouvez modifier la maison en location'} variant="outlined" color="success" />
+                      </Stack>
+                    )}
                   </div>
                 ) : (
                   <Button tag={Link} to={`/location/${locationId}`} color="info" size="sm" data-cy="entityDetailsButton">

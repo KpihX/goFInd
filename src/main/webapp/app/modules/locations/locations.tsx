@@ -8,13 +8,16 @@ import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { getEntities, reset } from 'app/entities/location/location.reducer';
+import { orange } from '@mui/material/colors';
+import { getEntities, reset, deleteEntities } from 'app/entities/location/location.reducer';
 import { APP_DATE_FORMAT } from 'app/config/constants';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { Button as Button2 } from '@mui/material';
 import { getEntities as getMaisons } from 'app/entities/maison/maison.reducer';
 import { getEntities as getUtilisateurs } from 'app/entities/utilisateur/utilisateur.reducer';
+import { partialUpdateEntity } from 'app/entities/piece/piece.reducer';
+import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
 export const Location = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +38,7 @@ export const Location = () => {
   const maisonList = useAppSelector(state => state.maison.entities);
   const account = useAppSelector(state => state.authentication.account);
   const utilisateurs = useAppSelector(state => state.utilisateur.entities);
+  const [isPassed, setIsPassed] = React.useState([]);
 
   const getAllEntities = () => {
     dispatch(
@@ -64,7 +68,34 @@ export const Location = () => {
   }, []);
 
   useEffect(() => {
-    console.log('* locations', locationList);
+    setIsPassed(locationList.map(location => dayjs(location.dateHeureFin).isBefore(dayjs())));
+  }, [locationList]);
+
+  useEffect(() => {
+    // console.log('** locations', locationList);
+    // console.log('** isPased', isPassed);
+
+    if (locationList && locationList.length !== 0) {
+      let ids = [];
+      for (let i = 0; i < isPassed.length; i++) {
+        if (locationList[i] && isPassed[i] && dayjs(locationList[i].dateHeureFin).isBefore(dayjs().subtract(2, 'days'))) {
+          ids = [...ids, locationList[i].id];
+          locationList[i].pieces.map(piece => {
+            dispatch(partialUpdateEntity({ id: piece.id, location: null }));
+          });
+        }
+      }
+
+      if (ids.length !== 0) {
+        dispatch(deleteEntities({ ids, motif: 'pass' }));
+        dispatch(getEntities({}));
+        toast.success('Les locations dont la date de départ est passée de 2 jours ont été supprimés');
+      }
+    }
+  }, [isPassed, locationList, updateSuccess]);
+
+  useEffect(() => {
+    // console.log('* locations', locationList);
   }, [locationList]);
 
   useEffect(() => {
@@ -117,6 +148,25 @@ export const Location = () => {
       return order === ASC ? faSortUp : faSortDown;
     }
   };
+
+  function calculerDifference(dateDayjs) {
+    // Ajouter 2 jours à la date fournie
+    const datePlusDeuxJours = dayjs(dateDayjs).add(2, 'day');
+
+    // Obtenir la date actuelle
+    const dateActuelle = dayjs();
+
+    // Calculer la différence en millisecondes
+    const differenceMs = datePlusDeuxJours.diff(dateActuelle);
+
+    // Convertir la différence en jours, heures et minutes
+    const jours = Math.floor(differenceMs / (24 * 60 * 60 * 1000));
+    const heures = Math.floor((differenceMs / (60 * 60 * 1000)) % 24);
+    const minutes = Math.floor((differenceMs / (60 * 1000)) % 60);
+
+    // Renvoyer le résultat formaté
+    return `${jours} jr + ${heures} h + ${minutes} mn`;
+  }
 
   return (
     <div>
@@ -228,19 +278,40 @@ export const Location = () => {
                                 {/* <Translate contentKey="entity.action.view">View</Translate> */}
                               </span>
                             </Button>
-                            <Button
+                            {/* <Button
                               onClick={() => (window.location.href = `/location/${location.id}/delete`)}
                               color="danger"
                               size="sm"
                               data-cy="entityDeleteButton"
-                            >
-                              <FontAwesomeIcon icon="trash" />{' '}
-                              <span className="d-none d-md-inline">
-                                Annuler
-                                {/* <Translate contentKey="entity.action.delete">Delete</Translate> */}
-                              </span>
-                            </Button>
+                            > */}
+                            {/* <FontAwesomeIcon icon="trash" />{' '} */}
+                            {/* <span className="d-none d-md-inline">
+                                Annuler */}
+                            {/* <Translate contentKey="entity.action.delete">Delete</Translate> */}
+                            {/* </span> */}
+                            {/* </Button> */}
                           </div>
+                          {isPassed[i] && (
+                            <Stack direction="row" spacing={1}>
+                              <Box
+                                sx={{
+                                  border: 1,
+                                  borderColor: 'warning.main',
+                                  borderRadius: '16px',
+                                  padding: '0.3rem',
+                                  backgroundColor: orange[10], // Utilisez la couleur appropriée de votre thème
+                                  color: orange[900], // Utilisez la couleur appropriée de votre thème
+                                  typography: 'body2',
+                                }}
+                              >
+                                La location a expirée!
+                                <br />
+                                Renouvellez là où elle va être supprimée dans:
+                                <br />
+                                {calculerDifference(location.dateHeureFin)}
+                              </Box>
+                            </Stack>
+                          )}
                         </td>
                       </tr>
                     )}

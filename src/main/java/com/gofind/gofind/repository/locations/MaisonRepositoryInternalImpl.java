@@ -47,6 +47,8 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
     private final UtilisateurRowMapper utilisateurMapper;
     private final MaisonRowMapper maisonMapper;
 
+    private static final EntityManager.LinkTable piecesLink = new EntityManager.LinkTable("piece", "maison_id", "id");
+
     private static final Table entityTable = Table.aliased("maison", EntityManager.ENTITY_ALIAS);
     private static final Table proprietaireTable = Table.aliased("utilisateur", "proprietaire");
 
@@ -141,5 +143,14 @@ class MaisonRepositoryInternalImpl extends SimpleR2dbcRepository<Maison, Long> i
     @Override
     public <S extends Maison> Mono<S> save(S entity) {
         return super.save(entity);
+    }
+
+    @Override
+    public Mono<Void> deleteById(Long entityId) {
+        return deleteRelations(entityId).then(super.deleteById(entityId));
+    }
+
+    protected Mono<Void> deleteRelations(Long entityId) {
+        return entityManager.deleteFromLinkTable(piecesLink, entityId);
     }
 }

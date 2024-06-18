@@ -133,17 +133,25 @@ export function House({ id, adresse, description, image, proprietaire, pieces })
                       <Translate contentKey="entity.action.edit">Edit</Translate>
                     </span>
                   </Button>
-                  <Button
-                    onClick={() => (window.location.href = `/maison/${id}/delete`)}
-                    color="danger"
-                    size="sm"
-                    data-cy="entityDeleteButton"
-                  >
-                    <FontAwesomeIcon icon="trash" />{' '}
-                    <span className="d-none d-md-inline">
-                      <Translate contentKey="entity.action.delete">Delete</Translate>
-                    </span>
-                  </Button>
+                  {!pieces.some(piece => piece.etat === 'LOUE') ? (
+                    <>
+                      <Button
+                        onClick={() => (window.location.href = `/maison/${id}/delete`)}
+                        color="danger"
+                        size="sm"
+                        data-cy="entityDeleteButton"
+                      >
+                        <FontAwesomeIcon icon="trash" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.delete">Delete</Translate>
+                        </span>
+                      </Button>
+                    </>
+                  ) : (
+                    <Stack direction="row" spacing={1}>
+                      <Chip label={'Vous ne pouvez supprimer la maison en location'} variant="outlined" color="success" />
+                    </Stack>
+                  )}
                 </div>
               </div>
             ) : (

@@ -3,6 +3,7 @@ package com.gofind.gofind.web.rest;
 import com.gofind.gofind.domain.locations.Location;
 import com.gofind.gofind.repository.locations.LocationRepository;
 import com.gofind.gofind.service.locations.LocationService;
+import com.gofind.gofind.service.mail.MailService;
 import com.gofind.gofind.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.ForwardedHeaderUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -45,9 +47,20 @@ public class LocationResource {
 
     private final LocationRepository locationRepository;
 
-    public LocationResource(LocationService locationService, LocationRepository locationRepository) {
+    private final MailService mailService;
+
+    private final PieceResource pieceResource;
+
+    public LocationResource(
+        LocationService locationService,
+        LocationRepository locationRepository,
+        MailService mailService,
+        PieceResource pieceResource
+    ) {
         this.locationService = locationService;
         this.locationRepository = locationRepository;
+        this.mailService = mailService;
+        this.pieceResource = pieceResource;
     }
 
     /**
@@ -219,6 +232,29 @@ public class LocationResource {
                 Mono.just(
                     ResponseEntity.noContent()
                         .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+                        .build()
+                )
+            );
+    }
+
+    @DeleteMapping("/delete-entities")
+    public Mono<ResponseEntity<Void>> deleteTrajets(
+        @RequestBody(required = true) List<Long> ids,
+        @RequestParam(required = true) String motif
+    ) {
+        log.debug("REST request to delete Trajets : {}", ids);
+
+        if (motif.equals("pass")) {
+            mailService.sendDelTrajetPassEmail(ids);
+        }
+
+        return Flux.fromIterable(ids)
+            // .map(Long::valueOf)
+            .flatMap(locationService::delete)
+            .then(
+                Mono.just(
+                    ResponseEntity.noContent()
+                        .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, ids.toString()))
                         .build()
                 )
             );

@@ -42,6 +42,8 @@ interface MaisonRepositoryInternal {
 
     Flux<Maison> findAll(String search, String searchType);
 
+    Mono<Void> deleteById(Long id);
+
     Mono<Maison> findById(Long id);
     // this is not supported at the moment because of https://github.com/jhipster/generator-jhipster/issues/18269
     // Flux<Maison> findAllBy(Pageable pageable, Criteria criteria);
