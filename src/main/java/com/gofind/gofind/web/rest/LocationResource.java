@@ -79,6 +79,7 @@ public class LocationResource {
         return locationService
             .save(location)
             .map(result -> {
+                mailService.sendLocationEmail(result);
                 try {
                     return ResponseEntity.created(new URI("/api/locations/" + result.getId()))
                         .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

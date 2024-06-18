@@ -2,6 +2,7 @@ package com.gofind.gofind.service.mail;
 
 import ch.qos.logback.core.util.Duration;
 import com.gofind.gofind.domain.itinaries.Trajet;
+import com.gofind.gofind.domain.locations.Location;
 import com.gofind.gofind.domain.locations.Maison;
 import com.gofind.gofind.domain.objects.Objet;
 import com.gofind.gofind.domain.users.User;
@@ -10,6 +11,7 @@ import com.gofind.gofind.service.itinaries.TrajetService;
 import com.gofind.gofind.service.locations.LocationService;
 import com.gofind.gofind.service.locations.MaisonService;
 import com.gofind.gofind.service.users.UserService;
+import com.gofind.gofind.service.users.UtilisateurService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +60,8 @@ public class MailService {
 
     private final MaisonService maisonService;
 
+    private final UtilisateurService utilisateurService;
+
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2); // Use a thread pool to limit concurrent connections
 
     public MailService(
@@ -68,7 +72,8 @@ public class MailService {
         UserService userService,
         TrajetService trajetService,
         LocationService locationService,
-        MaisonService maisonService
+        MaisonService maisonService,
+        UtilisateurService utilisateurService
     ) {
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
@@ -78,6 +83,7 @@ public class MailService {
         this.trajetService = trajetService;
         this.locationService = locationService;
         this.maisonService = maisonService;
+        this.utilisateurService = utilisateurService;
     }
 
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -622,30 +628,103 @@ public class MailService {
                                         e.printStackTrace();
                                     }
 
-                                    userService
-                                        .getUserWithAuthoritiesById(loc.getLocataireId())
-                                        .subscribe(userEngage -> {
-                                            if (userEngage.getEmail() == null) {
-                                                log.debug("!!!!!!!!!!!!!!!! Email doesn't exist for user '{}'", user.getLogin());
-                                                return;
-                                            }
+                                    utilisateurService
+                                        .findOne(loc.getLocataireId())
+                                        .subscribe(locUtil -> {
+                                            userService
+                                                .getUserWithAuthoritiesById(locUtil.getLoginId())
+                                                .subscribe(userEngage -> {
+                                                    if (userEngage.getEmail() == null) {
+                                                        log.debug("!!!!!!!!!!!!!!!! Email doesn't exist for user '{}'", user.getLogin());
+                                                        return;
+                                                    }
 
-                                            try {
-                                                executorService.schedule(
-                                                    () -> this.sendEmailSync(userEngage.getEmail(), subject, content, false, false),
-                                                    1,
-                                                    TimeUnit.SECONDS
-                                                );
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            // this.sendEmail(userEngage.getEmail(), subject, content, false, false);
+                                                    try {
+                                                        executorService.schedule(
+                                                            () -> this.sendEmailSync(userEngage.getEmail(), subject, content, false, false),
+                                                            1,
+                                                            TimeUnit.SECONDS
+                                                        );
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    // this.sendEmail(userEngage.getEmail(), subject, content, false, false);
 
+                                                });
                                         });
                                 });
                         });
                 });
         }
+    }
+
+    public void sendLocationEmail(Location loc) {
+        Long idM = loc.getMaisonId();
+
+        maisonService
+            .findOne(idM)
+            .subscribe(maison -> {
+                Utilisateur proprietaireUtil = maison.getProprietaire();
+                // User proprietaireUser = proprietaireUtil.getLogin();
+                // log.debug("! ! ! ! ! ! ! ProprietaireUtil: {}", proprietaireUtil);
+                // log.debug("! ! ! ! ! ! ! Proprietaire: {}", proprietaireUser);
+                Long loginId = proprietaireUtil.getLoginId();
+
+                String subject = "Signalement de location";
+
+                userService
+                    .getUserWithAuthoritiesById(loginId)
+                    .subscribe(user -> {
+                        log.debug(
+                            "! ! ! ! ! ! ! ! ! ! ! Sending Email since del on location by ProprietaireUtil: {} concerning trajet: {}",
+                            proprietaireUtil,
+                            loc
+                        );
+
+                        utilisateurService
+                            .findOne(loc.getLocataireId())
+                            .subscribe(locUtil -> {
+                                userService
+                                    .getUserWithAuthoritiesById(locUtil.getLoginId())
+                                    .subscribe(userEngage -> {
+                                        String content =
+                                            "Bonjour/Bonsoir cher utilisateur de nos services goFind!\n\n" +
+                                            "Nous vous écrivons pour vous signaler que des pieces en attente de location de votre maison d'informations:\n" +
+                                            "   - adresse maison: " +
+                                            maison.getAdresse() +
+                                            "\n" +
+                                            "   - description maison: " +
+                                            maison.getDescription() +
+                                            "\n" +
+                                            "ont finalement été prise par l'utilisateur d'informations:\n" +
+                                            "   - Nom: " +
+                                            userEngage.getLogin() +
+                                            "\n" +
+                                            "   - Email: " +
+                                            userEngage.getEmail() +
+                                            "\n" +
+                                            "   - Telephone: " +
+                                            locUtil.getTelephone() +
+                                            "\n" +
+                                            "Plus d'infos sur notre plateforme.\n" +
+                                            ".\nCordialement,\n" +
+                                            "L'equipe goFind!";
+
+                                        try {
+                                            executorService.schedule(
+                                                () -> this.sendEmailSync(user.getEmail(), subject, content, false, false),
+                                                1,
+                                                TimeUnit.SECONDS
+                                            );
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        // this.sendEmail(userEngage.getEmail(), subject, content, false, false);
+
+                                    });
+                            });
+                    });
+            });
     }
 
     public void sendActivationEmail(User user) {
